@@ -1,8 +1,15 @@
 <template>
   <div class="container-fluid">
-    <div class="position-absolute top-50 start-0 p-5">
-      <h1>Cut Your Hair Today</h1>
-      <button type="button" class="button mt-4">Get Started</button>
+    <div class="row">
+      <div class="col-md-6 align-self-center">
+        <h1 class="text-center">Cut Your Hair Today</h1>
+        <button type="button" class="button mt-4 mb-4 mx-auto d-block">
+          Get Started
+        </button>
+      </div>
+      <div class="col-md-6 align-self-center text-center">
+        <img class="img-fluid" src="../assets/main-image.PNG" alt="..." />
+      </div>
     </div>
   </div>
 </template>
@@ -13,8 +20,7 @@ export default {
 };
 </script>
 
-<style>
-/* CSS */
+<style scoped>
 .button {
   align-items: center;
   background-color: black;
