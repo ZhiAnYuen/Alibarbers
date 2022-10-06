@@ -21,6 +21,9 @@ export default {
 </script>
 
 <style scoped>
+h1 {
+  font-size: 60px;
+}
 .button {
   align-items: center;
   background-color: black;
