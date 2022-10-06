@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light border-bottom">
     <div class="container-fluid">
-      <a class="navbar-brand ms-5 h1" href="#">Alibarbers</a>
+      <router-link to="/home" class="navbar-brand ms-5 h1"
+        >Alibarbers</router-link
+      >
       <button
         class="navbar-toggler"
         type="button"
@@ -16,7 +18,7 @@
       <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
           <li class="nav-item">
-            <a class="nav-link" href="#">Login</a>
+            <router-link to="/login" class="nav-link">Login</router-link>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Sign Up</a>
