@@ -33,7 +33,6 @@ h1 {
   color: white;
   cursor: pointer;
   display: flex;
-  font-family: Inter, sans-serif;
   font-size: 16px;
   height: 48px;
   justify-content: center;
@@ -69,7 +68,8 @@ h1 {
 }
 
 .button:active {
-  background-color: #ffdeda;
+  color: black;
+  background-color: #ffd24c;
   outline: 0;
 }
 
