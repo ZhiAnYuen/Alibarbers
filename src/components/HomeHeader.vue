@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light border-bottom">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">Alibarbers</a>
+      <a class="navbar-brand ms-5 h1" href="#">Alibarbers</a>
       <button
         class="navbar-toggler"
         type="button"
@@ -14,7 +14,7 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarText">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
           <li class="nav-item">
             <a class="nav-link" href="#">Login</a>
           </li>
