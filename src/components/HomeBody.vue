@@ -3,7 +3,11 @@
     <div class="row">
       <div class="col-md-6 align-self-center">
         <h1 class="text-center">Cut Your Hair Today</h1>
-        <button type="button" class="button mt-4 mb-4 mx-auto d-block">
+        <button
+          id="get-started-button"
+          type="button"
+          class="button mt-4 mb-4 mx-auto d-block"
+        >
           Get Started
         </button>
       </div>
@@ -24,7 +28,8 @@ export default {
 h1 {
   font-size: 60px;
 }
-.button {
+
+#get-started-button {
   align-items: center;
   background-color: black;
   border: 2px solid black;
@@ -77,7 +82,7 @@ h1 {
 }
 
 @media (min-width: 768px) {
-  .button {
+  #get-started-button {
     padding: 0 40px;
   }
 }
