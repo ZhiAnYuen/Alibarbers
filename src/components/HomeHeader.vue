@@ -15,7 +15,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarText">
+      <div class="collapse navbar-collapse p-3" id="navbarText">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
           <li class="nav-item">
             <router-link to="/login" class="nav-link">Login</router-link>
