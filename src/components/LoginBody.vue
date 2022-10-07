@@ -8,9 +8,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 * {
-  background-color: #ffe69a;
+  background-color: $pastel-yellow;
 }
 
 #login-body {
@@ -19,10 +19,4 @@ export default {
   background-position: center;
   background-size: 1100px;
 }
-
-/* .bg-image {
-  background-image: url("../assets/scissor.png");
-  background-repeat: no-repeat;
-  background-position: center;
-} */
 </style>

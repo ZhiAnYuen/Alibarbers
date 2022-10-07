@@ -20,7 +20,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 h1 {
   font-size: 60px;
 }
@@ -45,36 +45,35 @@ h1 {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-}
 
-.button:after {
-  background-color: white;
-  border: 2px solid black;
-  border-radius: 8px;
-  content: "";
-  display: block;
-  height: 48px;
-  left: 0;
-  width: 100%;
-  position: absolute;
-  top: -2px;
-  transform: translate(8px, 8px);
-  transition: transform 0.2s ease-out;
-  z-index: -1;
-}
+  &:after {
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 8px;
+    content: "";
+    display: block;
+    height: 48px;
+    left: 0;
+    width: 100%;
+    position: absolute;
+    top: -2px;
+    transform: translate(8px, 8px);
+    transition: transform 0.2s ease-out;
+    z-index: -1;
+  }
 
-.button:hover:after {
-  transform: translate(0, 0);
-}
+  &:hover {
+    &:after {
+      transform: translate(0, 0);
+    }
+    outline: 0;
+  }
 
-.button:active {
-  color: black;
-  background-color: #ffd24c;
-  outline: 0;
-}
-
-.button:hover {
-  outline: 0;
+  &:active {
+    color: black;
+    background-color: $yellow;
+    outline: 0;
+  }
 }
 
 @media (min-width: 768px) {
