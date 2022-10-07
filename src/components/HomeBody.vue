@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="row">
+    <div class="row vh-100 align-items-center">
       <div class="col-md-6 align-self-center">
         <h1 class="text-center">Cut Your Hair Today</h1>
         <button
