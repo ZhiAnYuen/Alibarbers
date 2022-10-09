@@ -4,7 +4,7 @@
       <div class="col-md-6 align-self-center">
         <h1 class="text-center">Cut Your Hair Today</h1>
         <button
-          id="button"
+          id="hover-button"
           type="button"
           class="button mt-4 mb-4 mx-auto d-block"
         >

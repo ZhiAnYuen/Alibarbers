@@ -9,22 +9,31 @@
             <p>Sign in to your account below.</p>
             <div class="input-group mb-3">
               <input
+                id="username"
                 type="text"
                 class="form-control"
                 placeholder="Username"
                 aria-label="Username"
+                autocomplete="off"
               />
             </div>
             <div class="input-group mb-3">
               <input
+                id="password"
                 type="text"
                 class="form-control"
                 placeholder="Password"
                 aria-label="Password"
+                autocomplete="off"
               />
             </div>
             <p>Forgot Password?</p>
-            <button id="button" type="button" class="button mt-4 mb-4 d-block">
+            <button
+              id="hover-button"
+              v-on:click="submit"
+              type="button"
+              class="button mt-4 mb-4 d-block"
+            >
               Login
             </button>
             <p>Don’t have an account? <span>Register</span></p>
@@ -38,6 +47,12 @@
 <script>
 export default {
   name: "LoginBody",
+  methods: {
+    submit() {
+      console.log(document.getElementById("username").value);
+      console.log(document.getElementById("password").value);
+    },
+  },
 };
 </script>
 

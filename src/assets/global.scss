@@ -2,7 +2,7 @@ $blue: #92b4ec;
 $pastel-yellow: #ffe69a;
 $yellow: #ffd24c;
 
-#button {
+#hover-button {
   align-items: center;
   background-color: black;
   border: 2px solid black;
@@ -51,11 +51,5 @@ $yellow: #ffd24c;
     color: black;
     background-color: $yellow;
     outline: 0;
-  }
-}
-
-@media (min-width: 768px) {
-  #get-started-button {
-    padding: 0 40px;
   }
 }
