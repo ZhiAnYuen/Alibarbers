@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import router from "../router/index.js";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default {
@@ -64,7 +63,7 @@ export default {
       signInWithEmailAndPassword(auth, this.username, this.password)
         .then(() => {
           console.log("Login successful");
-          router.push("/feed");
+          this.$router.push("/feed");
         })
         .catch((error) => {
           switch (error.code) {

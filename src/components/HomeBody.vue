@@ -7,7 +7,7 @@
           id="hover-button"
           type="button"
           class="button mt-4 mb-4 mx-auto d-block"
-          @click="goLoginView()"
+          v-on:click="$router.push('/login')"
         >
           Get Started
         </button>
@@ -20,14 +20,8 @@
 </template>
 
 <script>
-import router from "../router/index.js";
 export default {
   name: "HomeBody",
-  methods: {
-    goLoginView() {
-      router.push("/login");
-    },
-  },
 };
 </script>
 
