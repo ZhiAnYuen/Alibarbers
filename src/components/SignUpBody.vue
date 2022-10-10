@@ -1,12 +1,45 @@
 <template>
-  <div id="login-body" class="container-fluid vh-100">
+  <div id="signup-body" class="container-fluid vh-100">
     <div class="row vh-100 align-items-center">
-      <div class="col-lg-6 d-md-none d-lg-block"></div>
       <div class="col-lg-6 d-flex justify-content-center">
         <div id="card" class="card m-5 border border-dark rounded-4">
           <div class="card-body p-5">
-            <h1>Welcome Back!</h1>
-            <p>Sign in to your account below.</p>
+            <h1>Create an account</h1>
+            <p>I am a...</p>
+            <div class="btn-group" role="group">
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio1"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-dark" for="btnradio1"
+                >Customer</label
+              >
+              <input
+                type="radio"
+                class="btn-check"
+                name="btnradio"
+                id="btnradio2"
+                autocomplete="off"
+              />
+              <label class="btn btn-outline-dark" for="btnradio2"
+                >Merchant</label
+              >
+            </div>
+
+            <div class="form-floating">
+              <input
+                v-model="name"
+                type="text"
+                class="form-control mb-3 mt-3"
+                id="floatingInput"
+                placeholder="name"
+              />
+              <label for="floatingInput">Name</label>
+            </div>
+
             <div class="form-floating">
               <input
                 v-model="email"
@@ -35,61 +68,36 @@
               type="button"
               class="button mt-4 mb-4 d-block"
             >
-              Login
+              Sign Up
             </button>
             <p>
-              Don’t have an account?
-              <router-link to="/signup"><span>Register</span></router-link>
+              Already have an account?
+              <router-link to="/login"><span>Login</span></router-link>
             </p>
           </div>
         </div>
       </div>
+      <div class="col-lg-6 d-md-none d-lg-block"></div>
     </div>
   </div>
 </template>
 
 <script>
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-
 export default {
-  name: "LoginBody",
+  name: "SignUpBody",
   data() {
     return {
+      name: "",
       email: "",
       password: "",
     };
   },
-  methods: {
-    submit() {
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, this.email, this.password)
-        .then(() => {
-          console.log("Login successful");
-          this.$router.push("/feed");
-        })
-        .catch((error) => {
-          switch (error.code) {
-            case "auth/invalid-email":
-              console.log("Invalid email");
-              break;
-            case "auth/user-not-found":
-              console.log("No account with that email was found");
-              break;
-            case "auth/wrong-password":
-              console.log("Incorrect password");
-              break;
-            default:
-              console.log("Email or password was incorrect");
-              break;
-          }
-        });
-    },
-  },
+  methods: {},
 };
 </script>
 
 <style lang="scss" scoped>
-#login-body {
+#signup-body {
   background-color: $pastel-yellow;
   background-image: url("../assets/scissor.png");
   background-repeat: no-repeat;
