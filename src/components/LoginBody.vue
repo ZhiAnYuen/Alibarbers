@@ -11,6 +11,7 @@
               <input
                 id="username"
                 type="text"
+                v-model="username"
                 class="form-control"
                 placeholder="Username"
                 aria-label="Username"
@@ -21,6 +22,7 @@
               <input
                 id="password"
                 type="text"
+                v-model="password"
                 class="form-control"
                 placeholder="Password"
                 aria-label="Password"
@@ -45,12 +47,41 @@
 </template>
 
 <script>
+import router from "../router/index.js";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
 export default {
   name: "LoginBody",
+  data() {
+    return {
+      username: "",
+      password: "",
+    };
+  },
   methods: {
     submit() {
-      console.log(document.getElementById("username").value);
-      console.log(document.getElementById("password").value);
+      const auth = getAuth();
+      signInWithEmailAndPassword(auth, this.username, this.password)
+        .then(() => {
+          console.log("Login successful");
+          router.push("/feed");
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "auth/invalid-email":
+              console.log("Invalid email");
+              break;
+            case "auth/user-not-found":
+              console.log("No account with that email was found");
+              break;
+            case "auth/wrong-password":
+              console.log("Incorrect password");
+              break;
+            default:
+              console.log("Email or password was incorrect");
+              break;
+          }
+        });
     },
   },
 };
