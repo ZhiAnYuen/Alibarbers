@@ -34,3 +34,9 @@ export default {
   name: "HomeHeader",
 };
 </script>
+
+<style lang="scss">
+.router-link-exact-active {
+  border-bottom: 4px solid $yellow;
+}
+</style>
