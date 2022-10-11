@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light border-bottom">
     <div class="container-fluid">
-      <router-link to="/home" class="navbar-brand ms-5 h1"
-        >Alibarbers</router-link
-      >
+      <router-link to="/home" class="navbar-brand ms-5 h1">
+        Alibarbers
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"

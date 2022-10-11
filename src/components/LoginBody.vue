@@ -115,5 +115,4 @@ span {
 #errMsg {
   color: red;
 }
-
 </style>

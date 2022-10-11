@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light border-bottom">
     <div class="container-fluid">
-      <router-link to="/feed" class="navbar-brand ms-5 h1"
-        >Alibarbers</router-link
-      >
+      <router-link to="/feed" class="navbar-brand ms-5 h1">
+        Alibarbers
+      </router-link>
       <button
         class="navbar-toggler"
         type="button"
@@ -24,7 +24,9 @@
             <router-link to="#" class="nav-link">My Appointments</router-link>
           </li>
           <li class="nav-item">
-            <p v-on:click="signOut" class="nav-link">Logout</p>
+            <span v-on:click="signOut" class="nav-link" style="cursor: pointer"
+              >Logout</span
+            >
           </li>
         </ul>
       </div>
