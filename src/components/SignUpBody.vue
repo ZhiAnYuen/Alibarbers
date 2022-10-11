@@ -6,27 +6,32 @@
           <div class="card-body p-5">
             <h1>Create an account</h1>
             <p>I am a...</p>
-            <div class="btn-group" role="group" v:model="user_type">
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio1"
-                autocomplete="off"
-              />
-              <label class="btn btn-outline-dark" for="btnradio1"
-                >Customer</label
-              >
-              <input
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio2"
-                autocomplete="off"
-              />
-              <label class="btn btn-outline-dark" for="btnradio2"
-                >Hairdresser</label
-              >
+
+            <div class="btn-group" role="group">
+              <label class="btn btn-outline-dark" for="btnradio1">
+                <input
+                  v-model="user_type"
+                  value="Customer"
+                  type="radio"
+                  class="btn-check"
+                  name="btnradio"
+                  id="btnradio1"
+                  autocomplete="off"
+                />
+                Customer
+              </label>
+              <label class="btn btn-outline-dark" for="btnradio2">
+                <input
+                  v-model="user_type"
+                  value="Hairdresser"
+                  type="radio"
+                  class="btn-check"
+                  name="btnradio"
+                  id="btnradio2"
+                  autocomplete="off"
+                />
+                Hairdresser
+              </label>
             </div>
 
             <div class="form-floating">
@@ -34,10 +39,10 @@
                 v-model="name"
                 type="text"
                 class="form-control mb-3 mt-3"
-                id="floatingInput"
+                id="floatingNameInput"
                 placeholder="name"
               />
-              <label for="floatingInput">Name</label>
+              <label for="floatingNameInput">Name</label>
             </div>
 
             <div class="form-floating">
@@ -45,10 +50,10 @@
                 v-model="email"
                 type="email"
                 class="form-control mb-3"
-                id="floatingInput"
+                id="floatingPasswordInput"
                 placeholder="name@example.com"
               />
-              <label for="floatingInput">Email address</label>
+              <label for="floatingPasswordInput">Email address</label>
             </div>
 
             <div class="form-floating">
@@ -64,7 +69,7 @@
 
             <button
               id="hover-button"
-              v-on:click="submit"
+              v-on:click="signUp"
               type="button"
               class="button mt-4 mb-4 d-block"
             >
@@ -84,8 +89,6 @@
 
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import router from "../router";
-
 
 export default {
   name: "SignUpBody",
@@ -98,20 +101,19 @@ export default {
     };
   },
   methods: {
-    submit () {
-      createUserWithEmailAndPassword(getAuth(), this.email, this.password)  
-        .then( (data) => {
+    signUp() {
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, this.email, this.password)
+        .then(() => {
           alert("Registration was Successful!");
-          router.push('/feed'); // redirect to feed if registration is successful
-          console.log(auth.currentUser);
+          this.$router.push("/feed");
         })
-        .catch( (error) => {
+        .catch((error) => {
           alert(error.code + ": " + error.message);
-        })
-    }
+        });
+    },
   },
 };
-
 </script>
 
 <style lang="scss" scoped>
