@@ -71,15 +71,19 @@ export default {
           switch (error.code) {
             case "auth/invalid-email":
               console.log("Invalid email");
+              alert("Invalid email. Try again!");
               break;
             case "auth/user-not-found":
               console.log("No account with that email was found");
+              alert("No account with that email was found. Try again!");
               break;
             case "auth/wrong-password":
               console.log("Incorrect password");
+              alert("Incorrect password. Try again!");
               break;
             default:
               console.log("Email or password was incorrect");
+              alert("Email or password was incorrect. Try again!");
               break;
           }
         });
@@ -107,4 +111,9 @@ span {
   font-weight: bold;
   text-decoration: underline;
 }
+
+#errMsg {
+  color: red;
+}
+
 </style>

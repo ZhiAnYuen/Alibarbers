@@ -1,3 +1,18 @@
 <template>
-  <h1 class="text-center p-5">Feed page</h1>
+  <main>
+    <FeedHeader/>
+    <FeedBody/>
+  </main>
 </template>
+
+<script>
+  import FeedHeader from "../components/FeedHeader.vue";
+  import FeedBody from "../components/FeedBody.vue";
+  
+  export default {
+  components: {
+    FeedHeader,
+    FeedBody,
+  },
+};
+</script>

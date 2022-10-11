@@ -6,7 +6,7 @@
           <div class="card-body p-5">
             <h1>Create an account</h1>
             <p>I am a...</p>
-            <div class="btn-group" role="group">
+            <div class="btn-group" role="group" v:model="user_type">
               <input
                 type="radio"
                 class="btn-check"
@@ -25,7 +25,7 @@
                 autocomplete="off"
               />
               <label class="btn btn-outline-dark" for="btnradio2"
-                >Merchant</label
+                >Hairdresser</label
               >
             </div>
 
@@ -83,6 +83,10 @@
 </template>
 
 <script>
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import router from "../router";
+
+
 export default {
   name: "SignUpBody",
   data() {
@@ -90,10 +94,24 @@ export default {
       name: "",
       email: "",
       password: "",
+      user_type: "",
     };
   },
-  methods: {},
+  methods: {
+    submit () {
+      createUserWithEmailAndPassword(getAuth(), this.email, this.password)  
+        .then( (data) => {
+          alert("Registration was Successful!");
+          router.push('/feed'); // redirect to feed if registration is successful
+          console.log(auth.currentUser);
+        })
+        .catch( (error) => {
+          alert(error.code + ": " + error.message);
+        })
+    }
+  },
 };
+
 </script>
 
 <style lang="scss" scoped>
