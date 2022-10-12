@@ -1,8 +1,8 @@
 <template>
-  <div id="signup-body" class="container-fluid vh-100">
-    <div class="row vh-100 align-items-center">
-      <div class="col-lg-6 d-flex justify-content-center">
-        <div id="card" class="card mx-5 border border-dark rounded-4">
+  <div id="signup-body" class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mt-5 mb-5 d-flex justify-content-center">
+        <div id="card" class="card border border-dark rounded-4">
           <div class="card-body p-5">
             <h1>Create an account</h1>
             <p>I am a...</p>
@@ -128,7 +128,6 @@ export default {
 #card {
   z-index: 0;
   width: 600px;
-  height: 575px;
 }
 
 span {
