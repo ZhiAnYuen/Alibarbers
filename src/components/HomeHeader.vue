@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg bg-light border-bottom">
+  <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
       <router-link to="/home" class="navbar-brand ms-5 h1">
         Alibarbers
@@ -36,7 +36,17 @@ export default {
 </script>
 
 <style lang="scss">
-.router-link-exact-active {
-  border-bottom: 4px solid $yellow;
+.navbar {
+  border: 1px solid transparent;
+}
+
+.navbar-nav {
+  gap: 10px;
+}
+
+.nav-link:hover,
+.nav-link.router-link-exact-active {
+  border-bottom: 2px solid $yellow;
+  margin: -1px;
 }
 </style>
