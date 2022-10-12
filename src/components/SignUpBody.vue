@@ -1,6 +1,6 @@
 <template>
-  <div id="signup-body" class="container-fluid">
-    <div class="row align-items-center">
+  <div id="signup-body" class="container-fluid vh-100">
+    <div class="row align-items-center vh-100">
       <div class="col-lg-6 mt-5 mb-5 d-flex justify-content-center">
         <div id="card" class="card border border-dark rounded-4">
           <div class="card-body p-5">
