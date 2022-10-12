@@ -36,10 +36,6 @@ export default {
 </script>
 
 <style lang="scss">
-.navbar {
-  border: 1px solid transparent;
-}
-
 .navbar-nav {
   gap: 10px;
 }
