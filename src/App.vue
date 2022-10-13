@@ -22,9 +22,8 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease-out;
+  transition: opacity 0.3s ease-out;
 }
 </style>

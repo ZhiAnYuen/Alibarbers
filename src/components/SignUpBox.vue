@@ -7,28 +7,28 @@
           <p>I am a...</p>
 
           <div class="btn-group" role="group">
+            <input
+              v-model="user_type"
+              value="Customer"
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnradio1"
+              autocomplete="off"
+            />
             <label class="btn btn-outline-dark" for="btnradio1">
-              <input
-                v-model="user_type"
-                value="Customer"
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio1"
-                autocomplete="off"
-              />
               Customer
             </label>
+            <input
+              v-model="user_type"
+              value="Hairdresser"
+              type="radio"
+              class="btn-check"
+              name="btnradio"
+              id="btnradio2"
+              autocomplete="off"
+            />
             <label class="btn btn-outline-dark" for="btnradio2">
-              <input
-                v-model="user_type"
-                value="Hairdresser"
-                type="radio"
-                class="btn-check"
-                name="btnradio"
-                id="btnradio2"
-                autocomplete="off"
-              />
               Hairdresser
             </label>
           </div>
