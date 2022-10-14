@@ -7,7 +7,7 @@
           id="hover-button"
           type="button"
           class="button mt-4 mb-4 mx-auto d-block"
-          v-on:click="$router.push('/login')"
+          v-on:click="$router.push('/auth')"
         >
           Get Started
         </button>

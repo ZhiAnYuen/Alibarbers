@@ -18,12 +18,12 @@
       <div class="collapse navbar-collapse p-3" id="navbarText">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
           <li class="nav-item">
-            <router-link to="/login" class="nav-link">
+            <router-link to="/auth" class="nav-link">
               <span class="fw-semibold text-dark"> Login </span>
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/signup" class="nav-link">
+            <router-link to="/auth" class="nav-link">
               <span class="fw-semibold text-dark"> Sign Up </span>
             </router-link>
           </li>

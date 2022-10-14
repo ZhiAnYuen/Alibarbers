@@ -1,18 +1,18 @@
 <template>
   <main>
     <HomeHeader />
-    <LoginBody />
+    <AuthBody />
   </main>
 </template>
 
 <script>
 import HomeHeader from "../components/HomeHeader.vue";
-import LoginBody from "../components/LoginBody.vue";
+import AuthBody from "../components/AuthBody.vue";
 
 export default {
   components: {
     HomeHeader,
-    LoginBody,
+    AuthBody,
   },
 };
 </script>

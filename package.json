@@ -8,9 +8,16 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@fullcalendar/core": "^5.11.3",
+    "@fullcalendar/daygrid": "^5.11.3",
+    "@fullcalendar/interaction": "^5.11.3",
+    "@fullcalendar/list": "^5.11.3",
+    "@fullcalendar/timegrid": "^5.11.3",
+    "@fullcalendar/vue3": "^5.11.2",
     "bootstrap": "^5.2.2",
     "firebase": "^9.11.0",
     "vue": "^3.2.38",
+    "vue-cal": "^4.8.0",
     "vue-router": "^4.1.5"
   },
   "devDependencies": {
