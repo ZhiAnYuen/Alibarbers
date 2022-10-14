@@ -100,10 +100,6 @@ export default {
   },
   methods: {
     signUp() {
-      // console.log(this.name);
-      // console.log(this.signUpEmail);
-      // console.log(this.signUpPassword);
-      // console.log(this.userType);
       const auth = getAuth();
       createUserWithEmailAndPassword(
         auth,

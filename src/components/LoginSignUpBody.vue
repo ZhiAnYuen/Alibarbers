@@ -1,9 +1,9 @@
 <template>
   <div id="login-body" class="container-fluid">
-    <transition name="fade" mode="out-in">
-      <LoginBox v-if="$route.meta.isLogin" />
-      <SignUpBox v-else />
-    </transition>
+    <!-- <transition name="fade" mode="out-in"> -->
+    <LoginBox v-if="$route.meta.isLogin" />
+    <SignUpBox v-else />
+    <!-- </transition> -->
   </div>
 </template>
 
@@ -21,14 +21,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#login-body {
-  background-color: $pastel-yellow;
-  background-image: url("../assets/scissor.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 1100px;
-}
-
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
