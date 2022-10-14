@@ -1,5 +1,5 @@
 <template>
-  <div class="row vh-100 align-items-center">
+  <div class="row align-items-center">
     <div class="col-lg-6 d-md-none d-lg-block"></div>
     <div class="col-lg-6 d-flex justify-content-center">
       <div id="card" class="card m-5 border border-dark rounded-4">

@@ -1,5 +1,5 @@
 <template>
-  <div id="login-body" class="container-fluid vh-100">
+  <div id="login-body" class="container-fluid">
     <transition name="fade" mode="out-in">
       <LoginBox v-if="$route.meta.isLogin" />
       <SignUpBox v-else />

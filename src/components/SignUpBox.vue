@@ -1,14 +1,14 @@
 <template>
-  <div class="row vh-100 align-items-center">
-    <div class="col-lg-6 mt-5 mb-5 d-flex justify-content-center">
-      <div id="card" class="card border border-dark rounded-4">
+  <div class="row align-items-center">
+    <div class="col-lg-6 d-flex justify-content-center">
+      <div id="card" class="card m-5 border border-dark rounded-4">
         <div class="card-body p-5">
           <h1>Create an account</h1>
           <p>I am a...</p>
 
           <div class="btn-group" role="group">
             <input
-              v-model="user_type"
+              v-model="userType"
               value="Customer"
               type="radio"
               class="btn-check"
@@ -20,7 +20,7 @@
               Customer
             </label>
             <input
-              v-model="user_type"
+              v-model="userType"
               value="Hairdresser"
               type="radio"
               class="btn-check"
@@ -95,11 +95,15 @@ export default {
       name: "",
       signUpEmail: "",
       signUpPassword: "",
-      user_type: "",
+      userType: "",
     };
   },
   methods: {
     signUp() {
+      // console.log(this.name);
+      // console.log(this.signUpEmail);
+      // console.log(this.signUpPassword);
+      // console.log(this.userType);
       const auth = getAuth();
       createUserWithEmailAndPassword(
         auth,
@@ -122,6 +126,7 @@ export default {
 #card {
   z-index: 0;
   width: 600px;
+  height: 570px;
 }
 
 span {

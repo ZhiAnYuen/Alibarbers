@@ -4,6 +4,7 @@ import router from "./router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap";
 import { initializeApp } from "firebase/app";
+// import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGx9onhnjCYGfE-nizcuGc6JckEkf6jpw",
@@ -16,6 +17,8 @@ const firebaseConfig = {
 };
 
 initializeApp(firebaseConfig);
+
+// const db = getFirestore(firebaseApp);
 
 const app = createApp(App);
 
