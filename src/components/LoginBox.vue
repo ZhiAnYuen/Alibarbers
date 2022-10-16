@@ -29,10 +29,9 @@
           </div>
 
           <button
-            id="hover-button"
             v-on:click="submit"
             type="button"
-            class="button mt-4 mb-4 d-block"
+            class="hover-button button mt-4 mb-4 d-block"
           >
             Login
           </button>

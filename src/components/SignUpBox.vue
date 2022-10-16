@@ -67,10 +67,9 @@
           </div>
 
           <button
-            id="hover-button"
             v-on:click="signUp"
             type="button"
-            class="button mt-4 mb-4 d-block"
+            class="hover-button button mt-4 mb-4 d-block"
           >
             Sign Up
           </button>
@@ -87,6 +86,8 @@
 
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import db from "../firebase.js";
 
 export default {
   name: "SignUp",
@@ -106,11 +107,17 @@ export default {
         this.signUpEmail,
         this.signUpPassword
       )
-        .then(() => {
+        .then((cred) => {
+          setDoc(doc(db.db, "users", cred.user.uid), {
+            name: this.name,
+            email: this.signUpEmail,
+            userType: this.userType,
+          });
           alert("Registration was Successful!");
           this.$router.push("/feed");
         })
         .catch((error) => {
+          console.log(error.code + ": " + error.message);
           alert(error.code + ": " + error.message);
         });
     },
