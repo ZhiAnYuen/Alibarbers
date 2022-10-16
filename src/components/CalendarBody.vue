@@ -1,7 +1,18 @@
 <template>
+  <Teleport to="body">
+    <!-- use the modal component, pass in the prop -->
+    <CalendarModal :show="createEventForm" @close="createEventForm = false">
+      <template #header>
+        <h3>{{ salonName }}</h3>
+      </template>
+    </CalendarModal>
+  </Teleport>
+  <div class="mx-5 d-block">
+    <h3>Book Your Appointment for {{ salonName }}</h3>
+    <button class="hover-button" @click="createEvent()">Book Now</button>
+  </div>
   <VueCal
     class="h-500 m-5 vuecal--green-theme"
-    :minDate="mindate"
     :startWeekOnSunday="true"
     :disable-views="['years', 'year', 'month']"
     :time-from="10 * 60"
@@ -10,23 +21,23 @@
     :events="events"
     :stickySplitLabels="true"
     :split-days="hairdressers"
-    :min-cell-width="500"
+    :snap-to-time="15"
+    @cell-click="createEvent($event)"
   />
 </template>
 
 <script>
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+import CalendarModal from "./CalendarModal.vue";
 
 export default {
   name: "CalendarBody",
-  components: {
-    VueCal,
-  },
   data() {
     return {
-      mindate: new Date().getDate(),
       true: true,
+      createEventForm: false,
+      salonName: "Team Salon @ Siglap",
       hairdressers: [
         { id: 1, class: "natalie", label: "Natalie" },
         { id: 2, class: "zhi-an", label: "Zhi An" },
@@ -35,51 +46,64 @@ export default {
         {
           start: "2022-10-14 10:30",
           end: "2022-10-14 11:30",
-          title: "Natalie",
-          content: '<i class="icon material-icons">shopping_cart</i>',
           class: "natalie",
           split: 1,
         },
         {
           start: "2022-10-14 13:30",
           end: "2022-10-14 15:30",
-          title: "Zhi An",
-          content: '<i class="icon material-icons">shopping_cart</i>',
           class: "zhi-an",
           split: 2,
         },
         {
           start: "2022-10-14 14:30",
           end: "2022-10-14 18:30",
-          title: "Natalie",
-          content: '<i class="icon material-icons">shopping_cart</i>',
           class: "natalie",
           split: 3,
         },
         {
           start: "2022-10-14 15:30",
           end: "2022-10-14 16:30",
-          title: "zhi-an",
-          content: '<i class="icon material-icons">shopping_cart</i>',
           class: "zhi-an",
           split: 4,
         },
       ],
     };
   },
+  methods: {
+    createEvent(event) {
+      var dateTime = Date(event);
+      console.log(dateTime);
+      this.createEventForm = true;
+      var newEvent = this.$refs.vuecal.createEvent(
+        // Formatted start date and time or JavaScript Date object.
+        dateTime,
+        // Event duration in minutes (Integer).
+        120,
+        // Custom event props (optional).
+        { title: "New Event", content: "yay! 🎉", class: "zhi-an" }
+      );
+      console.log(newEvent);
+    },
+  },
+  components: {
+    VueCal,
+    CalendarModal,
+  },
 };
 </script>
 
-<style lang="scss" scoped>
-.vuecal__menu,
-.vuecal__cell-events-count {
-  background-color: $yellow;
+<style lang="scss">
+.vuecal__event {
+  background-color: white;
+  font-size: 14px;
 }
+
 .vuecal__event.zhi-an {
-  background-color: yellow;
+  border-top: 6px solid $yellow;
 }
 
 .vuecal__event.natalie {
-  background-color: green;
+  border-top: 6px solid $blue;
 }
 </style>

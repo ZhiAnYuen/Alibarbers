@@ -73,10 +73,9 @@
               </div>
 
               <button
-                id="hover-button"
                 v-on:click="signUp"
                 type="button"
-                class="button mt-4 mb-4 d-block"
+                class="hover-button button mt-4 mb-4 d-block"
               >
                 Sign Up
               </button>
@@ -117,10 +116,9 @@
               </div>
 
               <button
-                id="hover-button"
                 v-on:click="login"
                 type="button"
-                class="button mt-4 mb-4 d-block"
+                class="hover-button button mt-4 mb-4 d-block"
               >
                 Login
               </button>
