@@ -47,6 +47,9 @@
 
 <script>
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import db from "../firebase.js";
+import { useUserStore } from "../stores/users.js";
 
 export default {
   name: "LoginBox",
@@ -60,7 +63,15 @@ export default {
     submit() {
       const auth = getAuth();
       signInWithEmailAndPassword(auth, this.loginEmail, this.loginPassword)
-        .then(() => {
+        .then(async (cred) => {
+          const docRef = doc(db.db, "users", cred.user.uid);
+          const docSnap = await getDoc(docRef);
+          let name = docSnap.data().name;
+          let userType = docSnap.data().userType;
+
+          const user = useUserStore();
+          user.login(name, this.loginEmail, userType);
+
           console.log("Login successful");
           this.$router.push("/feed");
         })

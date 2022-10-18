@@ -34,13 +34,20 @@
 
         <ul v-else class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
           <li class="nav-item">
-            <router-link to="#" class="nav-link">Explore</router-link>
+            <router-link to="/feed" class="nav-link">
+              <span class="fw-semibold text-dark"> Explore </span>
+            </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="#" class="nav-link">My Appointments</router-link>
+            <router-link to="/appointments" class="nav-link">
+              <span class="fw-semibold text-dark"> My Appointments </span>
+            </router-link>
           </li>
           <li class="nav-item">
-            <span v-on:click="signOut" class="nav-link" style="cursor: pointer"
+            <span
+              v-on:click="signOut"
+              class="nav-link fw-semibold text-dark"
+              style="cursor: pointer"
               >Logout</span
             >
           </li>
@@ -52,12 +59,15 @@
 
 <script>
 import { getAuth, signOut } from "firebase/auth";
+import { useUserStore } from "../stores/users.js";
 
 export default {
   name: "HomeHeader",
   methods: {
     signOut() {
       signOut(getAuth()).then(() => {
+        const user = useUserStore();
+        user.logout();
         this.$router.push("/home");
       });
     },
