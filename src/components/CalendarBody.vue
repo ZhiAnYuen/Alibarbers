@@ -78,16 +78,6 @@ export default {
     };
   },
   methods: {
-    onSelectHairdresser(hairdresser) {
-      const index = this.selectedHairdressers.indexOf(hairdresser);
-      if (index > -1) {
-        // only splice array when item is found
-        this.selectedHairdressers.splice(index, 1); // 2nd parameter means remove one item only
-      } else {
-        this.selectedHairdressers.push(hairdresser);
-      }
-      console.log(this.selectedHairdressers);
-    },
     onEventDragStart(e, draggable) {
       e.dataTransfer.setData("event", JSON.stringify(draggable));
       e.dataTransfer.setData("cursor-grab-at", e.offsetY);
