@@ -1,5 +1,6 @@
 <template>
-  <h1 class="text-center p-5">Feed page</h1>
+  <p class="text-start ms-5 mt-5 fw-semibold">Hello {{ name }},</p>
+  <h1 class="text-start ms-5 fw-semibold">Get a makeover today!</h1>
   <p class="text-center">{{ name }}</p>
   <p class="text-center">{{ email }}</p>
   <p class="text-center">{{ isLoggedIn }}</p>
