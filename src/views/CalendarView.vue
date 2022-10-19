@@ -1,17 +1,17 @@
 <template>
   <main>
-    <FeedHeader />
+    <Navbar />
     <CalendarBody />
   </main>
 </template>
 
 <script>
-import FeedHeader from "../components/FeedHeader.vue";
+import Navbar from "../components/Navbar.vue";
 import CalendarBody from "../components/CalendarBody.vue";
 
 export default {
   components: {
-    FeedHeader,
+    Navbar,
     CalendarBody,
   },
 };
