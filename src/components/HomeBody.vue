@@ -1,12 +1,12 @@
 <template>
-  <div class="container-fluid">
-    <div class="row align-items-center">
+  <div class="container-fluid vh-100">
+    <div class="row align-items-center vh-100">
       <div class="col-md-6 align-self-center">
         <h1 class="text-center">Cut Your Hair Today</h1>
         <button
           type="button"
           class="hover-button button mt-4 mb-4 mx-auto d-block"
-          v-on:click="$router.push('/auth')"
+          v-on:click="$router.push('/login')"
         >
           Get Started
         </button>

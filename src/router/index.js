@@ -1,15 +1,30 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import AuthView from "../views/AuthView.vue";
-import FeedView from "../views/FeedView.vue";
 import CalendarView from "../views/CalendarView.vue";
+import LoginSignUpView from "../views/LoginSignUpView.vue";
+import FeedView from "../views/FeedView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: "/home", name: "home", component: HomeView },
-    { path: "/auth", name: "auth", component: AuthView },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginSignUpView,
+      meta: {
+        isLogin: true,
+      },
+    },
+    {
+      path: "/signup",
+      name: "signup",
+      component: LoginSignUpView,
+      meta: {
+        isLogin: false,
+      },
+    },
     {
       path: "/feed",
       name: "feed",
