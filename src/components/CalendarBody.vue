@@ -106,6 +106,18 @@ export default {
       console.log(this.selectedServices);
     },
   },
+  computed: {
+    totalDuration() {
+      var calculatedDuration = this.selectedServices.reduce(
+        (accumulator, value) => {
+          return accumulator + value;
+        },
+        0
+      );
+      this.draggable.duration = calculatedDuration;
+      return calculatedDuration;
+    },
+  },
   components: {
     VueCal,
   },
@@ -140,7 +152,7 @@ export default {
           </div>
           <button
             type="button"
-            class="hover-button button mt-4 mb-4 d-flex flex-row line-end"
+            class="hover-button button mt-4 mb-4 ms-auto"
             @click="step += 1"
           >
             Next
@@ -160,7 +172,7 @@ export default {
           >
             <input
               type="checkbox"
-              :value="service.name"
+              :value="service.duration"
               :id="service.name"
               class="mx-3"
               v-model="selectedServices"
@@ -168,7 +180,7 @@ export default {
             <label :for="service.name">
               <strong>{{ service.name }}</strong></label
             >
-            <label :for="service.name" class="line-end"
+            <label :for="service.name" class="ms-auto"
               >{{ service.price }}
             </label>
           </div>
@@ -182,7 +194,7 @@ export default {
             </button>
             <button
               type="button"
-              class="hover-button button my-4 line-end"
+              class="hover-button button my-4 ms-auto"
               @click="step += 1"
             >
               Next
@@ -190,9 +202,9 @@ export default {
           </div>
         </div>
       </div>
-      <div v-if="step === 3">
+      <div v-if="step === 3" class="row mt-5 px-5">
         <div class="col-lg-4 col-md-12">
-          <div class="card border border-dark rounded-4 m-5">
+          <div class="card border border-dark rounded-4">
             <div class="p-5">
               <h2>
                 Step 3: Drag and drop the event below to select your appointment
@@ -207,11 +219,7 @@ export default {
                 >
                   <strong>{{ draggable.title }}</strong>
                   <div>
-                    {{
-                      draggable.duration
-                        ? `${draggable.duration} min`
-                        : "no duration"
-                    }}
+                    {{ totalDuration ? `${totalDuration} min` : "no duration" }}
                   </div>
                 </div>
               </div>
@@ -225,7 +233,7 @@ export default {
                 </button>
                 <button
                   type="button"
-                  class="hover-button button mt-4 mb-4 line-end"
+                  class="hover-button button mt-4 mb-4 ms-auto"
                   @click="test"
                 >
                   Confirm
@@ -235,9 +243,9 @@ export default {
           </div>
         </div>
         <div class="col-lg-8 col-md-12">
-          <div class="card border border-dark rounded-4 m-5">
+          <div class="card border border-dark rounded-4 h-0">
             <VueCal
-              class="h-1000 m-5"
+              class="h-50 m-5"
               startWeekOnSunday="true"
               :disable-views="['years', 'year', 'month']"
               :time-from="10 * 60"
@@ -247,7 +255,13 @@ export default {
               stickySplitLabels="true"
               snapToTime="15"
               @event-drop="onEventDrop"
-              editable-events
+              :editable-events="{
+                title: false,
+                drag: true,
+                resize: false,
+                delete: true,
+                create: false,
+              }"
               minCellWidth="120"
             />
           </div>
@@ -286,9 +300,5 @@ export default {
 
 .vuecal__event.natalie {
   border-top: 6px solid $blue;
-}
-
-.line-end {
-  margin-left: auto;
 }
 </style>
