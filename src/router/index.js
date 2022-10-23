@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginSignUpView from "../views/LoginSignUpView.vue";
 import FeedView from "../views/FeedView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import CreateShopView from "../views/CreateShopView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -33,6 +34,14 @@ const router = createRouter({
       },
     },
     { path: "/", redirect: "/home" },
+    {
+      path: "/createshop",
+      name: "createshop",
+      component: CreateShopView,
+      meta: {
+        requiresAuth: true,
+      }
+    }
   ],
 });
 
