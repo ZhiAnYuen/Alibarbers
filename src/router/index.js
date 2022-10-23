@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import CalendarView from "../views/CalendarView.vue";
 import LoginSignUpView from "../views/LoginSignUpView.vue";
 import FeedView from "../views/FeedView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -29,6 +30,14 @@ const router = createRouter({
       path: "/feed",
       name: "feed",
       component: FeedView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/calendar",
+      name: "calendar",
+      component: CalendarView,
       meta: {
         requiresAuth: true,
       },
@@ -64,7 +73,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     } else {
       alert("Please log in to access this page.");
-      next("/login");
+      next("/auth");
     }
   } else {
     next();
