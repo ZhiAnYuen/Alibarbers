@@ -16,6 +16,7 @@
     "@fullcalendar/vue3": "^5.11.2",
     "bootstrap": "^5.2.2",
     "firebase": "^9.11.0",
+    "moment": "^2.29.4",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",
     "vue": "^3.2.38",

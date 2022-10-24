@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
       <router-link to="/home" class="navbar-brand ms-5 h1">
-        Alibarbers
+        AliBarbers
       </router-link>
       <button
         class="navbar-toggler"
