@@ -3,7 +3,7 @@
     <img :src="imgLink" class="card-img-top" />
     <div class="card-body">
       <h5 class="card-title">{{ name }}</h5>
-      <p class="card-text">{{ rating }}</p>
+      <p class="card-text">Rating: {{ rating }}</p>
     </div>
     <router-link to="#" class="stretched-link" />
   </div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "CardBox",
+  name: "FeedCard",
   props: ["imgLink", "name", "rating"],
 };
 </script>

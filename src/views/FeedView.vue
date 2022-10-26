@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="d-flex">
     <FeedBody />
   </main>
 </template>
@@ -15,7 +15,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// main {
-//   background-color: $pastel-yellow;
-// }
+main {
+  background-color: $pastel-yellow;
+  height: 40vh;
+}
 </style>
