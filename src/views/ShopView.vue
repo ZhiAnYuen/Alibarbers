@@ -1,11 +1,22 @@
 <template>
   <main class="d-flex">
-    <h5>ShopView</h5>
+    <ShopBody />
   </main>
 </template>
 
 <script>
-export default {};
+import ShopBody from "../components/ShopBody.vue";
+
+export default {
+  components: {
+    ShopBody,
+  },
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+main {
+  background-color: $pastel-yellow;
+  height: 35vh;
+}
+</style>

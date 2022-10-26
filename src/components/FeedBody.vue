@@ -3,25 +3,39 @@
     <p class="text-start ms-5 mt-5 fw-semibold">Hello {{ name }},</p>
     <h1 class="text-start ms-5 fw-semibold">Get a makeover today!</h1>
     <div class="row mt-5">
-      <p class="text-center border">filter row</p>
+      <p class="text-center border">filter row (WIP)</p>
     </div>
-    <FeedBox />
-    <!-- <p class="text-center">{{ name }}</p>
-    <p class="text-center">{{ email }}</p>
-    <p class="text-center">{{ isLoggedIn }}</p>
-    <p class="text-center">{{ userType }}</p> -->
+    <div class="row mt-3 justify-content-center">
+      <div v-if="isLoading" class="col-2 text-center">Loading...</div>
+      <div
+        v-else
+        v-for="feed in feeds"
+        :key="feed.id"
+        class="col-sm-6 col-md-4 col-lg-2 my-2"
+      >
+        <FeedCard
+          :imgLink="feed.imgLink"
+          :name="feed.shopName"
+          :rating="feed.rating"
+          :id="feed.id"
+        />
+      </div>
+    </div>
+    <!-- <button @click="test">test</button> -->
   </div>
 </template>
 
 <script>
 import { computed } from "vue";
 import { useUserStore } from "../stores/users.js";
-import FeedBox from "../components/FeedBox.vue";
+import { collection, getDocs } from "firebase/firestore";
+import db from "../firebase.js";
+import FeedCard from "./FeedCard.vue";
 
 export default {
   name: "FeedBody",
   components: {
-    FeedBox,
+    FeedCard,
   },
   setup() {
     const user = useUserStore();
@@ -32,6 +46,30 @@ export default {
       isLoggedIn: computed(() => user.isLoggedIn),
       userType: computed(() => user.userType),
     };
+  },
+  data() {
+    return {
+      feeds: [],
+      isLoading: true,
+    };
+  },
+  mounted() {
+    this.getAllShops();
+  },
+  methods: {
+    getAllShops() {
+      getDocs(collection(db.db, "shop")).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          let obj = doc.data();
+          obj["id"] = doc.id;
+          this.feeds.push(obj);
+        });
+      });
+      this.isLoading = false;
+    },
+    test() {
+      console.log(this.feeds.length);
+    },
   },
 };
 </script>

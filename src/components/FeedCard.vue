@@ -5,14 +5,19 @@
       <h5 class="card-title">{{ name }}</h5>
       <p class="card-text">Rating: {{ rating }}</p>
     </div>
-    <router-link to="#" class="stretched-link" />
+    <span @click="routeShop" class="stretched-link"></span>
   </div>
 </template>
 
 <script>
 export default {
   name: "FeedCard",
-  props: ["imgLink", "name", "rating"],
+  props: ["imgLink", "name", "rating", "id"],
+  methods: {
+    routeShop() {
+      this.$router.push({ path: "/shop/" + this.id });
+    },
+  },
 };
 </script>
 
