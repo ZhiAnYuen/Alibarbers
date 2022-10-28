@@ -49,8 +49,8 @@ const router = createRouter({
       component: CreateShopView,
       meta: {
         requiresAuth: true,
-      }
-    }
+      },
+    },
   ],
 });
 

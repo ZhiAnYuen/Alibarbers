@@ -1,6 +1,10 @@
 <script>
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+
+import db from "../firebase.js";
+import { collection, query, where, getDocs } from "firebase/firestore";
+
 const CLIENT_ID =
   "357278563537-alpo25u2cdl470r9p00siu1ub3rhoc6t.apps.googleusercontent.com";
 const API_KEY = "AIzaSyDLDs4YzPHLUHXA6eztyjLyntTUZE_-9k8";
@@ -14,88 +18,13 @@ export default {
   data() {
     return {
       step: 1,
-      hairdressers: [
-        {
-          id: 1,
-          name: "Natalie Chan",
-          role: "Colorist Specialist",
-          class: "natalie",
-          label: "Natalie",
-        },
-        {
-          id: 2,
-          name: "Zhi An Yuen",
-          role: "Senior Hairstylist",
-          class: "zhi-an",
-          label: "Zhi An",
-        },
-        {
-          id: 3,
-          name: "Cara Loo",
-          role: "Junior Barber",
-          class: "cara",
-          label: "Cara",
-        },
-        {
-          id: 4,
-          name: "Sharlene Tio",
-          role: "Hair Washer",
-          class: "sharlene",
-          label: "Sharlene",
-        },
-      ],
-      services: [
-        {
-          id: 1,
-          name: "Hair Treatment",
-          duration: 240,
-          price: 60,
-        },
-        {
-          id: 2,
-          name: "Hair Styling",
-          duration: 20,
-          price: 30,
-        },
-        {
-          id: 3,
-          name: "Women's Hair Cut",
-          duration: 45,
-          price: 45,
-        },
-        {
-          id: 4,
-          name: "Men's Hair Cut",
-          duration: 30,
-          price: 35,
-        },
-      ],
-      events: [
-        {
-          start: "2022-10-14 10:30",
-          end: "2022-10-14 11:30",
-          class: "natalie",
-          split: 1, // has to match hairdresser id
-        },
-        {
-          start: "2022-10-14 13:30",
-          end: "2022-10-14 15:30",
-          class: "zhi-an",
-          split: 2,
-        },
-        {
-          start: "2022-10-14 14:30",
-          end: "2022-10-14 18:30",
-          class: "natalie",
-          split: 1,
-        },
-        {
-          start: "2022-10-14 15:30",
-          end: "2022-10-14 16:30",
-          class: "zhi-an",
-          split: 2,
-        },
-      ],
+      retrievingData: false,
+      shopData: undefined,
+      hairdressers: undefined,
+      services: undefined,
+      open: undefined,
+      close: undefined,
+      appointments: undefined,
       draggable: {
         id: 1,
         title: "My Appointment",
@@ -109,13 +38,33 @@ export default {
       step2To3Alert: false,
       tokenClient: undefined,
       showDraggable: true,
-      shopName: "Test Shop",
-      shopAddress: "1 Jln Jamal, Singapore 457591",
       googleCalendarEventLink: undefined,
+      addingToGoogleCalendar: false,
       addedToGoogleCalendar: false,
     };
   },
   methods: {
+    async retrieveData() {
+      this.retrievingData = true;
+
+      const q = query(
+        collection(db.db, "shop"),
+        where("shopName", "==", "Test Shop")
+      );
+
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        var shopData = doc.data();
+        this.shopData = shopData;
+        this.hairdressers = shopData.hairdressers;
+        this.services = shopData.services;
+        this.open = shopData.open;
+        this.close = shopData.close;
+        this.appointments = shopData.appointments;
+      });
+      this.retrievingData = false;
+    },
     onEventDragStart(e, draggable) {
       e.dataTransfer.setData("event", JSON.stringify(draggable));
       e.dataTransfer.setData("cursor-grab-at", e.offsetY);
@@ -153,13 +102,17 @@ export default {
       this.showDraggable = true;
       if (this.latestEvent) {
         this.step += 1;
+        this.appointments.push({
+          start: this.latestEvent.start,
+          end: this.latestEvent.end,
+          split: this.latestEvent.split,
+          class: this.hairdressers[this.latestEvent.split - 1].class,
+        });
+        console.log(this.appointments);
       }
     },
-    test() {
-      console.log(this.selectedHairdressers);
-      console.log(this.selectedServices);
-    },
     addToGoogleCal() {
+      this.addingToGoogleCalendar = true;
       this.tokenClient.callback = async (resp) => {
         if (resp.error !== undefined) {
           throw resp;
@@ -205,6 +158,7 @@ export default {
         });
 
         request.execute((event) => {
+          this.addingToGoogleCalendar = false;
           this.addedToGoogleCalendar = true;
           console.log("Event created:" + event.htmlLink);
         });
@@ -221,7 +175,6 @@ export default {
     },
     eventInfo(event) {
       this.latestEvent = event;
-      console.log(event);
     },
   },
   components: {
@@ -240,6 +193,8 @@ export default {
         discoveryDocs: DISCOVERY_DOC,
       });
     });
+
+    this.retrieveData();
   },
   computed: {
     computedEventStart() {
@@ -280,6 +235,12 @@ export default {
       >
         <div class="card-body p-5">
           <h2>Step 1: Choose your hairdresser(s)</h2>
+          <div
+            v-if="retrievingData"
+            class="d-flex justify-content-center align-items-center"
+          >
+            <div class="spinner-border text-warning" role="status"></div>
+          </div>
           <div
             v-for="person in hairdressers"
             :key="person.label"
@@ -402,8 +363,7 @@ export default {
               :time-from="10 * 60"
               :time-to="19 * 60"
               :time-step="30"
-              :events="events"
-              :stickySplitLabels="true"
+              :events="appointments"
               :snapToTime="15"
               @event-drop="onEventDrop"
               :editable-events="{
@@ -415,6 +375,7 @@ export default {
               }"
               @event-mouse-leave="eventInfo($event)"
               :minCellWidth="200"
+              :stickySplitLabels="true"
               :split-days="selectedHairdressers"
             />
           </div>
@@ -426,11 +387,11 @@ export default {
             <h2>Here's your appointment!</h2>
             <div class="mb-3">
               <span class="field-title">Shop</span><br />
-              <span class="field-details">{{ shopName }}</span>
+              <span class="field-details">{{ shopData.shopName }}</span>
             </div>
             <div class="mb-3">
               <span class="field-title">Address</span><br />
-              <span class="field-details">{{ shopAddress }}</span>
+              <span class="field-details">{{ shopData.location }}</span>
             </div>
             <div class="mb-3">
               <span class="field-title">Date & Time</span><br />
@@ -485,6 +446,14 @@ export default {
                 />
                 Added to your Google Calendar!
               </button>
+              <button
+                type="button"
+                class="btn w-100 border border-dark rounded-4 d-flex justify-content-center align-items-center"
+                v-if="addingToGoogleCalendar"
+              >
+                <div class="spinner-border me-2" role="status"></div>
+                Adding to your Google Calendar!
+              </button>
             </div>
             <div class="d-flex flex-row">
               <button
@@ -497,7 +466,6 @@ export default {
               <button
                 type="button"
                 class="hover-button button mt-4 mb-4 ms-auto"
-                @click="test"
               >
                 Confirm
               </button>
