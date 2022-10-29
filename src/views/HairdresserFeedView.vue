@@ -19,4 +19,8 @@ main {
     background-color: $pastel-yellow;
     height: 35vh;
   }
+.btn-custom:active {
+  box-shadow: lightgray;
+}
+
 </style>
