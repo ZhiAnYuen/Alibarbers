@@ -1,14 +1,18 @@
 <template>
   <h1 class="text-center p-5">Welcome! Set up your shop here.</h1>
   <div class="container">
-    <br />
+    
+    <div class="alert alert-danger col-12" v-for="error in errors">
+      {{ error }}
+    </div>
+
     <form>
       <!-- Shop name input and verification -->
       <div class="row">
-        <label for="shopname" class="form-label">Shop Name</label>
+        <label for="shopname" class="form-label my-3">Shop Name</label>
       </div>
-      <div class="row">
-        <div class="mb-3 col-lg-3">
+      <div class="row mb-2">
+        <div class="col-lg-3">
           <input
             type="text"
             class="form-control"
@@ -17,7 +21,7 @@
             placeholder="E.g. Sally's Hairdressers"
           />
         </div>
-        <div class="mb-3 col-lg-9">
+        <div class="col-lg-9">
           <span>
             <button
               v-if="shopnameAvail == 1"
@@ -31,7 +35,6 @@
               <button type="button" class="btn custom" @click="checkAvail()">
                 Verify Shop Name
               </button>
-              This shop name has been taken. Please choose another name.
             </span>
             <div v-if="shopnameAvail == 3" class="form-text">
               Shop Name Verified!
@@ -40,12 +43,29 @@
         </div>
       </div>
 
+      <!-- Upload a picture of their shop -->
+      <div class="row">
+        <label class="my-3" for="shopimg">Shop Image</label>
+      </div>
+      <div class="row mb-2">
+        <div class="input-group col-lg-6">
+          <input
+            type="file"
+            class="form-control"
+            id="shopimg"
+            accept="image/*"
+            v-bind="shopimg"
+          />
+          <label class="input-group-text" for="shopimg">Upload</label>
+        </div>
+      </div>
+
       <!-- Shop location. Need to add API here? -->
       <div class="row">
-        <label for="shoplocation" class="form-label">Shop Location</label>
+        <label for="shoplocation" class="my-3 form-label">Shop Location</label>
       </div>
-      <div class="row">
-        <div class="mb-3 col-lg-6">
+      <div class="row mb-2">
+        <div class="col-lg-6">
           <input
             type="text"
             class="form-control"
@@ -58,15 +78,15 @@
 
       <!-- Add & remove available services -->
       <div class="row">
-        <div class="col-lg-12">Add One or More Services</div>
+        <div class="my-3 col-lg-12">Add One or More Services</div>
       </div>
-      <div class="form-group row" v-for="(service, index) in services">
-        <div class="col-md-6">
+      <div class="form-group row mb-2" v-for="(service, index) in services">
+        <div class="col-md-3">
           <input
             type="text"
             :name="'service[' + index + '][name]'"
             class="form-control"
-            placeholder="E.g. Hair Cut & Dry"
+            placeholder="E.g. Hair Cut"
           />
         </div>
         <div class="col-md-3">
@@ -75,6 +95,14 @@
             :name="'service[' + index + '][price]'"
             class="form-control"
             placeholder="Price"
+          />
+        </div>
+        <div class="col-md-3">
+          <input
+            type="number"
+            :name="'service[' + index + '][duration]'"
+            class="form-control"
+            placeholder="Duration (min)"
           />
         </div>
         <div class="col-md-3">
@@ -95,12 +123,9 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-lg-3">
-          <br />
-          <button type="reset" class="btn btn-danger">Reset Fields</button>
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+      <div class="row my-2 float-end">
+          <button type="reset" class="btn btn-danger col-auto">Reset Fields</button>
+          <button type="submit" class="btn btn-primary col-auto" @click="createShop()">Submit</button>
       </div>
     </form>
   </div>
@@ -108,13 +133,13 @@
 
 <script>
 import db from "../firebase.js";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { EmailAuthCredential, getAuth } from "firebase/auth";
+import { useUserStore } from "../stores/users";
 
-const shop = collection(db.db, "shop");
 const auth = getAuth();
 const user = auth.currentUser;
-console.log(user); // not sure why the user is not recorded, this logs null
+console.log(user);
 
 export default {
   name: "CreateShop",
@@ -124,66 +149,84 @@ export default {
   data() {
     return {
       shopname: "",
-      /* ownername: user.name,
-			owneremail: user.email, */
       shoplocation: "",
       services: [],
       shopnameAvail: 1,
+      errors: [],
+      shopimg: "",
+      owneremail: useUserStore.email,
     };
   },
   methods: {
     checkAvail() {
-      let check = 0;
-      check = query(shop, where("shopName", "==", this.shopname));
-      console.log(check);
-      if (check != 0) {
-        this.shopnameAvail = 3;
+      console.log(this.shopname)
+      var docRef = doc(db.db, "shop", this.shopname);
+      var docSnap = getDoc(docRef);
+
+      if (docSnap.exists==false) {
+        console.log("No matching document.");
+        this.shopnameAvail = 3; // Shop name will be verified
+        if (this.errors.indexOf("The selected shop name has been taken. Please select another name for your shop.")!=-1) {
+          let i = this.errors.indexOf("The selected shop name has been taken. Please select another name for your shop.");
+          this.errors.splice(i, 1);
+        }
       } else {
-        this.shopnameAvail = 2;
+        console.log("Document data:", docSnap.data);
+        this.shopnameAvail = 2; // Error - shop name has been taken
+        if (this.errors.indexOf("The selected shop name has been taken. Please select another name for your shop.") == -1) {
+          this.errors.push("The selected shop name has been taken. Please select another name for your shop.");
+        }
       }
     },
     addService() {
       this.services.push({
         name: "",
         price: "",
+        duration: 0,
       });
+      if (
+        this.errors.indexOf(
+          "Your shop has to provide at least 1 hairdressing service!"
+        ) != -1
+      ) {
+        let i = this.errors.indexOf(
+          "Your shop has to provide at least 1 hairdressing service!"
+        );
+        this.errors.splice(i, 1);
+      }
     },
     removeService(index) {
       if (this.services.length <= 1) {
-        alert("You have to provide at least 1 hairdressing service!");
+        this.errors.push(
+          "Your shop has to provide at least 1 hairdressing service!"
+        );
       }
       this.services.splice(index, 1);
     },
     createShop() {
-      // create json format for services
-      db.collection("shop")
-        .add({
-          location: this.shoplocation,
-          shopName: this.shopname,
-          ownerName: this.ownername,
-          ownerEmail: this.owneremail,
-          services: this.services,
-        })
-        .then(() => {
-          alert("Success! Welcome, " + this.ownername);
-        })
-        .catch((error) => {
-          console.error(error);
+        setDoc(doc(db.db, "shop", this.shopname), {
+            shopName: this.shopname,
+            imgLink: this.shopimg,
+            location: this.shoplocation,
+            ownerEmail: this.owneremail,
+            services: this.services,
         });
+        console.log("Document written with ID: " + docRef.id);
+        alert('Success! Welcome, ' + this.shopname);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  background-color: $pastel-yellow;
-}
-button.custom {
-  background-color: $pastel-yellow;
-  color: black;
-}
-button {
-  border: 0ch;
-}
+  h1 {
+    background-color: $pastel-yellow;
+  }
+  button.custom {
+    background-color: $pastel-yellow;
+    color: black;
+  }
+  button {
+    border: 0ch;
+  }
 </style>

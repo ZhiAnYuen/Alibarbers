@@ -73,7 +73,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     } else {
       alert("Please log in to access this page.");
-      next("/auth");
+      next("/login");
     }
   } else {
     next();
