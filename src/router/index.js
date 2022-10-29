@@ -5,6 +5,7 @@ import LoginSignUpView from "../views/LoginSignUpView.vue";
 import FeedView from "../views/FeedView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CreateShopView from "../views/CreateShopView.vue";
+import HairdresserFeedBody from "../views/HairdresserFeedView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +52,14 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
+    {
+      path: "/hairdresserfeed",
+      name: "hairdresserfeed",
+      component: HairdresserFeedBody,
+      meta: {
+        requiresAuth: true,
+      },
+    },
   ],
 });
 
@@ -73,7 +82,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     } else {
       alert("Please log in to access this page.");
-      next("/auth");
+      next("/login");
     }
   } else {
     next();
