@@ -3,6 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import CalendarView from "../views/CalendarView.vue";
 import LoginSignUpView from "../views/LoginSignUpView.vue";
 import FeedView from "../views/FeedView.vue";
+import ShopView from "../views/ShopView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CreateShopView from "../views/CreateShopView.vue";
 import HairdresserFeedBody from "../views/HairdresserFeedView.vue";
@@ -31,6 +32,14 @@ const router = createRouter({
       path: "/feed",
       name: "feed",
       component: FeedView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/shop/:id",
+      name: "shop",
+      component: ShopView,
       meta: {
         requiresAuth: true,
       },

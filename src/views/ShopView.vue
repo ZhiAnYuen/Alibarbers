@@ -1,15 +1,15 @@
 <template>
   <main class="d-flex">
-    <FeedBody />
+    <ShopBody />
   </main>
 </template>
 
 <script>
-import FeedBody from "../components/FeedBody.vue";
+import ShopBody from "../components/ShopBody.vue";
 
 export default {
   components: {
-    FeedBody,
+    ShopBody,
   },
 };
 </script>
@@ -17,6 +17,7 @@ export default {
 <style lang="scss" scoped>
 main {
   background-color: $pastel-yellow;
-  height: 40vh;
+  background: linear-gradient(0deg, white 0%, $pastel-yellow 100%);
+  height: 35vh;
 }
 </style>

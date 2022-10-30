@@ -8,14 +8,14 @@
         class="navbar-toggler"
         type="button"
         data-bs-toggle="collapse"
-        data-bs-target="#navbarText"
-        aria-controls="navbarText"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse p-3" id="navbarText">
+      <div class="collapse navbar-collapse p-3" id="navbarNav">
         <ul
           v-if="!isLoggedIn($route.name)"
           class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
@@ -39,7 +39,7 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="/appointments" class="nav-link">
+            <router-link to="#" class="nav-link">
               <span class="fw-semibold text-dark"> My Appointments </span>
             </router-link>
           </li>
@@ -62,7 +62,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useUserStore } from "../stores/users.js";
 
 export default {
-  name: "HomeHeader",
+  name: "NavBar",
   methods: {
     signOut() {
       signOut(getAuth()).then(() => {
