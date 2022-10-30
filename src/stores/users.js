@@ -6,14 +6,21 @@ export const useUserStore = defineStore("user", {
     email: "",
     isLoggedIn: false,
     userType: "",
+    userID: "",
   }),
   actions: {
-    login(name, email, userType) {
+    login(name, email, userType, userID) {
       this.$patch({
         name: name,
         email: email,
         isLoggedIn: true,
         userType: userType,
+        userID: userID,
+      });
+    },
+    storeUserID(userID) {
+      this.$patch({
+        userID: userID,
       });
     },
     logout() {

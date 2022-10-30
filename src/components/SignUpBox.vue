@@ -114,7 +114,8 @@ export default {
             userType: this.userType,
           });
           alert("Registration was Successful!");
-          this.$router.push("/feed");
+          if (this.userType == "Customer") this.$router.push("/feed");
+          if (this.userType == "Hairdresser") this.$router.push("/createshop");
         })
         .catch((error) => {
           console.log(error.code + ": " + error.message);
