@@ -4,7 +4,11 @@
       <div class="col-md-6 mb-3">
         <h1 class="mt-5">{{ shopDetails["shopName"] }}</h1>
         <p class="mt-4 fs-4 fw-normal">Rating: {{ shopDetails["rating"] }}</p>
-        <p class="mt-4 fs-3 fw-normal">1 Jln Jamal, Singapore 457591</p>
+        <p class="mt-4 fs-3 fw-normal">{{ shopDetails["location"] }}</p>
+        <p class="mt-4 fs-5 fw-light">
+          Operating hours: {{ shopDetails["open"] }} to
+          {{ shopDetails["close"] }}
+        </p>
       </div>
       <div class="col-md-6 d-flex justify-content-end align-items-center">
         <img :src="shopDetails['imgLink']" id="shopImg" class="img-fluid" />
@@ -24,21 +28,25 @@
               </p>
             </div>
           </div>
-          <!-- <div>
-            <p>
-              {{ service["name"] }}
-              <span
-                >${{ service["price"] }}, {{ service["duration"] }} mins</span
-              >
+        </div>
+      </div>
+      <div class="col-md-6">
+        <h3 class="text-center mb-4">Hairdressers</h3>
+        <div
+          v-for="(hairdresser, index) in shopDetails['hairdressers']"
+          :key="index"
+        >
+          <div class="row text-center">
+            <p class="fs-5 fw-light">
+              {{ hairdresser["name"] }} - {{ hairdresser["role"] }}
             </p>
-          </div> -->
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- <div>Shop {{ $route.params.id }}</div> -->
-    <!-- <button @click="test">test button</button> -->
-    <div></div>
+    <div class="position-fixed bottom-0 end-0 m-5">
+      <button class="hover-button">Book</button>
+    </div>
   </div>
 </template>
 

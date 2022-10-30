@@ -21,11 +21,11 @@
         />
       </div>
     </div>
-    <!-- <button @click="test">test</button> -->
+    <button @click="test">test</button>
   </div>
 </template>
 
-<script>
+<script lang="js">
 import { computed } from "vue";
 import { useUserStore } from "../stores/users.js";
 import { collection, getDocs } from "firebase/firestore";
@@ -68,8 +68,8 @@ export default {
       this.isLoading = false;
     },
     test() {
-      console.log(this.feeds.length);
+      console.log(this.feeds);
     },
-  },
+  }
 };
 </script>
