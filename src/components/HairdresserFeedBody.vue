@@ -3,7 +3,7 @@
 	<p class="text-start ms-5 fw-semibold">Hello {{ name }},</p>
 	<h1 class="text-start ms-5 fw-semibold">Welcome to your Insights Dashboard.</h1>
 	
-	<div class="card ms-5 m-4 border border-dark rounded-4 text-center">
+	<div class="card ms-5 m-4 border border-dark rounded-4 text-center col-md-10 col-sm-10">
 		<div class="row">
 			<div class="col-lg-4 col-md-5 col-sm-12 my-2">
 				<h5 class="fw-semibold">Focused View</h5>
@@ -33,7 +33,7 @@
 						</div>
 						<div class="col">
 							<img src="../assets/revenue.png" class="img-fluid custom-size mt-3"/>
-						</div>
+						</div> 
 					</div>
 		</div>
 		<!-- bookings -->
@@ -56,6 +56,7 @@
 						<div class="col">
 							<img src="../assets/rating.png" class="img-fluid custom-size mt-3"/>
 						</div>
+						<div id="svg-ytd-rating"></div>
 					</div>
 		</div>
 	</div>
@@ -105,8 +106,6 @@
 					{ date: '3-10-22', rating: 3.5 },
 					{ date: '6-10-22', rating: 4 },
 					{ date: '11-10-22', rating: 4.5 },
-					{ date: '14-10-22', rating: 1 },
-					{ date: '15-10-22', rating: 2.5 },
 				],
 				showAll: true,
 				showRevenueStats: false,
@@ -122,6 +121,21 @@
 			querySnapshot.forEach((doc) => {
 				console.log(doc.id, " => ", doc.data());
 			});
+			var svg_ytd_revenue = d3.select("#svg-ytd-rating")
+				.append("svg")
+				.attr("width", 600)
+				.attr("height", 400); 
+
+			svg_ytd_revenue.selectAll("rect")
+				.data(this.ratings)
+				.enter().append("rect")
+					.attr("class","bar")
+					.attr("height", "250")
+					.attr("width","40")
+          .attr("x", function(d,i) {return (i*60)+25;} )
+					.attr("y","15")
+          //.attr("y", function(d,i) {return 400 - (d * 10)});
+
 		},
 		methods: {
 			getRatings() {
@@ -173,5 +187,13 @@
 .custom-size {
 	height: 35px;
 	width: auto;
+}
+.bar {
+	fill: blue;
+	stroke: black;
+	stroke-width: 3;
+}
+.bar:hover {
+	fill:red; 
 }
 </style>
