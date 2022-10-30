@@ -159,8 +159,10 @@ export default {
   },
   methods: {
     checkAvail() {
-      console.log(this.shopname)
-      var docRef = doc(db.db, "shop", this.shopname);
+      let name = this.shopname.replace(" ", "")
+
+      var docRef = doc(db.db, "shop", name);
+      console.log(docRef);
       var docSnap = getDoc(docRef);
 
       if (docSnap.exists==false) {
