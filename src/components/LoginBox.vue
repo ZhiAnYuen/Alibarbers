@@ -70,7 +70,7 @@ export default {
           let userType = docSnap.data().userType;
 
           const user = useUserStore();
-          user.login(name, this.loginEmail, userType);
+          user.login(name, this.loginEmail, userType, cred.user.uid);
 
           console.log("Login successful");
           this.$router.push("/feed");

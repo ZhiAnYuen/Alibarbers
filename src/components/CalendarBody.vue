@@ -3,7 +3,10 @@ import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 
 import db from "../firebase.js";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+
+import { computed } from "vue";
+import { useUserStore } from "../stores/users.js";
 
 const CLIENT_ID =
   "357278563537-alpo25u2cdl470r9p00siu1ub3rhoc6t.apps.googleusercontent.com";
@@ -12,6 +15,21 @@ const DISCOVERY_DOC = [
   "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
 ];
 const SCOPES = "https://www.googleapis.com/auth/calendar";
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 export default {
   name: "CalendarBody",
@@ -24,12 +42,11 @@ export default {
       services: undefined,
       open: undefined,
       close: undefined,
-      appointments: undefined,
+      appointments: [],
       draggable: {
         id: 1,
         title: "My Appointment",
         duration: 60,
-        price: 0,
       },
       latestEvent: undefined,
       selectedHairdressers: [],
@@ -43,27 +60,47 @@ export default {
       addedToGoogleCalendar: false,
     };
   },
+  setup() {
+    const user = useUserStore();
+    return {
+      username: computed(() => user.name),
+      userEmail: computed(() => user.email),
+      isLoggedIn: computed(() => user.isLoggedIn),
+      userType: computed(() => user.userType),
+    };
+  },
   methods: {
     async retrieveData() {
       this.retrievingData = true;
 
-      const q = query(
+      const qShop = query(
         collection(db.db, "shop"),
         where("shopName", "==", "Test Shop")
       );
 
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
+      const shopSnapshot = await getDocs(qShop);
+      shopSnapshot.forEach((doc) => {
         var shopData = doc.data();
         this.shopData = shopData;
         this.hairdressers = shopData.hairdressers;
         this.services = shopData.services;
         this.open = shopData.open;
         this.close = shopData.close;
-        this.appointments = shopData.appointments;
       });
+
+      const qAppointments = query(
+        collection(db.db, "appointments"),
+        where("shopName", "==", "Test Shop")
+      );
+
+      const appSnapshot = await getDocs(qAppointments);
+      appSnapshot.forEach((doc) => {
+        this.appointments.push(doc.data());
+      });
+
       this.retrievingData = false;
+      console.log(this.shopData);
+      console.log(this.appointments);
     },
     onEventDragStart(e, draggable) {
       e.dataTransfer.setData("event", JSON.stringify(draggable));
@@ -101,14 +138,8 @@ export default {
     step3To4() {
       this.showDraggable = true;
       if (this.latestEvent) {
+        console.log(this.latestEvent);
         this.step += 1;
-        this.appointments.push({
-          start: this.latestEvent.start,
-          end: this.latestEvent.end,
-          split: this.latestEvent.split,
-          class: this.hairdressers[this.latestEvent.split - 1].class,
-        });
-        console.log(this.appointments);
       }
     },
     addToGoogleCal() {
@@ -176,6 +207,44 @@ export default {
     eventInfo(event) {
       this.latestEvent = event;
     },
+    async addAppointmentToDB() {
+      function convertToDateString(dateTime) {
+        var dateObj = new Date(dateTime);
+        return (
+          dateObj.getFullYear() +
+          "-" +
+          String(dateObj.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(dateObj.getDate()).padStart(2, "0") +
+          " " +
+          String(dateObj.getHours()).padStart(2, "0") +
+          ":" +
+          String(dateObj.getMinutes()).padStart(2, "0")
+        );
+      }
+
+      this.draggable.start = convertToDateString(this.latestEvent.start);
+      this.draggable.end = convertToDateString(this.latestEvent.end);
+      this.draggable.split = this.latestEvent.split;
+      this.draggable.class =
+        this.hairdressers[this.latestEvent.split - 1].class;
+      this.draggable.selectedServices = this.selectedServices;
+      this.draggable.selectedHairdresser =
+        this.hairdressers[this.latestEvent.split - 1];
+      this.draggable.location = this.shopData.location;
+      this.draggable.email = this.userEmail;
+      this.draggable.imgLink = this.shopData.imgLink;
+      delete this.draggable.title;
+      delete this.draggable.id;
+      this.draggable.shopName = this.shopData.shopName;
+      console.log(this.draggable);
+
+      const response = await addDoc(
+        collection(db.db, "appointments"),
+        this.draggable
+      );
+      console.log(response.id);
+    },
   },
   components: {
     VueCal,
@@ -197,17 +266,24 @@ export default {
     this.retrieveData();
   },
   computed: {
-    computedEventStart() {
-      var startDate = new Date(this.latestEvent.start);
-      return startDate.toLocaleTimeString();
-    },
-    computedEventEnd() {
-      var endDate = new Date(this.latestEvent.end);
-      return endDate.toLocaleTimeString();
-    },
     computedEventDate() {
       var startDate = new Date(this.latestEvent.start);
-      return startDate.toLocaleDateString();
+      var endDate = new Date(this.latestEvent.end);
+      return (
+        String(startDate.getDate()).padStart(2, "0") +
+        " " +
+        months[startDate.getMonth()] +
+        " " +
+        startDate.getFullYear() +
+        ", " +
+        String(startDate.getHours()).padStart(2, "0") +
+        ":" +
+        String(startDate.getMinutes()).padStart(2, "0") +
+        " - " +
+        String(endDate.getHours()).padStart(2, "0") +
+        ":" +
+        String(endDate.getMinutes()).padStart(2, "0")
+      );
     },
     selectedHairdresser() {
       var result = this.selectedHairdressers.filter(
@@ -243,18 +319,18 @@ export default {
           </div>
           <div
             v-for="person in hairdressers"
-            :key="person.label"
+            :key="person.id"
             class="border border-dark rounded-4 p-2 d-flex flex-row my-3"
           >
             <input
               type="checkbox"
               :value="person"
-              :id="person.label"
+              :id="person.id"
               class="m-3"
               v-model="selectedHairdressers"
             />
-            <label :for="person.label"
-              ><strong>{{ person.label }}</strong>
+            <label :for="person.id"
+              ><strong>{{ person.name }}</strong>
               <span class="d-block">{{ person.role }}</span>
             </label>
           </div>
@@ -360,8 +436,8 @@ export default {
             <VueCal
               class="h-50 m-5"
               :disable-views="['years', 'year', 'month']"
-              :time-from="10 * 60"
-              :time-to="19 * 60"
+              :time-from="open"
+              :time-to="close"
               :time-step="30"
               :events="appointments"
               :snapToTime="15"
@@ -395,10 +471,7 @@ export default {
             </div>
             <div class="mb-3">
               <span class="field-title">Date & Time</span><br />
-              <span class="field-details"
-                >{{ computedEventDate }}, {{ computedEventStart }} -
-                {{ computedEventEnd }}</span
-              >
+              <span class="field-details">{{ computedEventDate }}</span>
             </div>
             <div class="mb-3">
               <span class="field-title">Hairdresser</span><br />
@@ -466,6 +539,7 @@ export default {
               <button
                 type="button"
                 class="hover-button button mt-4 mb-4 ms-auto"
+                @click="addAppointmentToDB()"
               >
                 Confirm
               </button>

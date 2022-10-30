@@ -1,7 +1,6 @@
 <template>
   <h1 class="text-center p-5">Welcome! Set up your shop here.</h1>
   <div class="container">
-    
     <div class="alert alert-danger col-12" v-for="error in errors">
       {{ error }}
     </div>
@@ -124,8 +123,16 @@
       </div>
 
       <div class="row my-2 float-end">
-          <button type="reset" class="btn btn-danger col-auto">Reset Fields</button>
-          <button type="submit" class="btn btn-primary col-auto" @click="createShop()">Submit</button>
+        <button type="reset" class="btn btn-danger col-auto">
+          Reset Fields
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary col-auto"
+          @click="createShop()"
+        >
+          Submit
+        </button>
       </div>
     </form>
   </div>
@@ -137,9 +144,9 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { EmailAuthCredential, getAuth } from "firebase/auth";
 import { useUserStore } from "../stores/users";
 
-const auth = getAuth();
-const user = auth.currentUser;
-console.log(user);
+// const auth = getAuth();
+// const user = auth.currentUser;
+// console.log(user);
 
 export default {
   name: "CreateShop",
@@ -159,26 +166,36 @@ export default {
   },
   methods: {
     checkAvail() {
-      let name = this.shopname.replace(" ", "")
-
+      let name = this.shopname.replace(" ", "");
       var docRef = doc(db.db, "shop", name);
-      console.log(docRef);
-      var docSnap = getDoc(docRef);
-
-      if (docSnap.exists==false) {
-        console.log("No matching document.");
-        this.shopnameAvail = 3; // Shop name will be verified
-        if (this.errors.indexOf("The selected shop name has been taken. Please select another name for your shop.")!=-1) {
-          let i = this.errors.indexOf("The selected shop name has been taken. Please select another name for your shop.");
-          this.errors.splice(i, 1);
+      getDoc(docRef).then((docSnap) => {
+        if (!docSnap.exists()) {
+          console.log("No matching document.");
+          this.shopnameAvail = 3; // Shop name will be verified
+          if (
+            this.errors.indexOf(
+              "The selected shop name has been taken. Please select another name for your shop."
+            ) != -1
+          ) {
+            let i = this.errors.indexOf(
+              "The selected shop name has been taken. Please select another name for your shop."
+            );
+            this.errors.splice(i, 1);
+          }
+        } else {
+          console.log("Document data:", docSnap.data);
+          this.shopnameAvail = 2; // Error - shop name has been taken
+          if (
+            this.errors.indexOf(
+              "The selected shop name has been taken. Please select another name for your shop."
+            ) == -1
+          ) {
+            this.errors.push(
+              "The selected shop name has been taken. Please select another name for your shop."
+            );
+          }
         }
-      } else {
-        console.log("Document data:", docSnap.data);
-        this.shopnameAvail = 2; // Error - shop name has been taken
-        if (this.errors.indexOf("The selected shop name has been taken. Please select another name for your shop.") == -1) {
-          this.errors.push("The selected shop name has been taken. Please select another name for your shop.");
-        }
-      }
+      });
     },
     addService() {
       this.services.push({
@@ -206,29 +223,29 @@ export default {
       this.services.splice(index, 1);
     },
     createShop() {
-        setDoc(doc(db.db, "shop", this.shopname), {
-            shopName: this.shopname,
-            imgLink: this.shopimg,
-            location: this.shoplocation,
-            ownerEmail: this.owneremail,
-            services: this.services,
-        });
-        console.log("Document written with ID: " + docRef.id);
-        alert('Success! Welcome, ' + this.shopname);
+      setDoc(doc(db.db, "shop", this.shopname), {
+        shopName: this.shopname,
+        imgLink: this.shopimg,
+        location: this.shoplocation,
+        ownerEmail: this.owneremail,
+        services: this.services,
+      });
+      console.log("Document written with ID: " + docRef.id);
+      alert("Success! Welcome, " + this.shopname);
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-  h1 {
-    background-color: $pastel-yellow;
-  }
-  button.custom {
-    background-color: $pastel-yellow;
-    color: black;
-  }
-  button {
-    border: 0ch;
-  }
+h1 {
+  background-color: $pastel-yellow;
+}
+button.custom {
+  background-color: $pastel-yellow;
+  color: black;
+}
+button {
+  border: 0ch;
+}
 </style>
