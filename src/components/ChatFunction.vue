@@ -1,4 +1,5 @@
 <template>
+    
   <div class="view chat" :bind="username">
     <header>
       <button class="back" @click="Back">Back</button>
@@ -40,7 +41,7 @@
 
 <script>
 import { reactive, onMounted, ref } from "vue";
-import db from "../firebase";
+import db from "../firebase.js";
 
 export default {
   setup() {
