@@ -1,27 +1,17 @@
 <template>
-    
-  <div class="view chat" :bind="username">
+  <div class="view chat">
     <header>
       <button class="back" @click="Back">Back</button>
       <h1>
-        Hairdresser
-        <!--{{state.Hairdresser}} -->
+        Saldresser
       </h1>
     </header>
 
     <section class="chat-box">
-      <div
-        v-for="message in state.messages"
-        :key="message.key"
-        :class="
-          message.username == state.username
-            ? 'message current-user'
-            : 'message'
-        "
-      >
+      <div>
         <div class="message-inner">
-          <div class="username">{{ message.username }}</div>
-          <div class="content">{{ message.content }}</div>
+          <div class="username">{{ this.name }}</div>
+          <div class="content">{{ this.message }}</div>
         </div>
       </div>
     </section>
@@ -30,80 +20,53 @@
       <form @submit.prevent="SendMessage">
         <input
           type="text"
-          v-model="inputMessage"
+          v-model="message"
           placeholder="Write a message..."
         />
-        <input type="submit" value="Send" />
+        <input type="submit" value="Send"/>
       </form>
     </footer>
   </div>
 </template>
 
 <script>
-import { reactive, onMounted, ref } from "vue";
-import db from "../firebase.js";
+import { computed } from "vue";
+//import db from "../firebase.js";
+import { useUserStore } from "../stores/users.js";
+import { getDatabase, ref, set } from "firebase/database";
+import db2 from "../firebase.js";
 
 export default {
   setup() {
-    const username = ref("");
-    const hairdresser = ref("");
-    const inputMessage = ref("");
+    const user = useUserStore();
+    return {
+      name: computed(() => user.name),
+      email: computed(() => user.email),
+      isLoggedIn: computed(() => user.isLoggedIn),
+      userType: computed(() => user.userType),
+    };
+  },
 
-    const state = reactive({
-      username: "",
-      hairdresser: "",
-      messages: [],
-    });
+  data() {
+    return {
+      message: "",
+    };
+  },
 
-    const SendMessage = () => {
-      const messagesRef = db.db.database().ref("messages");
-
-      if (inputMessage.value === "" || inputMessage.value === null) {
+  methods: {
+    SendMessage(name, message) {
+      if (this.message === "" || this.message === null) {
         return;
       }
 
-      const message = {
-        username: state.username,
-        hairdresser: state.hairdresser,
-        content: inputMessage.value,
-      };
-
-      messagesRef.push(message);
-      inputMessage.value = "";
-    };
-
-    onMounted(() => {
-      const messagesRef = db.db.database().ref("messages");
-
-      messagesRef.on("value", (snapshot) => {
-        const data = snapshot.val();
-        let messages = [];
-
-        Object.keys(data).forEach((key) => {
-          messages.push({
-            id: key,
-            username: data[key].username,
-            hairdresser: data[key].hairdresser,
-            content: data[key].content,
-          });
-        });
-
-        state.messages = messages;
+      //const db = getDatabase();
+      set(ref(db2, 'users/' + 10), {
+        username: name,
+        hairdresser: 'Saldresser',
+        content: message
       });
-    });
 
-    /*back(() => {
-          route to prev page
-      });*/
-
-    return {
-      username,
-      hairdresser,
-      state,
-      inputMessage,
-      SendMessage,
-      //back
-    };
+    },
   },
 };
 </script>
