@@ -75,6 +75,70 @@
         </div>
       </div>
 
+      <!-- Opening hours -->
+      <div class="row">
+        <label for="hours" class="my-3 form-label">Opening Hours</label>
+      </div>
+      <div class="row mb-8">
+        <div class="col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            id="hours"
+            v-model="opening"
+            placeholder="E.g. 0800"
+          />
+        </div>
+        <div class="col-lg-3">
+          <input
+            type="text"
+            class="form-control"
+            id="hours"
+            v-model="closing"
+            placeholder="E.g. 1800"
+          />
+        </div>
+      </div>
+
+      <!-- Add & remove available hairdressers -->
+      <div class="row">
+        <div class="my-3 col-lg-12">Add One or More Hairdressers</div>
+      </div>
+      <div class="form-group row mb-2" v-for="(hairdresser, index) in hairdressers">
+        <div class="col-md-3">
+          <input
+            type="text"
+            :name="'hairdresser[' + index + '][name]'"
+            class="form-control"
+            placeholder="E.g. Tom Chan"
+          />
+        </div>
+        <div class="col-md-3">
+          <input
+            type="text"
+            :name="'hairdresser[' + index + '][role]'"
+            class="form-control"
+            placeholder="E.g. Men's Haircut Specialist"
+          />
+        </div>
+        <div class="col-md-3">
+          <button
+            type="button"
+            @click="removeHairdresser(index)"
+            class="btn btn-danger"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-3">
+          <button type="button" @click="addHairdresser()" class="btn custom">
+            Add Hairdresser
+          </button>
+        </div>
+      </div>
+
       <!-- Add & remove available services -->
       <div class="row">
         <div class="my-3 col-lg-12">Add One or More Services</div>
@@ -122,6 +186,7 @@
         </div>
       </div>
 
+      <!-- Form submission -->
       <div class="row my-2 float-end">
         <button type="reset" class="btn btn-danger col-auto">
           Reset Fields
@@ -140,7 +205,7 @@
 
 <script>
 import db from "../firebase.js";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, addDoc, getDoc } from "firebase/firestore";
 import { EmailAuthCredential, getAuth } from "firebase/auth";
 import { useUserStore } from "../stores/users";
 
@@ -152,16 +217,20 @@ export default {
   name: "CreateShop",
   created() {
     this.addService();
+    this.addHairdresser();
   },
   data() {
     return {
       shopname: "",
       shoplocation: "",
       services: [],
+      hairdressers: [],
       shopnameAvail: 1,
       errors: [],
       shopimg: "",
       owneremail: useUserStore.email,
+      opening: "",
+      closing: "",
     };
   },
   methods: {
@@ -222,15 +291,54 @@ export default {
       }
       this.services.splice(index, 1);
     },
-    createShop() {
-      setDoc(doc(db.db, "shop", this.shopname), {
+    addHairdresser() {
+      this.hairdressers.push({
+        name: "",
+        role: "",
+      });
+      if (
+        this.errors.indexOf(
+          "Your shop has to have at least 1 hairdresser!"
+        ) != -1
+      ) {
+        let i = this.errors.indexOf(
+          "Your shop has to have at least 1 hairdresser!"
+        );
+        this.errors.splice(i, 1);
+      }
+    },
+    removeHairdresser(index) {
+      if (this.hairdressers.length <= 1) {
+        this.errors.push(
+          "Your shop has to have at least 1 hairdresser!"
+        );
+      }
+      this.hairdressers.splice(index, 1);
+    },
+    async createShop() {
+      let final_hairdressers = [];
+      for (i=0; i < hairdressers.length; i++) {
+        temp = {};
+        temp['class'] = hairdressers[i]['name'].replace(" ", "");
+        temp['id'] = i+1;
+        temp['role'] = hairdressers[i]['role'];
+        temp['name'] = hairdressers[i]['name'];
+        temp['label'] = hairdressers[i]['name'].replace(" ", "");
+        final_hairdressers.push(temp);
+      }
+      console.log(final_hairdressers);
+      
+      let docRef2 = await addDoc(collection(db.db, "shop"), {
         shopName: this.shopname,
         imgLink: this.shopimg,
         location: this.shoplocation,
         ownerEmail: this.owneremail,
         services: this.services,
+        open: this.opening,
+        close: this.closing,
+        hairdressers: final_hairdressers,
       });
-      console.log("Document written with ID: " + docRef.id);
+      console.log("Document written with ID: " + docRef2.id);
       alert("Success! Welcome, " + this.shopname);
     },
   },
