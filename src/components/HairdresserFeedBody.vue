@@ -1,127 +1,125 @@
 <template>
-  <br />
-  <p class="text-start ms-5 fw-semibold">Hello {{ name }},</p>
-  <h1 class="text-start ms-5 fw-semibold">
-    Welcome to your Insights Dashboard.
-  </h1>
-
-  <div class="row justify-content-center">
-    <div class="card border border-dark rounded-4 text-center col-11 my-3">
-      <div class="row">
-        <div class="col-lg-4 col-md-5 col-sm-12 my-2">
-          <h5 class="fw-semibold">Focused View</h5>
-          <button
-            type="button"
-            class="btn btn-outline-secondary m-1"
-            @click="reset()"
-          >
-            Reset
-          </button>
-        </div>
-        <div class="col-lg-4 col-md-5 col-sm-12 my-2">
-          <h5 class="fw-semibold">Analytics Type</h5>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-custom m-1"
-            @click="revenue()"
-          >
-            Revenue
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-custom m-1"
-            @click="bookings()"
-          >
-            Bookings
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-custom m-1"
-            @click="rating()"
-          >
-            Ratings
-          </button>
-        </div>
-        <div class="col-lg-4 col-md-5 col-sm-12 my-2">
-          <h5 class="fw-semibold">View Option</h5>
-          <!-- <button type="button" class="btn btn-outline-secondary btn-custom m-1">Monthly</button> -->
-          <button
-            type="button"
-            class="btn btn-outline-secondary btn-custom m-1"
-            @click="changeView()"
-          >
-            Weekly
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row justify-content-center mx-3">
-    <!-- default view -->
-    <div class="row" v-if="timeInterval == 'YTD' && showAll == true">
-      <!-- revenue -->
-      <div
-        class="card col-lg-3 col-md-6 col-sm-12 ms-5 m-4 border border-dark rounded-4 text-center"
-      >
-        <div class="row justify-content-evenly">
-          <div class="col mt-2">
-            <h5 class="fw-semibold">Y.t.d<br />Revenue</h5>
+  <div class="container" width="95%">
+    <br/>
+    <p class="text-start fw-semibold">Hello {{ name }},</p>
+    <h1 class="text-start fw-semibold">
+      Welcome to your Insights Dashboard.
+    </h1>
+    
+    <!-- Dashboard -->
+    <div class="row justify-content-center">
+      <div class="card border border-dark rounded-4 text-center my-3">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12 my-3">
+            <h5 class="fw-semibold">Focused View</h5>
+            <button
+              type="button"
+              class="btn btn-outline-secondary m-1"
+              @click="reset()"
+            >
+              Reset
+            </button>
           </div>
-          <div class="col">
-            <img
-              src="../assets/revenue.png"
-              class="img-fluid custom-size mt-3"
-            />
+          <div class="col-lg-4 col-md-5 col-sm-12 my-3">
+            <h5 class="fw-semibold">Analytics Type</h5>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-custom m-1"
+              @click="revenue()"
+            >
+              Revenue
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-custom m-1"
+              @click="bookings()"
+            >
+              Bookings
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-custom m-1"
+              @click="rating()"
+            >
+              Ratings
+            </button>
           </div>
-        </div>
-      </div>
-      <!-- bookings -->
-      <div
-        class="card col-lg-3 col-md-6 col-sm-12 ms-5 m-4 border border-dark rounded-4 text-center"
-      >
-        <div class="row justify-content-evenly">
-          <div class="col mt-2">
-            <h5 class="fw-semibold">Y.t.d<br />Bookings</h5>
+          <div class="col-lg-4 col-md-6 col-sm-12 my-3">
+            <h5 class="fw-semibold">View Option</h5>
+            <!-- <button type="button" class="btn btn-outline-secondary btn-custom m-1">Monthly</button> -->
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-custom m-1"
+              @click="changeView()"
+            >
+              Weekly
+            </button>
           </div>
-          <div class="col">
-            <img
-              src="../assets/booking.png"
-              class="img-fluid custom-size mt-3"
-            />
-          </div>
-        </div>
-      </div>
-      <!-- ratings -->
-      <div
-        class="card col-lg-3 col-md-6 col-sm-12 ms-5 m-4 border border-dark rounded-4 text-center"
-      >
-        <div class="row justify-content">
-          <div class="col mt-2">
-            <h5 class="fw-semibold">Y.t.d<br />Ratings</h5>
-          </div>
-          <div class="col">
-            <img
-              src="../assets/rating.png"
-              class="img-fluid custom-size mt-3"
-            />
-          </div>
-          <div id="svg-ytd-rating"></div>
         </div>
       </div>
     </div>
 
-    <!-- revenue stats only -->
-    <div v-if="showRevenueStats">revenue</div>
+    <!-- Default View -->
+    <div class="row g-3" v-if="timeInterval == 'YTD' && showAll == true">
+        <!-- Revenue -->
+        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
+          <div class="row justify-content-evenly">
+            <div class="col mt-2">
+              <h5 class="fw-semibold">Y.t.d<br/>Revenue</h5>
+            </div>
+            <div class="col">
+              <img
+                src="../assets/revenue.png"
+                class="img-fluid custom-size mt-3"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- bookings -->
+        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
+          <div class="row justify-content-evenly">
+            <div class="col mt-2">
+              <h5 class="fw-semibold">Y.t.d<br/>Bookings</h5>
+            </div>
+            <div class="col">
+              <img
+                src="../assets/booking.png"
+                class="img-fluid custom-size mt-3"
+              />
+            </div>
+          </div>
+        </div>
+        <!-- ratings -->
+        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
+          <div class="row justify-content">
+            <div class="col mt-2">
+              <h5 class="fw-semibold">Y.t.d<br/>Ratings</h5>
+            </div>
+            <div class="col">
+              <img
+                src="../assets/rating.png"
+                class="img-fluid custom-size mt-3"
+              />
+            </div>
+            <div id="svg-ytd-rating"></div>
+          </div>
+        </div>
+      </div>
 
-    <!-- rating stats only -->
-    <div v-if="showRatingStats">rating</div>
+      <!-- revenue stats only -->
+      <div v-if="showRevenueStats">revenue</div>
 
-    <!-- booking stats only -->
-    <div v-if="showBookingStats">booking</div>
+      <!-- rating stats only -->
+      <div v-if="showRatingStats">rating</div>
 
-    <p class="text-center">{{ email }}</p>
-  </div>
+      <!-- booking stats only -->
+      <div v-if="showBookingStats">booking</div>
+
+      <p class="text-center">{{ email }}</p>
+    </div>
+
+
+
 </template>
 
 <script>
@@ -232,7 +230,7 @@ export default {
   box-shadow: lightslategray;
 }
 .custom-size {
-  height: 35px;
+  height: 30px;
   width: auto;
 }
 .bar {
@@ -242,5 +240,9 @@ export default {
 }
 .bar:hover {
   fill: red;
+}
+.card{
+    padding-left: 5px;
+    padding-right: 5px;
 }
 </style>

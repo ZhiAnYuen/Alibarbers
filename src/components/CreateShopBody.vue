@@ -5,7 +5,7 @@
     <form>
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
-          <h3>Basic Information</h3>
+          <h4>Basic Information</h4>
           <small class="text-muted">Provide some information about your shop.</small>
         </div>
         <div class="col-lg-8">
@@ -105,7 +105,7 @@
       <!-- Add & remove available hairdressers -->
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
-          <h3>Add One or More Hairdressers</h3>
+          <h4>Add One or More Hairdressers</h4>
           <small class="text-muted">Provide some information about you and/or your staff.</small>
         </div>
         <div class="col-lg-8 mb-2">
@@ -151,7 +151,7 @@
       <!-- Add & remove available services -->
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
-          <h3>Add One or More Services</h3>
+          <h4>Add One or More Services</h4>
           <small class="text-muted">Provide some information about the hairdressing services your shop offers.</small>
         </div>
         <div class="col-lg-8">
