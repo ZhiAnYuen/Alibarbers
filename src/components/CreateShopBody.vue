@@ -205,7 +205,7 @@
 
 <script>
 import db from "../firebase.js";
-import { doc, addDoc, getDoc } from "firebase/firestore";
+import { doc, addDoc, getDoc, collection } from "firebase/firestore";
 import { EmailAuthCredential, getAuth } from "firebase/auth";
 import { useUserStore } from "../stores/users";
 
@@ -316,23 +316,24 @@ export default {
       this.hairdressers.splice(index, 1);
     },
     async createShop() {
+      event.preventDefault();
       let final_hairdressers = [];
-      for (i=0; i < hairdressers.length; i++) {
-        temp = {};
-        temp['class'] = hairdressers[i]['name'].replace(" ", "");
+      for (var i=0; i < this.hairdressers.length; i++) {
+        let temp = {};
+        temp['class'] = this.hairdressers[i]['name'].replace(" ", "");
         temp['id'] = i+1;
-        temp['role'] = hairdressers[i]['role'];
-        temp['name'] = hairdressers[i]['name'];
-        temp['label'] = hairdressers[i]['name'].replace(" ", "");
+        temp['role'] = this.hairdressers[i]['role'];
+        temp['name'] = this.hairdressers[i]['name'];
+        temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
         final_hairdressers.push(temp);
       }
       console.log(final_hairdressers);
-      
-      let docRef2 = await addDoc(collection(db.db, "shop"), {
+
+      const docRef2 = await addDoc(collection(db.db, "shop"), {
         shopName: this.shopname,
         imgLink: this.shopimg,
         location: this.shoplocation,
-        ownerEmail: this.owneremail,
+        //ownerEmail: this.owneremail,
         services: this.services,
         open: this.opening,
         close: this.closing,
