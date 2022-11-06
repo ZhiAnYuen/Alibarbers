@@ -2,13 +2,12 @@
   <div class="view chat">
     <header>
       <button class="back" @click="Back">Back</button>
-      <h1>
-        Saldresser
-      </h1>
+      <h1>Saldresser</h1>
     </header>
 
     <section class="chat-box">
-      <div>
+      <div class="message current-user"> 
+        <!--need to check here if user is sent by cust or hairdresser-->
         <div class="message-inner">
           <div class="username">{{ this.name }}</div>
           <div class="content">{{ this.message }}</div>
@@ -18,12 +17,8 @@
 
     <footer>
       <form @submit.prevent="SendMessage">
-        <input
-          type="text"
-          v-model="message"
-          placeholder="Write a message..."
-        />
-        <input type="submit" value="Send"/>
+        <input type="text" v-model="message" placeholder="Write a message..." />
+        <input type="submit" value="Send" />
       </form>
     </footer>
   </div>
@@ -33,7 +28,7 @@
 import { computed } from "vue";
 //import db from "../firebase.js";
 import { useUserStore } from "../stores/users.js";
-import { getDatabase, ref, set } from "firebase/database";
+import { ref, update, push, child } from "firebase/database";
 import db2 from "../firebase.js";
 
 export default {
@@ -50,22 +45,33 @@ export default {
   data() {
     return {
       message: "",
+      messageData: [],
+      count: 0,
+      
+      
     };
   },
 
   methods: {
-    SendMessage(name, message) {
+    SendMessage() {
       if (this.message === "" || this.message === null) {
         return;
       }
 
-      //const db = getDatabase();
-      set(ref(db2, 'users/' + 10), {
-        username: name,
-        hairdresser: 'Saldresser',
-        content: message
-      });
+      const messageData = {
+        username: this.name,
+        hairdresser: "Saldresser",
+        content: this.message,
+      };
 
+      // Get a key for a new Post.
+      const newMessagesKey = push(child(ref(db2.db2), "messages")).key;
+
+      // Write the new post's data simultaneously in the posts list and the user's post list.
+      const updates = {};
+      updates["/messages/" + newMessagesKey] = messageData;
+      this.message = "";
+      return update(ref(db2.db2), updates);
     },
   },
 };
@@ -108,7 +114,7 @@ export default {
         text-align: right;
       }
       h1 {
-        color: #fff;
+        color: #333;
       }
     }
     .chat-box {
@@ -144,11 +150,12 @@ export default {
           margin-top: 30px;
           justify-content: flex-end;
           text-align: right;
+
           .message-inner {
             max-width: 75%;
             .content {
-              color: #fff;
-              font-weight: 600;
+              color: #333;
+              font-size: 18px;
               background-color: #ffd24c;
             }
           }
