@@ -71,7 +71,6 @@ export default {
 
           const user = useUserStore();
           user.login(name, this.loginEmail, userType);
-
           console.log("Login successful");
           this.$router.push("/feed");
         })
@@ -90,6 +89,7 @@ export default {
               alert("Incorrect password. Try again!");
               break;
             default:
+              console.log(error);
               console.log("Email or password was incorrect");
               alert("Email or password was incorrect. Try again!");
               break;
