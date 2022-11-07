@@ -10,7 +10,7 @@
     <div class="row justify-content-center">
       <div class="card border border-dark rounded-4 text-center my-3">
         <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-12 my-3">
+          <div class="col-md-6 col-sm-12 my-3">
             <h5 class="fw-semibold">Focused View</h5>
             <button
               type="button"
@@ -20,7 +20,7 @@
               Reset
             </button>
           </div>
-          <div class="col-lg-4 col-md-5 col-sm-12 my-3">
+          <div class="col-md-5 col-sm-12 my-3">
             <h5 class="fw-semibold">Analytics Type</h5>
             <button
               type="button"
@@ -42,17 +42,6 @@
               @click="rating()"
             >
               Ratings
-            </button>
-          </div>
-          <div class="col-lg-4 col-md-6 col-sm-12 my-3">
-            <h5 class="fw-semibold">View Option</h5>
-            <!-- <button type="button" class="btn btn-outline-secondary btn-custom m-1">Monthly</button> -->
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-custom m-1"
-              @click="changeView()"
-            >
-              Weekly
             </button>
           </div>
         </div>
@@ -153,12 +142,11 @@ export default {
       showRevenueStats: false,
       showRatingStats: false,
       showBookingStats: false,
-      timeInterval: "YTD", // other options: week, month
     };
   },
   async mounted() {
     var shopsRef = collection(db.db, "shop");
-    var q = query(shopsRef, where("shopName", "==", "Test Shop"));
+    var q = query(shopsRef, where("shopName", "==", "Test Shop")); // to-do: integrate with current user
     var querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       console.log(doc.id, " => ", doc.data());
@@ -193,11 +181,7 @@ export default {
         });
       });
     },
-    changeView() {
-      this.timeInterval = "weekly";
-    },
     reset() {
-      this.timeInterval = "YTD";
       this.showRevenueStats = false;
       this.showRatingStats = false;
       this.showBookingStats = false;

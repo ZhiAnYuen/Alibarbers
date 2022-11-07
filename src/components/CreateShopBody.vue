@@ -117,6 +117,7 @@
                 v-model="hairdresser.name"
                 class="form-control"
                 placeholder="E.g. Tom Chan"
+                required
               />
             </div>
             <div class="col-lg-5">
@@ -126,6 +127,7 @@
                 v-model="hairdresser.role"
                 class="form-control"
                 placeholder="E.g. Men's Haircut Specialist"
+                required
               />
             </div>
             <div class="col-lg-2">
@@ -163,6 +165,7 @@
                 v-model="service.name"
                 class="form-control"
                 placeholder="E.g. Hair Cut"
+                required
               />
             </div>
             <div class="col-lg-2">
@@ -172,6 +175,7 @@
                 v-model="service.price"
                 class="form-control"
                 placeholder="Price"
+                required
               />
             </div>
             <div class="col-lg-4">
@@ -181,6 +185,7 @@
                 v-model="service.duration"
                 class="form-control"
                 placeholder="Duration (min)"
+                required
               />
             </div>
             <div class="col-lg-1">
@@ -207,7 +212,7 @@
         {{ error }}
       </div>
 
-      <!-- Form submission -->
+      <!-- Form Validation & Submission -->
       <div class="row my-2 float-end col-auto">
         <button type="reset" class="btn custom-reset col-auto mx-2 hover-button">
           Reset Fields
@@ -224,16 +229,20 @@
 <script>
 import db from "../firebase.js";
 import { doc, addDoc, getDoc, collection } from "firebase/firestore";
-import { EmailAuthCredential, getAuth } from "firebase/auth";
 import { useUserStore } from "../stores/users";
-
-// const auth = getAuth();
-// const user = auth.currentUser;
-// console.log(user);
+import { computed } from "vue";
 
 export default {
   name: "CreateShop",
-  created() {},
+  setup() {
+    const user = useUserStore();
+    return {
+      name: computed(() => user.name),
+      email: computed(() => user.email),
+      isLoggedIn: computed(() => user.isLoggedIn),
+      userType: computed(() => user.userType),
+    };
+  },
   data() {
     return {
       shopname: "",
@@ -250,9 +259,9 @@ export default {
       shopnameAvail: 1,
       errors: [],
       shopimg: "",
-      owneremail: useUserStore.email,
       opening: "",
       closing: "",
+      validateForm: false,
     };
   },
   methods: {
@@ -339,7 +348,7 @@ export default {
     },
     async createShop() {
       event.preventDefault();
-      let final_hairdressers = [];
+      var final_hairdressers = [];
       for (var i=0; i < this.hairdressers.length; i++) {
         let temp = {};
         temp['class'] = this.hairdressers[i]['name'].replace(" ", "");
@@ -349,21 +358,33 @@ export default {
         temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
         final_hairdressers.push(temp);
       }
-      console.log(final_hairdressers);
-      console.log(this.services);
+      //console.log(final_hairdressers);
+      //console.log(this.services);
 
-      const docRef2 = await addDoc(collection(db.db, "shop"), {
-        shopName: this.shopname,
-        imgLink: this.shopimg,
-        location: this.shoplocation,
-        //ownerEmail: this.owneremail,
-        services: this.services,
-        open: this.opening,
-        close: this.closing,
-        hairdressers: final_hairdressers,
-      });
-      console.log("Document written with ID: " + docRef2.id);
-      alert("Success! Welcome, " + this.shopname);
+      if (
+          !(this.shopnameAvail==3) | 
+            this.shoplocation=="" | 
+            this.opening=="" | 
+            this.closing=="" | 
+            this.errors.length>0
+      ) {
+        console.log(this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
+        alert("Error! Please fill in all fields.");
+      } else {
+        const docRef2 = await addDoc(collection(db.db, "shop"), {
+          shopName: this.shopname,
+          imgLink: this.shopimg,
+          location: this.shoplocation,
+          ownerEmail: this.email,
+          services: this.services,
+          open: this.opening,
+          close: this.closing,
+          hairdressers: final_hairdressers,
+        });
+        console.log("Document written with ID: " + docRef2.id);
+        alert("Success! Welcome, " + this.shopname);
+        this.$router.push("/hairdresserfeed");
+      }
     },
   },
 };
