@@ -35,8 +35,10 @@
       </div>
     </div>
     <div class="row mt-5 justify-content-center">
-      <transition-group name="list">
-        <div v-if="isLoading" class="col-2 text-center">Loading...</div>
+      <transition-group appear name="list">
+        <div v-if="isLoading" class="col-2 text-center">
+          <h1>Loading...</h1>
+        </div>
         <div
           v-else
           v-for="feed in filtered"
@@ -164,12 +166,18 @@ export default {
 }
 
 .list-enter-active,
-.list-leave-active {
-  transition: all 0.5s ease;
+.list-move {
+  transition: all 0.4s ease;
 }
 
 .list-enter-from,
 .list-leave-to {
   opacity: 0;
+  transform: scale(0.6);
+}
+
+.list-leave-active {
+  transition: all 0.4s ease;
+  position: absolute;
 }
 </style>
