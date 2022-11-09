@@ -49,12 +49,12 @@
     </div>
 
     <!-- Default View -->
-    <div class="row g-3" v-if="timeInterval == 'YTD' && showAll == true">
+    <div class="row g-3 justify-content-evenly" v-if="showAll == true">
         <!-- Revenue -->
-        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
+        <div class="card col-xl-3 col-md-5 col-sm-12 border border-dark rounded-4 text-center">
           <div class="row justify-content-evenly">
-            <div class="col mt-2">
-              <h5 class="fw-semibold">Y.t.d<br/>Revenue</h5>
+            <div class="col mt-3">
+              <h5 class="fw-semibold">Revenue</h5>
             </div>
             <div class="col">
               <img
@@ -63,12 +63,15 @@
               />
             </div>
           </div>
+          <div>
+            <canvas id="revenueChart"></canvas>
+          </div>
         </div>
         <!-- bookings -->
-        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
+        <div class="card col-xl-3 col-md-5 col-sm-12 border border-dark rounded-4 text-center">
           <div class="row justify-content-evenly">
-            <div class="col mt-2">
-              <h5 class="fw-semibold">Y.t.d<br/>Bookings</h5>
+            <div class="col mt-3">
+              <h5 class="fw-semibold">Bookings</h5>
             </div>
             <div class="col">
               <img
@@ -77,12 +80,15 @@
               />
             </div>
           </div>
+          <div>
+            <canvas id="bookingsChart"></canvas>
+          </div>
         </div>
         <!-- ratings -->
-        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
-          <div class="row justify-content">
-            <div class="col mt-2">
-              <h5 class="fw-semibold">Y.t.d<br/>Ratings</h5>
+        <div class="card col-xl-3 col-md-5 col-sm-12 border border-dark rounded-4 text-center mb-3">
+          <div class="row justify-content-evenly">
+            <div class="col mt-3">
+              <h5 class="fw-semibold">Ratings</h5>
             </div>
             <div class="col">
               <img
@@ -90,7 +96,9 @@
                 class="img-fluid custom-size mt-3"
               />
             </div>
-            <div id="svg-ytd-rating"></div>
+          </div>
+          <div>
+            <canvas id="ratingsChart"></canvas>
           </div>
         </div>
       </div>
@@ -116,7 +124,7 @@ import db from "../firebase.js";
 import { useUserStore } from "../stores/users.js";
 import { computed } from "vue";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import * as d3 from "d3";
+import Chart from 'chart.js/auto'
 
 export default {
   name: "HairdresserFeedBody",
@@ -132,55 +140,73 @@ export default {
   data() {
     return {
       shopdata: {},
-      ratings: [
-        { date: "1-10-22", rating: 5 },
-        { date: "3-10-22", rating: 3.5 },
-        { date: "6-10-22", rating: 4 },
-        { date: "11-10-22", rating: 4.5 },
-      ],
+      reviews: [],
       showAll: true,
       showRevenueStats: false,
       showRatingStats: false,
       showBookingStats: false,
+      shopname: "",
     };
   },
   async mounted() {
+    
+    // find shopname based on user's email
     var shopsRef = collection(db.db, "shop");
-    var q = query(shopsRef, where("shopName", "==", "Test Shop")); // to-do: integrate with current user
+    var q = query(shopsRef, where("ownerEmail", "==", this.email));
     var querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
+      //console.log(doc.id, " => ", doc.data());
+      this.shopname = doc.data().shopName;
+      console.log(this.shopname);
     });
-    var svg_ytd_revenue = d3
-      .select("#svg-ytd-rating")
-      .append("svg")
-      .attr("width", 600)
-      .attr("height", 400);
 
-    svg_ytd_revenue
-      .selectAll("rect")
-      .data(this.ratings)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("height", "250")
-      .attr("width", "40")
-      .attr("x", function (d, i) {
-        return i * 60 + 25;
-      })
-      .attr("y", "15");
-    //.attr("y", function(d,i) {return 400 - (d * 10)});
+    // find all ratings based on shopName
+    var reviewsRef = collection(db.db, "reviews");
+    var q2 = query(reviewsRef, where("shopName", "==", this.shopname)); 
+    var querySnapshot2 = await getDocs(q2);
+    querySnapshot2.forEach((doc) => {
+      //console.log(doc.id, " => ", doc.data());
+      this.reviews.push(doc.data());
+    });
+    console.log(this.reviews)
+
+    // graph for reviews
+    let ratings = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+    for (const review of this.reviews) {
+      ratings[review.ratingStars] ++;
+    }
+    console.log(ratings);
+    console.log(Object.values(ratings));
+
+    const ctx1 = document.getElementById('ratingsChart');
+    const ratingsChart = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['1-star', '2-star', '3-star', '5-star', '5-star'],
+        datasets: [{
+          labels: '# of Ratings', // this does not show up
+          data: Object.values(ratings),
+          backgroundColor: [
+            'rgba(255, 0, 0, 0.55)',
+            'rgba(255, 171, 120, 0.75)',
+            'rgba(255, 255, 120, 0.75)',
+            'rgba(211, 255, 120, 0.75)',
+            'rgba(154, 255, 120, 0.75)'
+          ],
+          borderColor: 'rgba(0, 0, 0, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    })
+
+
   },
   methods: {
-    getRatings() {
-      getDocs(collection(db.db, "ratings")).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let obj = doc.data();
-          obj["id"] = doc.id;
-          this.ratings.push(obj);
-        });
-      });
-    },
     reset() {
       this.showRevenueStats = false;
       this.showRatingStats = false;
@@ -216,14 +242,6 @@ export default {
 .custom-size {
   height: 30px;
   width: auto;
-}
-.bar {
-  fill: blue;
-  stroke: black;
-  stroke-width: 3;
-}
-.bar:hover {
-  fill: red;
 }
 .card{
     padding-left: 5px;
