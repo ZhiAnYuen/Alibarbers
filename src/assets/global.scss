@@ -54,6 +54,20 @@ $yellow: #ffd24c;
   }
 }
 
-input[type=checkbox] {
+input[type="checkbox"] {
   accent-color: black;
+}
+
+.multiselect__tag {
+  background: $pastel-yellow !important;
+  color: black !important;
+}
+
+.multiselect__option--highlight {
+  color: black !important;
+}
+
+.multiselect__option--highlight,
+.multiselect__option--highlight:after {
+  background-color: $pastel-yellow !important;
 }

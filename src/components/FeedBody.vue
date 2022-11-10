@@ -2,8 +2,7 @@
   <div class="container-fluid">
     <p class="text-start ms-5 mt-5 fw-semibold">Hello {{ name }},</p>
     <h1 class="text-start ms-5 fw-semibold">Get a makeover today!</h1>
-    <div class="row mt-5 justify-content-center">
-      <!-- <p class="text-center border">filter row (WIP)</p> -->
+    <div id="filter-row" class="row mt-5 justify-content-center">
       <div class="row col-10 justify-content-center">
         <div class="col-4">
           <multiselect
@@ -168,18 +167,10 @@ export default {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
-.multiselect__tag {
-  background: $pastel-yellow;
-  color: black;
-}
-
-.multiselect__option--highlight {
-  color: black;
-}
-
-.multiselect__option--highlight,
-.multiselect__option--highlight:after {
-  background-color: $pastel-yellow;
+@media screen and (max-width: 768px) {
+  #filter-row {
+    display: none !important;
+  }
 }
 
 .list-enter-active,
