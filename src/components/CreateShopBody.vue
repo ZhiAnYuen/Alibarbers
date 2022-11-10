@@ -55,22 +55,6 @@
             </div>
           </div>
         
-          <!-- Shop location -->
-          <div class="row my-2">
-            <div class="">
-              <label for="shoplocation" class="form-label"><strong>Shop Location</strong></label>
-            </div>
-            <div class="">
-              <input
-                type="text"
-                class="form-control mb-2"
-                id="shoplocation"
-                v-model="shoplocation"
-                placeholder="E.g. 6 Thompson Rd, Singapore 366481"
-              />
-            </div>
-          </div>
-        
           <!-- Opening hours -->
           <div class="row my-2">
             <div class="">
@@ -99,7 +83,45 @@
           </div>
         </div>
       </div>
-      
+
+      <hr/>
+
+      <!-- Shop Location -->
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Shop Location</h4>
+          <small class="text-muted">Provide some information where your shop is located.</small>
+        </div>
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="">
+              <label for="shoplocation" class="form-label"><strong>Shop Location</strong></label>
+            </div>
+            <div class="">
+              <input
+                type="text"
+                class="form-control mb-2"
+                id="shoplocation"
+                v-model="shoplocation"
+                placeholder="E.g. 6 Thompson Rd, Singapore 366481"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="">
+              <label class="form-label my-2"><strong>Nearest MRT Station</strong></label>
+            </div>
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputGroupSelect01">Options</label>
+              <select class="form-select" id="inputGroupSelect01" v-model="selectedMRT">
+                <option selected>Choose...</option>
+                <option v-for="mrt of MRTs" >{{mrt}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <hr/>
       
       <!-- Add & remove available hairdressers -->
@@ -228,7 +250,7 @@
 
 <script>
 import db from "../firebase.js";
-import { doc, addDoc, getDoc, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc, collection } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
 
@@ -258,10 +280,21 @@ export default {
       }],
       shopnameAvail: 1,
       errors: [],
-      shopimg: "",
-      opening: "",
-      closing: "",
+      shopimg: '',
+      opening: '',
+      closing: '',
       validateForm: false,
+      MRTs: [
+        "Punggol",
+        "Sembawang",
+        "Marine Parade",
+        "Serangoon",
+        "Woodlands",
+        "Tampines",
+        "Newton",
+        "Buona Vista",
+      ],
+      selectedMRT: 'Choose...',
     };
   },
   methods: {
@@ -346,7 +379,7 @@ export default {
       }
       this.hairdressers.splice(index, 1);
     },
-    async createShop() {
+    createShop() {
       event.preventDefault();
       var final_hairdressers = [];
       for (var i=0; i < this.hairdressers.length; i++) {
@@ -358,32 +391,44 @@ export default {
         temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
         final_hairdressers.push(temp);
       }
-      //console.log(final_hairdressers);
-      //console.log(this.services);
 
-      if (
-          !(this.shopnameAvail==3) | 
-            this.shoplocation=="" | 
-            this.opening=="" | 
-            this.closing=="" | 
-            this.errors.length>0
-      ) {
-        console.log(this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
+      if (!(this.closing.length==4) || 
+          !(this.opening.length==4) ||
+          isNaN(this.opening)==true ||
+          isNaN(this.closing)==true ) {
+        var hourscheck = false;
+        alert("Error! Please enter valid opening hours in 24-hour clock format.");
+      } else {
+        var hourscheck = true;
+      }
+
+      if (!(this.shopnameAvail==3) || this.shoplocation=="" || this.errors.length>0 || hourscheck==false || this.selectedMRT=="Choose..." ) {
+        console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
         alert("Error! Please fill in all fields.");
       } else {
-        const docRef2 = await addDoc(collection(db.db, "shop"), {
+        let name = this.shopname.replace(" ", "");
+
+
+        const docRef2 = doc(db.db, "shop", name);
+        const data1 = {
           shopName: this.shopname,
           imgLink: this.shopimg,
           location: this.shoplocation,
           ownerEmail: this.email,
           services: this.services,
-          open: this.opening,
-          close: this.closing,
+          open: Number(this.opening.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
+          close: Number(this.closing.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
           hairdressers: final_hairdressers,
-        });
-        console.log("Document written with ID: " + docRef2.id);
-        alert("Success! Welcome, " + this.shopname);
-        this.$router.push("/hairdresserfeed");
+        };
+        setDoc(docRef2, data1)
+          .then(() => {
+            console.log('Document was added successfully!');
+            alert("Success! Welcome, " + this.shopname);
+            this.$router.push("/hairdresserfeed");
+          })
+          .catch(error => {
+            console.log(error);
+          })
       }
     },
   },
