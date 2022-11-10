@@ -34,7 +34,7 @@
         </div>
       </div>
     </div>
-    <div class="row mt-5 justify-content-center">
+    <div class="row my-5 justify-content-center">
       <transition-group appear name="list">
         <div v-if="isLoading" class="col-2 text-center">
           <h1>Loading...</h1>
@@ -150,7 +150,24 @@ export default {
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
+.card {
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
+  transition: 0.3s transform cubic-bezier(0.155, 1.105, 0.295, 1.12),
+    0.3s box-shadow,
+    0.3s -webkit-transform cubic-bezier(0.155, 1.105, 0.295, 1.12);
+  // padding: 14px 80px 18px 36px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
 .multiselect__tag {
   background: $pastel-yellow;
   color: black;

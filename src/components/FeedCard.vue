@@ -26,5 +26,6 @@ export default {
   width: 100%;
   height: 10vw;
   object-fit: contain;
+  min-height: 150px;
 }
 </style>
