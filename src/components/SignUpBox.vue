@@ -88,6 +88,7 @@
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import db from "../firebase.js";
+import { useUserStore } from "../stores/users.js";
 
 export default {
   name: "SignUp",
@@ -113,6 +114,10 @@ export default {
             email: this.signUpEmail,
             userType: this.userType,
           });
+
+          const user = useUserStore();
+          user.login(this.name, this.signUpEmail, this.userType, cred.user.uid);
+        
           alert("Registration was Successful!");
           if (this.userType == "Customer") this.$router.push("/feed");
           if (this.userType == "Hairdresser") this.$router.push("/createshop");
