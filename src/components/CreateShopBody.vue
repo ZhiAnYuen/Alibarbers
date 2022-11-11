@@ -48,10 +48,19 @@
               <input
                 type="file"
                 class="form-control mb-2"
-                id="shopimg"
+                id="files"
                 accept="image/*"
                 v-bind="shopimg"
+                aria-describedby="filepicker"
               />
+              <!-- <button 
+                class="btn mb-2 btn-outline-secondary" 
+                type="button" 
+                id="filepicker"
+                @click="imgPicker()"
+              >
+                Upload
+              </button> -->
             </div>
           </div>
         
@@ -139,7 +148,6 @@
                 v-model="hairdresser.name"
                 class="form-control"
                 placeholder="E.g. Tom Chan"
-                required
               />
             </div>
             <div class="col-lg-5">
@@ -149,7 +157,6 @@
                 v-model="hairdresser.role"
                 class="form-control"
                 placeholder="E.g. Men's Haircut Specialist"
-                required
               />
             </div>
             <div class="col-lg-2">
@@ -187,7 +194,6 @@
                 v-model="service.name"
                 class="form-control"
                 placeholder="E.g. Hair Cut"
-                required
               />
             </div>
             <div class="col-lg-2">
@@ -197,7 +203,6 @@
                 v-model="service.price"
                 class="form-control"
                 placeholder="Price"
-                required
               />
             </div>
             <div class="col-lg-4">
@@ -207,7 +212,6 @@
                 v-model="service.duration"
                 class="form-control"
                 placeholder="Duration (min)"
-                required
               />
             </div>
             <div class="col-lg-1">
@@ -225,7 +229,31 @@
               Add Service
             </button>
           </div>
+        </div>
+      </div>
 
+      <hr/>
+
+      <!-- Check & uncheck shop tags -->
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Add Tags</h4>
+          <small class="text-muted">Choose the tags that describe your shop and services. This is optional but could help customers pick your shop based on their needs!</small>
+        </div>
+        <div class="col-lg-8">
+          <div class="row justify-content-around text-center">
+            <div class="col-sm-6 col-md-4" v-for="tag of tags" :key="tag">
+              <input 
+                type="checkbox" 
+                class="btn-check" 
+                :id="tag" 
+                autocomplete="off"
+                :value="tag"
+                v-model="selectedTags"
+              >
+              <label class="btn customlabel rounded-5 m-1" :for="tag">{{tag}}</label>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -250,9 +278,10 @@
 
 <script>
 import db from "../firebase.js";
-import { doc, setDoc, getDoc, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
+import "firebase/storage";
 
 export default {
   name: "CreateShop",
@@ -284,20 +313,47 @@ export default {
       opening: '',
       closing: '',
       validateForm: false,
+      tags: [
+        'Male Hairstyles', 
+        'Female Hairstyles',
+        'Perming',
+        'Colouring',
+        'Hair Cuts',
+        'Scalp Treatment',
+        'Wedding Hairstyles',
+        'Wellness',
+        'Bleaching',
+      ],
+      selectedTags: [],
       MRTs: [
-        "Punggol",
-        "Sembawang",
-        "Marine Parade",
-        "Serangoon",
+        "Joo Koon",
+        "Jurong East",
+        "Bukit Panjang",
         "Woodlands",
-        "Tampines",
-        "Newton",
+        "Botanic Gardens",
         "Buona Vista",
+        "Outram Park",
+        "Somerset",
+        "Newton",
+        "Bishan",
+        "Serangoon",
+        "City Hall",
+        "Bugis",
+        "Paya Lebar",
+        "Farrer Park",
+        "Hougang",
+        "Punggol",
+        "Bedok",
+        "Tampines",
+        "Marine Parade"
       ],
       selectedMRT: 'Choose...',
     };
   },
   methods: {
+    imgPicker() {
+
+    }, 
     checkAvail() {
       let name = this.shopname.replace(" ", "");
       var docRef = doc(db.db, "shop", name);
@@ -406,10 +462,12 @@ export default {
         console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
         alert("Error! Please fill in all fields.");
       } else {
+        let final_tags = this.selectedTags;
+        final_tags.push(this.selectedMRT);
+
         let name = this.shopname.replace(" ", "");
-
-
         const docRef2 = doc(db.db, "shop", name);
+
         const data1 = {
           shopName: this.shopname,
           imgLink: this.shopimg,
@@ -419,7 +477,9 @@ export default {
           open: Number(this.opening.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
           close: Number(this.closing.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
           hairdressers: final_hairdressers,
+          tags: final_tags,
         };
+
         setDoc(docRef2, data1)
           .then(() => {
             console.log('Document was added successfully!');
@@ -436,18 +496,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  background-color: $pastel-yellow;
-}
-button.custom {
-  background-color: $pastel-yellow;
-  color: black;
-  border-color: black;
-}
-button {
-  border: 0ch;
-}
-button.custom-reset {
-  background-color: red($color: #000000);
-}
+  h1 {
+    background-color: $pastel-yellow;
+  }
+  button.custom {
+    background-color: $pastel-yellow;
+    color: black;
+    border-color: black;
+  }
+  button {
+    border: 0ch;
+  }
+  button.custom-reset {
+    background-color: red($color: #000000);
+  }
+  label.customlabel:hover {
+    background-color: $pastel-yellow;
+  }
+  label.customlabel:checked {
+    background-color: $pastel-yellow;
+    border: 1px;
+  }
 </style>
