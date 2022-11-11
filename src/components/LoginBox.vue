@@ -73,7 +73,8 @@ export default {
           user.login(name, this.loginEmail, userType, cred.user.uid);
 
           console.log("Login successful");
-          this.$router.push("/feed");
+          if (userType == "Customer") this.$router.push("/feed");
+          if (userType == "Hairdresser") this.$router.push("/hairdresserfeed");
         })
         .catch((error) => {
           switch (error.code) {
