@@ -16,8 +16,9 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse p-3" id="navbarNav">
+        <!-- v-if="isLoggedIn($route.name) == false" -->
         <ul
-          v-if="isLoggedIn($route.name)==false"
+          v-if="isLoggedIn == false"
           class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
         >
           <li class="nav-item">
@@ -33,7 +34,11 @@
         </ul>
 
         <!-- Navbar for Customers -->
-        <ul v-if="isLoggedIn($route.name)=='Customer'" class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
+        <!-- v-if="isLoggedIn($route.name) == 'Customer'" -->
+        <ul
+          v-if="userType == 'Customer'"
+          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
+        >
           <li class="nav-item">
             <router-link to="/feed" class="nav-link">
               <span class="fw-semibold text-dark"> Explore </span>
@@ -60,7 +65,11 @@
         </ul>
 
         <!-- Navbar for Hairdressers -->
-        <ul v-if="isLoggedIn($route.name)=='Hairdresser'" class="navbar-nav ms-auto mb-2 mb-lg-0 me-5">
+        <!-- v-if="isLoggedIn($route.name) == 'Hairdresser'" -->
+        <ul
+          v-if="userType == 'Hairdresser'"
+          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
+        >
           <li class="nav-item">
             <router-link to="/hairdresserfeed" class="nav-link">
               <span class="fw-semibold text-dark"> Dashboard </span>
@@ -85,7 +94,6 @@
             >
           </li>
         </ul>
-
       </div>
     </div>
   </nav>
@@ -114,15 +122,6 @@ export default {
         user.logout();
         this.$router.push("/home");
       });
-    },
-    isLoggedIn(routename) {
-      if (["home", "login", "signup"].includes(routename)) {
-        return false;
-      } else if (this.userType == "Hairdresser") {
-        return "Hairdresser";
-      } else {
-        return "Customer";
-      }
     },
   },
 };

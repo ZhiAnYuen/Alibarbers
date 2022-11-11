@@ -89,7 +89,8 @@ export default {
               break;
             case "auth/user-not-found":
               console.log("No account with that email was found");
-              this.loginStatus = "No account with that email was found. Try again!";
+              this.loginStatus =
+                "No account with that email was found. Try again!";
               // alert("No account with that email was found. Try again!");
               break;
             case "auth/wrong-password":
