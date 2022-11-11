@@ -6,6 +6,9 @@
         <div class="card-body p-5">
           <h1>Welcome Back!</h1>
           <p>Sign in to your account below.</p>
+          <div v-if="loginStatus" class="alert alert-danger" role="alert">
+            {{ loginStatus }}
+          </div>
           <div class="form-floating">
             <input
               v-model="loginEmail"
@@ -57,6 +60,7 @@ export default {
     return {
       loginEmail: "",
       loginPassword: "",
+      loginStatus: "",
     };
   },
   methods: {
@@ -80,19 +84,24 @@ export default {
           switch (error.code) {
             case "auth/invalid-email":
               console.log("Invalid email");
-              alert("Invalid email. Try again!");
+              this.loginStatus = "Invalid email. Try again!";
+              // alert("Invalid email. Try again!");
               break;
             case "auth/user-not-found":
               console.log("No account with that email was found");
-              alert("No account with that email was found. Try again!");
+              this.loginStatus = "No account with that email was found. Try again!";
+              // alert("No account with that email was found. Try again!");
               break;
             case "auth/wrong-password":
               console.log("Incorrect password");
-              alert("Incorrect password. Try again!");
+              this.loginStatus = "Incorrect password. Try again!";
+              // alert("Incorrect password. Try again!");
               break;
             default:
+              console.log(error);
               console.log("Email or password was incorrect");
-              alert("Email or password was incorrect. Try again!");
+              this.loginStatus = "Email or password was incorrect. Try again!";
+              // alert("Email or password was incorrect. Try again!");
               break;
           }
         });
