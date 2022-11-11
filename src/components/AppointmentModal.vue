@@ -19,7 +19,7 @@
 
 <script>
 export default {
-  name: "ReviewModal",
+  name: "AppointmentModal",
   props: {
     showModal: Boolean,
   },
@@ -46,22 +46,18 @@ export default {
   vertical-align: middle;
 }
 .modal-container {
-  padding: 20px 30px;
+  padding: 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
   position: fixed;
-  right: 0;
-  top: 0;
+  left: 25%;
   width: 50%;
-  height: 100%;
   z-index: 9999;
   min-width: 500px;
 }
-.modal-header h3 {
-  margin-top: 0;
-}
+
 .modal-body {
   margin: 20px 0;
 }
@@ -69,13 +65,13 @@ export default {
   float: right;
 }
 /*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
+   * The following styles are auto-applied to elements with
+   * transition="modal" when their visibility is toggled
+   * by Vue.js.
+   *
+   * You can easily play with the modal transition by editing
+   * these styles.
+   */
 .modal-enter-from {
   opacity: 0;
 }

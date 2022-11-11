@@ -1,26 +1,25 @@
 <template>
-	<main>
-			<HairdresserFeedBody />
-	</main>
+  <main>
+    <HairdresserFeedBody />
+  </main>
 </template>
 
 <script>
-	import HairdresserFeedBody from "../components/HairdresserFeedBody.vue";
+import HairdresserFeedBody from "../components/HairdresserFeedBody.vue";
 
-	export default {
-		components: {
-			HairdresserFeedBody,
-		},
-	};
+export default {
+  components: {
+    HairdresserFeedBody,
+  },
+};
 </script>
 
 <style lang="scss" scoped>
 main {
-    background-color: $pastel-yellow;
-    height: 35vh;
-  }
+  background-color: $pastel-yellow;
+  height: 35vh;
+}
 .btn-custom:active {
   box-shadow: lightgray;
 }
-
 </style>

@@ -1,303 +1,3 @@
-<script>
-import VueCal from "vue-cal";
-import "vue-cal/dist/vuecal.css";
-
-import db from "../firebase.js";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
-
-import { computed } from "vue";
-import { useUserStore } from "../stores/users.js";
-
-const CLIENT_ID =
-  "357278563537-alpo25u2cdl470r9p00siu1ub3rhoc6t.apps.googleusercontent.com";
-const API_KEY = "AIzaSyDLDs4YzPHLUHXA6eztyjLyntTUZE_-9k8";
-const DISCOVERY_DOC = [
-  "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
-];
-const SCOPES = "https://www.googleapis.com/auth/calendar";
-
-const months = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-export default {
-  name: "CalendarBody",
-  data() {
-    return {
-      step: 1,
-      retrievingData: false,
-      shopData: undefined,
-      hairdressers: undefined,
-      services: undefined,
-      open: undefined,
-      close: undefined,
-      appointments: [],
-      draggable: {
-        id: 1,
-        title: "My Appointment",
-        duration: 60,
-      },
-      latestEvent: undefined,
-      selectedHairdressers: [],
-      selectedServices: [],
-      step1To2Alert: false,
-      step2To3Alert: false,
-      tokenClient: undefined,
-      showDraggable: true,
-      googleCalendarEventLink: undefined,
-      addingToGoogleCalendar: false,
-      addedToGoogleCalendar: false,
-    };
-  },
-  setup() {
-    const user = useUserStore();
-    return {
-      username: computed(() => user.name),
-      userEmail: computed(() => user.email),
-      isLoggedIn: computed(() => user.isLoggedIn),
-      userType: computed(() => user.userType),
-    };
-  },
-  methods: {
-    async retrieveData() {
-      this.retrievingData = true;
-
-      const qShop = query(
-        collection(db.db, "shop"),
-        where("shopName", "==", "Test Shop")
-      );
-
-      const shopSnapshot = await getDocs(qShop);
-      shopSnapshot.forEach((doc) => {
-        var shopData = doc.data();
-        this.shopData = shopData;
-        this.hairdressers = shopData.hairdressers;
-        this.services = shopData.services;
-        this.open = shopData.open;
-        this.close = shopData.close;
-      });
-
-      const qAppointments = query(
-        collection(db.db, "appointments"),
-        where("shopName", "==", "Test Shop")
-      );
-
-      const appSnapshot = await getDocs(qAppointments);
-      appSnapshot.forEach((doc) => {
-        this.appointments.push(doc.data());
-      });
-
-      this.retrievingData = false;
-      console.log(this.shopData);
-      console.log(this.appointments);
-    },
-    onEventDragStart(e, draggable) {
-      e.dataTransfer.setData("event", JSON.stringify(draggable));
-      e.dataTransfer.setData("cursor-grab-at", e.offsetY);
-    },
-    onEventDrop({ external }) {
-      if (external) {
-        this.showDraggable = false;
-      }
-    },
-    step1To2() {
-      if (this.selectedHairdressers.length > 0) {
-        this.step += 1;
-        this.step1To2Alert = false;
-      } else {
-        this.step1To2Alert = true;
-      }
-    },
-    step2To3() {
-      if (this.selectedServices.length > 0) {
-        this.step += 1;
-        this.step2To3Alert = false;
-        var totalDuration = 0;
-        var totalPrice = 0;
-        for (var service of this.selectedServices) {
-          totalDuration += service.duration;
-          totalPrice += service.price;
-        }
-        this.draggable.duration = totalDuration;
-        this.draggable.price = totalPrice;
-      } else {
-        this.step2To3Alert = true;
-      }
-    },
-    step3To4() {
-      this.showDraggable = true;
-      if (this.latestEvent) {
-        console.log(this.latestEvent);
-        this.step += 1;
-      }
-    },
-    addToGoogleCal() {
-      this.addingToGoogleCalendar = true;
-      this.tokenClient.callback = async (resp) => {
-        if (resp.error !== undefined) {
-          throw resp;
-        }
-
-        function ISODateString(d) {
-          function pad(n) {
-            return n < 10 ? "0" + n : n;
-          }
-          return (
-            d.getUTCFullYear() +
-            "-" +
-            pad(d.getUTCMonth() + 1) +
-            "-" +
-            pad(d.getUTCDate()) +
-            "T" +
-            pad(d.getUTCHours()) +
-            ":" +
-            pad(d.getUTCMinutes()) +
-            ":" +
-            pad(d.getUTCSeconds()) +
-            "Z"
-          );
-        }
-
-        var startDate = new Date(this.latestEvent.start);
-        var endDate = new Date(this.latestEvent.end);
-        const googleCalEvent = {
-          summary: "Appointment at " + this.shopName,
-          start: {
-            dateTime: ISODateString(startDate),
-            timeZone: "Asia/Singapore",
-          },
-          end: {
-            dateTime: ISODateString(endDate),
-            timeZone: "Asia/Singapore",
-          },
-        };
-
-        const request = window.gapi.client.calendar.events.insert({
-          calendarId: "primary",
-          resource: googleCalEvent,
-        });
-
-        request.execute((event) => {
-          this.addingToGoogleCalendar = false;
-          this.addedToGoogleCalendar = true;
-          console.log("Event created:" + event.htmlLink);
-        });
-      };
-
-      if (window.gapi.client.getToken() === null) {
-        // Prompt the user to select a Google Account and ask for consent to share their data
-        // when establishing a new session.
-        this.tokenClient.requestAccessToken({ prompt: "consent" });
-      } else {
-        // Skip display of account chooser and consent dialog for an existing session.
-        this.tokenClient.requestAccessToken({ prompt: "" });
-      }
-    },
-    eventInfo(event) {
-      this.latestEvent = event;
-    },
-    async addAppointmentToDB() {
-      function convertToDateString(dateTime) {
-        var dateObj = new Date(dateTime);
-        return (
-          dateObj.getFullYear() +
-          "-" +
-          String(dateObj.getMonth() + 1).padStart(2, "0") +
-          "-" +
-          String(dateObj.getDate()).padStart(2, "0") +
-          " " +
-          String(dateObj.getHours()).padStart(2, "0") +
-          ":" +
-          String(dateObj.getMinutes()).padStart(2, "0")
-        );
-      }
-
-      this.draggable.start = convertToDateString(this.latestEvent.start);
-      this.draggable.end = convertToDateString(this.latestEvent.end);
-      this.draggable.split = this.latestEvent.split;
-      this.draggable.class =
-        this.hairdressers[this.latestEvent.split - 1].class;
-      this.draggable.selectedServices = this.selectedServices;
-      this.draggable.selectedHairdresser =
-        this.hairdressers[this.latestEvent.split - 1];
-      this.draggable.location = this.shopData.location;
-      this.draggable.email = this.userEmail;
-      this.draggable.imgLink = this.shopData.imgLink;
-      delete this.draggable.title;
-      delete this.draggable.id;
-      this.draggable.shopName = this.shopData.shopName;
-      console.log(this.draggable);
-
-      const response = await addDoc(
-        collection(db.db, "appointments"),
-        this.draggable
-      );
-      console.log(response.id);
-
-      this.$router.push({ path: "/appointments/" });
-    },
-  },
-  components: {
-    VueCal,
-  },
-  mounted() {
-    this.tokenClient = window.google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      callback: "",
-    });
-
-    window.gapi.load("client", async () => {
-      await window.gapi.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: DISCOVERY_DOC,
-      });
-    });
-
-    this.retrieveData();
-  },
-  computed: {
-    computedEventDate() {
-      var startDate = new Date(this.latestEvent.start);
-      var endDate = new Date(this.latestEvent.end);
-      return (
-        String(startDate.getDate()).padStart(2, "0") +
-        " " +
-        months[startDate.getMonth()] +
-        " " +
-        startDate.getFullYear() +
-        ", " +
-        String(startDate.getHours()).padStart(2, "0") +
-        ":" +
-        String(startDate.getMinutes()).padStart(2, "0") +
-        " - " +
-        String(endDate.getHours()).padStart(2, "0") +
-        ":" +
-        String(endDate.getMinutes()).padStart(2, "0")
-      );
-    },
-    selectedHairdresser() {
-      var result = this.selectedHairdressers.filter(
-        (hairdresser) => hairdresser.id === this.latestEvent.split
-      );
-
-      return result[0]["label"];
-    },
-  },
-};
-</script>
-
 <template>
   <div id="calendar-body" class="container-fluid gx-0">
     <div class="alert alert-danger px-5 col-12" v-if="step1To2Alert">
@@ -542,6 +242,307 @@ export default {
     </div>
   </div>
 </template>
+
+<script>
+import VueCal from "vue-cal";
+import "vue-cal/dist/vuecal.css";
+
+import db from "../firebase.js";
+import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+
+import { computed } from "vue";
+import { useUserStore } from "../stores/users.js";
+
+const CLIENT_ID =
+  "357278563537-alpo25u2cdl470r9p00siu1ub3rhoc6t.apps.googleusercontent.com";
+const API_KEY = "AIzaSyDLDs4YzPHLUHXA6eztyjLyntTUZE_-9k8";
+const DISCOVERY_DOC = [
+  "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
+];
+const SCOPES = "https://www.googleapis.com/auth/calendar";
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export default {
+  name: "CalendarBody",
+  data() {
+    return {
+      step: 1,
+      retrievingData: false,
+      shopData: undefined,
+      hairdressers: undefined,
+      services: undefined,
+      open: undefined,
+      close: undefined,
+      appointments: [],
+      draggable: {
+        id: 1,
+        title: "My Appointment",
+        duration: 60,
+      },
+      latestEvent: undefined,
+      selectedHairdressers: [],
+      selectedServices: [],
+      step1To2Alert: false,
+      step2To3Alert: false,
+      tokenClient: undefined,
+      showDraggable: true,
+      googleCalendarEventLink: undefined,
+      addingToGoogleCalendar: false,
+      addedToGoogleCalendar: false,
+    };
+  },
+  setup() {
+    const user = useUserStore();
+    return {
+      userName: computed(() => user.name),
+      userEmail: computed(() => user.email),
+      isLoggedIn: computed(() => user.isLoggedIn),
+      userType: computed(() => user.userType),
+    };
+  },
+  methods: {
+    async retrieveData() {
+      this.retrievingData = true;
+
+      const qShop = query(
+        collection(db.db, "shop"),
+        where("shopName", "==", "Test Shop")
+      );
+
+      const shopSnapshot = await getDocs(qShop);
+      shopSnapshot.forEach((doc) => {
+        var shopData = doc.data();
+        this.shopData = shopData;
+        this.hairdressers = shopData.hairdressers;
+        this.services = shopData.services;
+        this.open = shopData.open;
+        this.close = shopData.close;
+      });
+
+      const qAppointments = query(
+        collection(db.db, "appointments"),
+        where("shopName", "==", "Test Shop")
+      );
+
+      const appSnapshot = await getDocs(qAppointments);
+      appSnapshot.forEach((doc) => {
+        this.appointments.push(doc.data());
+      });
+
+      this.retrievingData = false;
+      console.log(this.shopData);
+      console.log(this.appointments);
+    },
+    onEventDragStart(e, draggable) {
+      e.dataTransfer.setData("event", JSON.stringify(draggable));
+      e.dataTransfer.setData("cursor-grab-at", e.offsetY);
+    },
+    onEventDrop({ external }) {
+      if (external) {
+        this.showDraggable = false;
+      }
+    },
+    step1To2() {
+      if (this.selectedHairdressers.length > 0) {
+        this.step += 1;
+        this.step1To2Alert = false;
+      } else {
+        this.step1To2Alert = true;
+      }
+    },
+    step2To3() {
+      if (this.selectedServices.length > 0) {
+        this.step += 1;
+        this.step2To3Alert = false;
+        var totalDuration = 0;
+        var totalPrice = 0;
+        for (var service of this.selectedServices) {
+          totalDuration += service.duration;
+          totalPrice += service.price;
+        }
+        this.draggable.duration = totalDuration;
+        this.draggable.price = totalPrice;
+      } else {
+        this.step2To3Alert = true;
+      }
+    },
+    step3To4() {
+      this.showDraggable = true;
+      if (this.latestEvent) {
+        console.log(this.latestEvent);
+        this.step += 1;
+      }
+    },
+    addToGoogleCal() {
+      this.addingToGoogleCalendar = true;
+      this.tokenClient.callback = async (resp) => {
+        if (resp.error !== undefined) {
+          throw resp;
+        }
+
+        function ISODateString(d) {
+          function pad(n) {
+            return n < 10 ? "0" + n : n;
+          }
+          return (
+            d.getUTCFullYear() +
+            "-" +
+            pad(d.getUTCMonth() + 1) +
+            "-" +
+            pad(d.getUTCDate()) +
+            "T" +
+            pad(d.getUTCHours()) +
+            ":" +
+            pad(d.getUTCMinutes()) +
+            ":" +
+            pad(d.getUTCSeconds()) +
+            "Z"
+          );
+        }
+
+        var startDate = new Date(this.latestEvent.start);
+        var endDate = new Date(this.latestEvent.end);
+        const googleCalEvent = {
+          summary: "Appointment at " + this.shopName,
+          start: {
+            dateTime: ISODateString(startDate),
+            timeZone: "Asia/Singapore",
+          },
+          end: {
+            dateTime: ISODateString(endDate),
+            timeZone: "Asia/Singapore",
+          },
+        };
+
+        const request = window.gapi.client.calendar.events.insert({
+          calendarId: "primary",
+          resource: googleCalEvent,
+        });
+
+        request.execute((event) => {
+          this.addingToGoogleCalendar = false;
+          this.addedToGoogleCalendar = true;
+          console.log("Event created:" + event.htmlLink);
+        });
+      };
+
+      if (window.gapi.client.getToken() === null) {
+        // Prompt the user to select a Google Account and ask for consent to share their data
+        // when establishing a new session.
+        this.tokenClient.requestAccessToken({ prompt: "consent" });
+      } else {
+        // Skip display of account chooser and consent dialog for an existing session.
+        this.tokenClient.requestAccessToken({ prompt: "" });
+      }
+    },
+    eventInfo(event) {
+      this.latestEvent = event;
+    },
+    async addAppointmentToDB() {
+      function convertToDateString(dateTime) {
+        var dateObj = new Date(dateTime);
+        return (
+          dateObj.getFullYear() +
+          "-" +
+          String(dateObj.getMonth() + 1).padStart(2, "0") +
+          "-" +
+          String(dateObj.getDate()).padStart(2, "0") +
+          " " +
+          String(dateObj.getHours()).padStart(2, "0") +
+          ":" +
+          String(dateObj.getMinutes()).padStart(2, "0")
+        );
+      }
+
+      this.draggable.start = convertToDateString(this.latestEvent.start);
+      this.draggable.end = convertToDateString(this.latestEvent.end);
+      this.draggable.split = this.latestEvent.split;
+      this.draggable.class =
+        this.hairdressers[this.latestEvent.split - 1].class;
+      this.draggable.selectedServices = this.selectedServices;
+      this.draggable.selectedHairdresser =
+        this.hairdressers[this.latestEvent.split - 1];
+      this.draggable.location = this.shopData.location;
+      this.draggable.email = this.userEmail;
+      this.draggable.imgLink = this.shopData.imgLink;
+      this.draggable.title = this.userName;
+      delete this.draggable.id;
+      this.draggable.shopName = this.shopData.shopName;
+      console.log(this.draggable);
+
+      const response = await addDoc(
+        collection(db.db, "appointments"),
+        this.draggable
+      );
+      console.log(response.id);
+
+      this.$router.push({ path: "/appointments/" });
+    },
+  },
+  components: {
+    VueCal,
+  },
+  mounted() {
+    this.tokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      callback: "",
+    });
+
+    window.gapi.load("client", async () => {
+      await window.gapi.client.init({
+        apiKey: API_KEY,
+        discoveryDocs: DISCOVERY_DOC,
+      });
+    });
+
+    this.retrieveData();
+  },
+  computed: {
+    computedEventDate() {
+      var startDate = new Date(this.latestEvent.start);
+      var endDate = new Date(this.latestEvent.end);
+      return (
+        String(startDate.getDate()).padStart(2, "0") +
+        " " +
+        months[startDate.getMonth()] +
+        " " +
+        startDate.getFullYear() +
+        ", " +
+        String(startDate.getHours()).padStart(2, "0") +
+        ":" +
+        String(startDate.getMinutes()).padStart(2, "0") +
+        " - " +
+        String(endDate.getHours()).padStart(2, "0") +
+        ":" +
+        String(endDate.getMinutes()).padStart(2, "0")
+      );
+    },
+    selectedHairdresser() {
+      var result = this.selectedHairdressers.filter(
+        (hairdresser) => hairdresser.id === this.latestEvent.split
+      );
+
+      return result[0]["label"];
+    },
+  },
+};
+</script>
+
 
 <style lang="scss">
 #calendar-body {

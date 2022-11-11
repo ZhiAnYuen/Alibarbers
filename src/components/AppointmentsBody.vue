@@ -129,7 +129,7 @@ export default {
 
 <style lang="scss" scoped>
 #yellow-bar {
-  background-color: $yellow;
+  background-color: $pastel-yellow;
 }
 
 .metric {
