@@ -144,6 +144,7 @@ export default {
             font-size: 18px;
             line-height: 1.2em;
             text-align: left;
+            word-break: break-all;
           }
         }
         &.current-user {
@@ -157,6 +158,7 @@ export default {
               color: #333;
               font-size: 18px;
               background-color: #ffd24c;
+              word-break: break-all;
             }
           }
         }
