@@ -1,22 +1,125 @@
 <template>
+  <ReviewModal :showModal="showModal" @close="showModal = false">
+    <template v-slot:header>
+      <div class="d-flex flex-column w-100">
+        <div class="alert alert-danger" :key="error" v-for="error in errors">
+          {{ error }}
+        </div>
+      </div>
+    </template>
+    <template v-slot:body>
+      <h3>
+        You visited {{ appointmentData.shopName }} on {{ appointmentDate }}
+      </h3>
+      <div class="my-4">
+        <b>Rate Your Experience</b>
+        <p>How satisfied were you with the service?</p>
+        <div class="rate">
+          <input
+            type="radio"
+            id="star5"
+            name="rate"
+            value="5"
+            v-model="ratingStars"
+          />
+          <label for="star5" title="text">5 stars</label>
+          <input
+            type="radio"
+            id="star4"
+            name="rate"
+            value="4"
+            v-model="ratingStars"
+          />
+          <label for="star4" title="text">4 stars</label>
+          <input
+            type="radio"
+            id="star3"
+            name="rate"
+            value="3"
+            v-model="ratingStars"
+          />
+          <label for="star3" title="text">3 stars</label>
+          <input
+            type="radio"
+            id="star2"
+            name="rate"
+            value="2"
+            v-model="ratingStars"
+          />
+          <label for="star2" title="text">2 stars</label>
+          <input
+            type="radio"
+            id="star1"
+            name="rate"
+            value="1"
+            v-model="ratingStars"
+          />
+          <label for="star1" title="text">1 star</label>
+        </div>
+      </div>
+      <hr />
+      <div class="my-4">
+        <b>What did you like?</b>
+        <p></p>
+        <div
+          class="d-inline me-1"
+          v-for="category in categories"
+          :key="category"
+        >
+          <input
+            type="checkbox"
+            class="btn-check"
+            :id="category"
+            v-model="likedCategories"
+            :value="category"
+          />
+          <label class="btn btn-outline-primary" :for="category">{{
+            category
+          }}</label>
+        </div>
+      </div>
+      <hr />
+      <div class="my-4">
+        <b>Care to Share More?</b>
+        <p>
+          Tell us more about your experience. What did you enjoy? What can be
+          improved?
+        </p>
+        <textarea
+          id="floatingTextarea"
+          class="border border-dark rounded-4 p-3 w-100"
+          v-model="reviewFeedback"
+          placeholder="Type your feedback here"
+        ></textarea>
+      </div>
+    </template>
+    <template v-slot:footer>
+      <button class="hover-button modal-default-button" @click="submitReview()">
+        Submit Review
+      </button>
+    </template>
+  </ReviewModal>
   <div
-    class="border border-dark rounded-4 d-flex flex-row justify-content-between align-items-center p-4 bg-white mb-3"
+    class="border border-dark rounded-4 row mx-0 align-items-center p-4 bg-white mb-3"
+    @click="routeToAppointment"
   >
-    <div class="d-flex flex-row align-items-center">
-      <img :src="appointmentData.imgLink" height="50" width="80" />
+    <div class="col-lg-3 col-md-12 d-flex flex-row align-items-center p-2">
+      <div class="d-inline">
+        <img :src="appointmentData.imgLink" height="50" />
+      </div>
       <div class="d-flex flex-column ps-4">
         <span class="shop-name">{{ appointmentData.shopName }}</span>
         <span>{{ appointmentData.location }}</span>
       </div>
     </div>
-    <div class="d-flex flex-row align-items-center">
+    <div class="col-lg-3 col-md-12 d-flex flex-row align-items-center p-2">
       <img src="../assets/icons8-planner-24.png" width="32" height="32" />
-      <div class="d-flex flex-column ps-4">
+      <div class="col-9 d-flex flex-column ps-4">
         <span class="upper-row">{{ appointmentDate }}</span>
         <span>{{ appointmentTime }}</span>
       </div>
     </div>
-    <div class="d-flex flex-row align-items-center">
+    <div class="col-lg-3 col-md-12 d-flex flex-row align-items-center p-2">
       <img src="../assets/icons8-user-32.png" width="32" height="32" />
       <div class="d-flex flex-column ps-4">
         <span class="upper-row">{{
@@ -25,12 +128,28 @@
         <span>{{ appointmentData.selectedHairdresser.role }}</span>
       </div>
     </div>
-    <button v-if="type === 'upco'" class="hover-button">Cancel</button>
-    <button v-else class="hover-button">Review</button>
+    <button v-if="type === 'upco'" class="col-lg-3 col-md-12 hover-button p-2">
+      Cancel
+    </button>
+    <button
+      v-else
+      class="col-lg-3 col-md-12 hover-button p-2 review-button"
+      @click="openReviewModal($event)"
+    >
+      Review
+    </button>
   </div>
 </template>
 
 <script>
+import ReviewModal from "./ReviewModal.vue";
+
+import db from "../firebase.js";
+import { collection, addDoc } from "firebase/firestore";
+
+import { computed } from "vue";
+import { useUserStore } from "../stores/users.js";
+
 const months = [
   "Jan",
   "Feb",
@@ -48,6 +167,31 @@ const months = [
 
 export default {
   name: "AppointmentDisplay",
+  setup() {
+    const user = useUserStore();
+    return {
+      username: computed(() => user.name),
+      userEmail: computed(() => user.email),
+      isLoggedIn: computed(() => user.isLoggedIn),
+      userType: computed(() => user.userType),
+    };
+  },
+  data() {
+    return {
+      showModal: false,
+      reviewFeedback: "",
+      ratingStars: undefined,
+      errors: [],
+      likedCategories: [],
+      categories: [
+        "Cleanliness",
+        "Professionalism",
+        "Punctuality",
+        "Quality",
+        "Value",
+      ],
+    };
+  },
   props: { appointmentData: Object, type: String },
   computed: {
     appointmentDate() {
@@ -74,6 +218,43 @@ export default {
       );
     },
   },
+  components: {
+    ReviewModal,
+  },
+  methods: {
+    async submitReview() {
+      if (this.ratingStars === undefined) {
+        this.errors.push("Please give a rating.");
+      }
+      if (this.likedCategories.length === 0) {
+        this.errors.push("Please choose something you liked.");
+      }
+      if (this.reviewFeedback.length === 0) {
+        this.errors.push("Please fill in some details about your experience.");
+      }
+      if (this.errors.length === 0) {
+        const response = await addDoc(collection(db.db, "reviews"), {
+          ratingStars: Number(this.ratingStars),
+          reviewFeedback: this.reviewFeedback,
+          email: this.userEmail,
+          likedCategories: this.likedCategories,
+        });
+
+        console.log(response.id);
+
+        this.showModal = false;
+      }
+    },
+    routeToAppointment() {
+      this.$router.push({ path: "/appointment/" + this.appointmentData.docID });
+    },
+    openReviewModal(event) {
+      console.log(event);
+      this.errors = [];
+      this.showModal = !this.showModal;
+      event.stopPropagation();
+    },
+  },
 };
 </script>
 
@@ -84,5 +265,42 @@ export default {
 
 .upper-row {
   font-weight: 500;
+}
+
+.rate {
+  display: inline-block;
+  height: 46px;
+}
+
+.rate:not(:checked) > input {
+  position: absolute;
+  top: -9999px;
+}
+.rate:not(:checked) > label {
+  float: right;
+  width: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 50px;
+  line-height: 50px;
+  color: #ccc;
+}
+.rate:not(:checked) > label:before {
+  content: "★ ";
+}
+.rate > input:checked ~ label {
+  color: $yellow;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+  color: $yellow;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+  color: $yellow;
 }
 </style>

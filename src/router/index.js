@@ -8,6 +8,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CreateShopView from "../views/CreateShopView.vue";
 import HairdresserFeedBody from "../views/HairdresserFeedView.vue";
 import AppointmentsView from "../views/AppointmentsView.vue";
+import AppointmentView from "../views/AppointmentView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -57,6 +58,14 @@ const router = createRouter({
       path: "/appointments",
       name: "appointments",
       component: AppointmentsView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/appointment/:id",
+      name: "appointment",
+      component: AppointmentView,
       meta: {
         requiresAuth: true,
       },

@@ -12,29 +12,19 @@ export default {
 
 <template>
   <Transition name="modal">
-    <div v-if="showModal" class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header"></slot>
-          </div>
-
-          <div class="modal-body">
-            <slot name="body"></slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="footer">
-              <button
-                class="hover-button modal-default-button"
-                @click="$emit('close')"
-              >
-                Submit Review
-              </button>
-            </slot>
-          </div>
+    <div class="modal-wrapper row" v-if="showModal">
+      <div class="modal-container">
+        <div class="modal-header">
+          <slot name="header"></slot>
+        </div>
+        <div class="modal-body">
+          <slot name="body"></slot>
+        </div>
+        <div class="modal-footer">
+          <slot name="footer"> </slot>
         </div>
       </div>
+      <div class="modal-mask" @click="$emit('close')"></div>
     </div>
   </Transition>
 </template>
@@ -42,7 +32,7 @@ export default {
 <style lang="scss" scoped>
 .modal-mask {
   position: fixed;
-  z-index: 9998;
+  z-index: 1;
   top: 0;
   left: 0;
   width: 100%;
@@ -66,6 +56,8 @@ export default {
   top: 0;
   width: 50%;
   height: 100%;
+  z-index: 2;
+  min-width: 500px;
 }
 .modal-header h3 {
   margin-top: 0;
