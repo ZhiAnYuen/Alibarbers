@@ -1,13 +1,9 @@
 <template>
-  <h3 class="text-center mb-4">List of reviews</h3>
-  <!-- <h3 class="text-center mb-4">{{ shopName }}</h3> -->
+  <h4 class="mb-4">Total reviews: {{ reviews.length }}</h4>
   <div v-for="(review, index) in reviews" :key="index">
     <div class="card m-5">
       <div class="card-body">
         <h5 class="card-title mb-2">{{ review["name"] }}</h5>
-        <!-- <h6 class="card-subtitle mb-2 text-muted">
-          Rating: {{ review["ratingStars"] }}/5
-        </h6> -->
         <star-rating
           :rating="getRatings(index)"
           :read-only="true"

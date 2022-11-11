@@ -58,7 +58,10 @@
       <div v-if="state == 'Overview'" class="m-5 justify-content-center col-8">
         <OverviewBody />
       </div>
-      <div v-if="state == 'Reviews'" class="m-5 justify-content-center col-8">
+      <div
+        v-if="state == 'Reviews'"
+        class="my-5 justify-content-center col-md-12 col-xl-8"
+      >
         <ReviewsBody :shopName="shopDetails['shopName']" />
       </div>
       <div v-if="state == 'Services'" class="m-5 justify-content-center col-8">
@@ -71,9 +74,6 @@
         <p><HairdressersBody :hairdressers="shopDetails['hairdressers']" /></p>
       </div>
     </div>
-    <!-- <div class="position-fixed bottom-0 end-0 m-5">
-      <button class="hover-button">Book</button>
-    </div> -->
   </div>
 </template>
 

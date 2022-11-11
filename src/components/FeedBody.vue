@@ -26,32 +26,26 @@
           <multiselect
             v-model="locations"
             :options="locationsOptions"
-            placeholder="Filter location"
+            placeholder="Filter MRT location"
             :show-labels="false"
             :multiple="true"
           />
         </div>
       </div>
     </div>
-    <div class="row my-5 justify-content-center">
-      <transition-group appear name="list">
-        <div v-if="isLoading" class="col-2 text-center">
-          <h1>Loading...</h1>
-        </div>
-        <div
-          v-else
-          v-for="feed in filtered"
-          :key="feed.id"
-          class="col-sm-6 col-md-4 col-lg-2 my-2"
-        >
-          <FeedCard
-            :imgLink="feed.imgLink"
-            :name="feed.shopName"
-            :rating="feed.rating"
-            :id="feed.id"
-          />
-        </div>
-      </transition-group>
+    <div class="row my-5 justify-content-center" v-auto-animate>
+      <div
+        v-for="feed in filtered"
+        :key="feed.id"
+        class="col-sm-6 col-md-4 col-lg-2 my-2"
+      >
+        <FeedCard
+          :imgLink="feed.imgLink"
+          :name="feed.shopName"
+          :rating="feed.rating"
+          :id="feed.id"
+        />
+      </div>
     </div>
     <!-- <button @click="test">test</button> -->
   </div>
@@ -71,7 +65,7 @@ export default {
     FeedCard,
     Multiselect,
   },
-  setup() {
+  data() {
     const user = useUserStore();
 
     return {
@@ -79,26 +73,46 @@ export default {
       email: computed(() => user.email),
       isLoggedIn: computed(() => user.isLoggedIn),
       userType: computed(() => user.userType),
-    };
-  },
-  data() {
-    return {
       feeds: [],
-      isLoading: true,
       services: null,
-      servicesOptions: ["Hair-cutting", "Colouring", "Styling"],
+      servicesOptions: [
+        "Hair-cutting",
+        "Colouring",
+        "Styling",
+        "Perming",
+        "Colouring",
+        "Hair Cuts",
+        "Scalp Treatment",
+        "Wedding Hairstyles",
+        "Wellness",
+        "Bleaching",
+      ],
       categories: null,
       categoriesOptions: ["Most Popular", "Male Hairstyle", "Female Hairstyle"],
       locations: null,
       locationsOptions: [
-        "Punggol",
         "Sembawang",
         "Marine Parade",
-        "Serangoon",
+        "Joo Koon",
+        "Jurong East",
+        "Bukit Panjang",
         "Woodlands",
-        "Tampines",
-        "Newton",
+        "Botanic Gardens",
         "Buona Vista",
+        "Outram Park",
+        "Somerset",
+        "Newton",
+        "Bishan",
+        "Serangoon",
+        "City Hall",
+        "Bugis",
+        "Paya Lebar",
+        "Farrer Park",
+        "Hougang",
+        "Punggol",
+        "Bedok",
+        "Tampines",
+        "Marine Parade",
       ],
     };
   },
@@ -130,7 +144,7 @@ export default {
     this.getAllShops();
   },
   methods: {
-    getAllShops() {
+    async getAllShops() {
       getDocs(collection(db.db, "shop")).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let obj = doc.data();
@@ -138,7 +152,6 @@ export default {
           this.feeds.push(obj);
         });
       });
-      this.isLoading = false;
     },
     test() {
       console.log(this.locations);
@@ -157,7 +170,6 @@ export default {
   transition: 0.3s transform cubic-bezier(0.155, 1.105, 0.295, 1.12),
     0.3s box-shadow,
     0.3s -webkit-transform cubic-bezier(0.155, 1.105, 0.295, 1.12);
-  // padding: 14px 80px 18px 36px;
   margin-bottom: 30px;
   cursor: pointer;
 }
@@ -171,21 +183,5 @@ export default {
   #filter-row {
     display: none !important;
   }
-}
-
-.list-enter-active,
-.list-move {
-  transition: all 0.4s ease;
-}
-
-.list-enter-from,
-.list-leave-to {
-  opacity: 0;
-  transform: scale(0.6);
-}
-
-.list-leave-active {
-  transition: all 0.4s ease;
-  position: absolute;
 }
 </style>
