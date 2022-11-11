@@ -17,7 +17,7 @@
 <style lang="scss" scoped>
 main {
     background-color: $pastel-yellow;
-    height: 35vh;
+    height: 33vh;
   }
 .btn-custom:active {
   box-shadow: lightgray;

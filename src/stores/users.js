@@ -18,11 +18,6 @@ export const useUserStore = defineStore("user", {
         userID: userID,
       });
     },
-    storeUserID(userID) {
-      this.$patch({
-        userID: userID,
-      });
-    },
     logout() {
       this.$reset();
     },

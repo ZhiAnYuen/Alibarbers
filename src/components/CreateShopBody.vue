@@ -1,146 +1,229 @@
 <template>
   <h1 class="text-center p-5">Welcome! Set up your shop here.</h1>
-  <div class="container">
-    <div class="alert alert-danger col-12" v-for="error in errors">
-      {{ error }}
-    </div>
-
+  <div class="container" width="90%">
+    
     <form>
-      <!-- Shop name input and verification -->
-      <div class="row">
-        <label for="shopname" class="form-label my-3">Shop Name</label>
-      </div>
-      <div class="row mb-2">
-        <div class="col-lg-3">
-          <input
-            type="text"
-            class="form-control"
-            id="shopname"
-            v-model="shopname"
-            placeholder="E.g. Sally's Hairdressers"
-          />
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Basic Information</h4>
+          <small class="text-muted">Provide some information about your shop.</small>
         </div>
-        <div class="col-lg-9">
-          <span>
-            <button
-              v-if="shopnameAvail == 1"
-              type="button"
-              class="btn custom"
-              @click="checkAvail()"
-            >
-              Verify Shop Name
-            </button>
-            <span v-if="shopnameAvail == 2" class="form-text">
-              <button type="button" class="btn custom" @click="checkAvail()">
+        <div class="col-lg-8">
+          <!-- Shop name input and verification -->
+          <div class="row">
+            <div class="">
+              <label for="shopname" class="form-label"><strong>Shop Name</strong></label>
+            </div>
+            <div class="">
+              <input
+                type="text"
+                class="form-control"
+                id="shopname"
+                v-model="shopname"
+                placeholder="E.g. Sally's Hairdressers"
+              />
+              <button
+                v-if="shopnameAvail == 1"
+                type="button"
+                class="btn custom my-2"
+                @click="checkAvail()"
+              >
                 Verify Shop Name
               </button>
-            </span>
-            <div v-if="shopnameAvail == 3" class="form-text">
-              Shop Name Verified!
+              <span v-if="shopnameAvail == 2" class="form-text">
+                <button type="button" class="btn custom my-2" @click="checkAvail()">
+                  Verify Shop Name
+                </button>
+              </span>
+              <div v-if="shopnameAvail == 3" class="form-text my-2">
+                Shop Name Verified!
+              </div>
             </div>
-          </span>
+          </div>
+
+          <!-- Upload a picture of their shop -->
+          <div class="row">
+            <label class="my-2" for="shopimg"><strong>Shop Image</strong></label>
+            <div class="input-group">
+              <input
+                type="file"
+                class="form-control mb-2"
+                id="shopimg"
+                accept="image/*"
+                v-bind="shopimg"
+              />
+            </div>
+          </div>
+        
+          <!-- Shop location -->
+          <div class="row my-2">
+            <div class="">
+              <label for="shoplocation" class="form-label"><strong>Shop Location</strong></label>
+            </div>
+            <div class="">
+              <input
+                type="text"
+                class="form-control mb-2"
+                id="shoplocation"
+                v-model="shoplocation"
+                placeholder="E.g. 6 Thompson Rd, Singapore 366481"
+              />
+            </div>
+          </div>
+        
+          <!-- Opening hours -->
+          <div class="row my-2">
+            <div class="">
+              <label for="hours" class="form-label"><strong>Opening Hours</strong> (24-hour clock)</label>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hours"
+                  v-model="opening"
+                  placeholder="E.g. 0800"
+                />
+              </div>
+              <div class="col-lg-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="hours"
+                  v-model="closing"
+                  placeholder="E.g. 1800"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <hr/>
+      
+      <!-- Add & remove available hairdressers -->
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Add One or More Hairdressers</h4>
+          <small class="text-muted">Provide some information about you and/or your staff.</small>
+        </div>
+        <div class="col-lg-8 mb-2">
+          <div class="form-group row mb-2" v-for="(hairdresser, index) in hairdressers" :key="index">
+            <div class="col-lg-5">
+              <input
+                type="text"
+                :name="'hairdresser[' + index + '][name]'"
+                v-model="hairdresser.name"
+                class="form-control"
+                placeholder="E.g. Tom Chan"
+              />
+            </div>
+            <div class="col-lg-5">
+              <input
+                type="text"
+                :name="'hairdresser[' + index + '][role]'"
+                v-model="hairdresser.role"
+                class="form-control"
+                placeholder="E.g. Men's Haircut Specialist"
+              />
+            </div>
+            <div class="col-lg-2">
+              <button
+                type="button"
+                @click="removeHairdresser(index)"
+                class="btn btn-outline-danger"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+          <div class="">
+              <button type="button" @click="addHairdresser()" class="btn custom">
+                Add Hairdresser
+              </button>
+          </div>
         </div>
       </div>
 
-      <!-- Upload a picture of their shop -->
-      <div class="row">
-        <label class="my-3" for="shopimg">Shop Image</label>
-      </div>
-      <div class="row mb-2">
-        <div class="input-group col-lg-6">
-          <input
-            type="file"
-            class="form-control"
-            id="shopimg"
-            accept="image/*"
-            v-bind="shopimg"
-          />
-          <label class="input-group-text" for="shopimg">Upload</label>
-        </div>
-      </div>
-
-      <!-- Shop location. Need to add API here? -->
-      <div class="row">
-        <label for="shoplocation" class="my-3 form-label">Shop Location</label>
-      </div>
-      <div class="row mb-2">
-        <div class="col-lg-6">
-          <input
-            type="text"
-            class="form-control"
-            id="shoplocation"
-            v-model="shoplocation"
-            placeholder="E.g. 6 Thompson Rd, Singapore 366481"
-          />
-        </div>
-      </div>
+      <hr/>
 
       <!-- Add & remove available services -->
-      <div class="row">
-        <div class="my-3 col-lg-12">Add One or More Services</div>
-      </div>
-      <div class="form-group row mb-2" v-for="(service, index) in services">
-        <div class="col-md-3">
-          <input
-            type="text"
-            :name="'service[' + index + '][name]'"
-            class="form-control"
-            placeholder="E.g. Hair Cut"
-          />
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Add One or More Services</h4>
+          <small class="text-muted">Provide some information about the hairdressing services your shop offers.</small>
         </div>
-        <div class="col-md-3">
-          <input
-            type="number"
-            :name="'service[' + index + '][price]'"
-            class="form-control"
-            placeholder="Price"
-          />
-        </div>
-        <div class="col-md-3">
-          <input
-            type="number"
-            :name="'service[' + index + '][duration]'"
-            class="form-control"
-            placeholder="Duration (min)"
-          />
-        </div>
-        <div class="col-md-3">
-          <button
-            type="button"
-            @click="removeService(index)"
-            class="btn btn-danger"
-          >
-            Remove
-          </button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-3">
-          <button type="button" @click="addService()" class="btn custom">
-            Add Service
-          </button>
+        <div class="col-lg-8">
+          <div class="form-group row mb-2" v-for="(service, index) in services" :key="index">
+            <div class="col-lg-4">
+              <input
+                type="text"
+                :name="'service[' + index + '][name]'"
+                v-model="service.name"
+                class="form-control"
+                placeholder="E.g. Hair Cut"
+              />
+            </div>
+            <div class="col-lg-2">
+              <input
+                type="number"
+                :name="'service[' + index + '][price]'"
+                v-model="service.price"
+                class="form-control"
+                placeholder="Price"
+              />
+            </div>
+            <div class="col-lg-4">
+              <input
+                type="number"
+                :name="'service[' + index + '][duration]'"
+                v-model="service.duration"
+                class="form-control"
+                placeholder="Duration (min)"
+              />
+            </div>
+            <div class="col-lg-1">
+              <button
+                type="button"
+                @click="removeService(index)"
+                class="btn btn-outline-danger"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+          <div class="">
+            <button type="button" @click="addService()" class="btn custom">
+              Add Service
+            </button>
+          </div>
+
         </div>
       </div>
 
-      <div class="row my-2 float-end">
-        <button type="reset" class="btn btn-danger col-auto">
+      <!-- Errors -->
+      <div class="alert alert-danger col-12" v-for="error in errors">
+        {{ error }}
+      </div>
+
+      <!-- Form submission -->
+      <div class="row my-2 float-end col-auto">
+        <button type="reset" class="btn custom-reset col-auto mx-2 hover-button">
           Reset Fields
         </button>
-        <button
-          type="submit"
-          class="btn btn-primary col-auto"
-          @click="createShop()"
-        >
-          Submit
+        <button type="submit" class="btn custom col-auto mx-2 hover-button" @click="createShop()">
+          Create Shop
         </button>
       </div>
+    
     </form>
   </div>
 </template>
 
 <script>
 import db from "../firebase.js";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, addDoc, getDoc, collection } from "firebase/firestore";
 import { EmailAuthCredential, getAuth } from "firebase/auth";
 import { useUserStore } from "../stores/users";
 
@@ -150,18 +233,26 @@ import { useUserStore } from "../stores/users";
 
 export default {
   name: "CreateShop",
-  created() {
-    this.addService();
-  },
+  created() {},
   data() {
     return {
       shopname: "",
       shoplocation: "",
-      services: [],
+      services: [{
+        name: '',
+        price: '',
+        duration: ''
+      }],
+      hairdressers: [{
+        name: '',
+        role: ''
+      }],
       shopnameAvail: 1,
       errors: [],
       shopimg: "",
       owneremail: useUserStore.email,
+      opening: "",
+      closing: "",
     };
   },
   methods: {
@@ -201,7 +292,7 @@ export default {
       this.services.push({
         name: "",
         price: "",
-        duration: 0,
+        duration: "",
       });
       if (
         this.errors.indexOf(
@@ -222,15 +313,56 @@ export default {
       }
       this.services.splice(index, 1);
     },
-    createShop() {
-      setDoc(doc(db.db, "shop", this.shopname), {
+    addHairdresser() {
+      this.hairdressers.push({
+        name: "",
+        role: "",
+      });
+      if (
+        this.errors.indexOf(
+          "Your shop has to have at least 1 hairdresser!"
+        ) != -1
+      ) {
+        let i = this.errors.indexOf(
+          "Your shop has to have at least 1 hairdresser!"
+        );
+        this.errors.splice(i, 1);
+      }
+    },
+    removeHairdresser(index) {
+      if (this.hairdressers.length <= 1) {
+        this.errors.push(
+          "Your shop has to have at least 1 hairdresser!"
+        );
+      }
+      this.hairdressers.splice(index, 1);
+    },
+    async createShop() {
+      event.preventDefault();
+      let final_hairdressers = [];
+      for (var i=0; i < this.hairdressers.length; i++) {
+        let temp = {};
+        temp['class'] = this.hairdressers[i]['name'].replace(" ", "");
+        temp['id'] = i+1;
+        temp['role'] = this.hairdressers[i]['role'];
+        temp['name'] = this.hairdressers[i]['name'];
+        temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
+        final_hairdressers.push(temp);
+      }
+      console.log(final_hairdressers);
+      console.log(this.services);
+
+      const docRef2 = await addDoc(collection(db.db, "shop"), {
         shopName: this.shopname,
         imgLink: this.shopimg,
         location: this.shoplocation,
-        ownerEmail: this.owneremail,
+        //ownerEmail: this.owneremail,
         services: this.services,
+        open: this.opening,
+        close: this.closing,
+        hairdressers: final_hairdressers,
       });
-      console.log("Document written with ID: " + docRef.id);
+      console.log("Document written with ID: " + docRef2.id);
       alert("Success! Welcome, " + this.shopname);
     },
   },
@@ -244,8 +376,12 @@ h1 {
 button.custom {
   background-color: $pastel-yellow;
   color: black;
+  border-color: black;
 }
 button {
   border: 0ch;
+}
+button.custom-reset {
+  background-color: red($color: #000000);
 }
 </style>
