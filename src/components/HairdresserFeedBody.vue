@@ -6,86 +6,91 @@
       Welcome to your Insights Dashboard.
     </h1>
 
-    <div class="row g-3 justify-content-evenly my-3">
-        <!-- Revenue -->
-        <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
-          <div class="row justify-content-evenly">
-            <div class="col mt-3 mx-4">
-              <h3 class="fw-semibold">Revenue</h3>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/revenue.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
+    <div class="row g-3 mt-2 p-3">
+      
+      <!-- Revenue -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Revenue</h3>
           </div>
-          <div class="mt-3">
-            <canvas id="revenueChart"></canvas>
-          </div>
-          <div class="card-body text-center">
-            Average Revenue per Booking: ${{averageRevenue}} <br/>
-            Total YTD Revenue: ${{totalRevenue}}
+          <div class="col">
+            <img
+              src="../assets/revenue.png"
+              class="img-fluid custom-size mt-3"
+            />
           </div>
         </div>
-
-        <!-- bookings -->
-        <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
-          <div class="row justify-content-evenly">
-            <div class="col mt-3 mx-4">
-              <h3 class="fw-semibold">Bookings</h3>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/booking.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
-          </div>
-          <div class="mt-3">
-            <canvas id="bookingsChart"></canvas>
-          </div>
+        <div class="mt-3 mx-3">
+          <canvas id="revenueChart"></canvas>
         </div>
-
-        <!-- ratings -->
-        <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center mb-3">
-          <div class="row justify-content-evenly">
-            <div class="col mt-3 mx-4">
-              <h3 class="fw-semibold">Ratings</h3>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/rating.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
-          </div>
-          <div class="mt-3">
-            <canvas id="ratingsChart"></canvas>
-          </div>
-          <div class="card-body text-center">Average Rating: {{averageRating}} stars</div>
+        <div class="card-body text-center">
+          Average Revenue per Booking: <strong>${{averageRevenue}}</strong> <br/>
+          Total YTD Revenue: <strong>${{totalRevenue}}</strong>
         </div>
-
-        <!-- services -->
-        <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center mb-3">
-          <div class="row justify-content-evenly">
-            <div class="col mt-3 mx-4">
-              <h3 class="fw-semibold">Services</h3>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/service.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
-          </div>
-          <div class="my-2 justify-content-center text-center" style = "text-align:center;">
-            <canvas class="justify-content-center" id="servicesChart"></canvas>
-          </div>
-        </div>
-
       </div>
+
+      <div class="col-md-1 d-none d-md-block"></div>
+        
+      <!-- bookings -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Bookings</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/booking.png"
+              class="img-fluid custom-size mt-3"
+            />
+          </div>
+        </div>
+        <div class="my-3 mx-3">
+          <canvas id="bookingsChart"></canvas>
+        </div>
+      </div>
+
+      <!-- ratings -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Ratings</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/rating.png"
+              class="img-fluid custom-size mt-3"
+            />
+          </div>
+        </div>
+        <div class="mt-3 mx-3">
+          <canvas id="ratingsChart"></canvas>
+        </div>
+        <div class="card-body text-center">Average Rating: <strong>{{averageRating}} stars</strong></div>
+      </div>
+
+      <div class="col-md-1 d-none d-md-block"></div>
+
+      <!-- services -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Services</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/service.png"
+              class="img-fluid custom-size mt-3"
+            />
+          </div>
+        </div>
+        <div class="my-2 d-flex flex-row justify-content-center">
+          <canvas class="justify-content-center mb-2" id="servicesChart"></canvas>
+        </div>
+      </div>
+
     </div>
+  </div>
 </template>
 
 <script>
@@ -146,7 +151,9 @@ export default {
       ratings[review.ratingStars] ++;
       totalrating += Number(review.ratingStars);
     }
-    this.averageRating = (totalrating / this.reviews.length).toFixed(2);
+    let avgRating = (totalrating / this.reviews.length).toFixed(2);
+    if ( !isNaN(avgRating) ) { this.averageRating = (totalrating / this.reviews.length).toFixed(2); }
+
     //console.log(ratings);
     //console.log(Object.values(ratings));
     const ctx1 = document.getElementById('ratingsChart');
@@ -211,7 +218,8 @@ export default {
         console.log(appt.selectedServices[ind]);
       }
     }
-    this.averageRevenue = (this.totalRevenue / this.appts.length).toFixed(2);
+    let avgRev = (this.totalRevenue / this.appts.length).toFixed(2)
+    if ( !isNaN(avgRev) ) { this.averageRevenue = (this.totalRevenue / this.appts.length).toFixed(2) }
     
     // graph for bookings
     const ctx2 = document.getElementById('bookingsChart');
@@ -291,7 +299,7 @@ export default {
         responsive: false,
         plugins: {
           legend: {
-              display: true,
+            display: true,
           },
         },
       }
@@ -304,12 +312,12 @@ export default {
 
 
 <style lang="scss" scoped>
-.custom-size {
-  height: 30px;
-  width: auto;
-}
-.card{
-    padding-left: 5px;
-    padding-right: 5px;
-}
+  .custom-size {
+    height: 48px;
+    width: auto;
+  }
+  .card{
+      padding-left: 5px;
+      padding-right: 5px;
+  }
 </style>
