@@ -39,7 +39,7 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="#" class="nav-link">
+            <router-link to="/appointments" class="nav-link">
               <span class="fw-semibold text-dark"> My Appointments </span>
             </router-link>
           </li>

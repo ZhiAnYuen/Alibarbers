@@ -244,6 +244,8 @@ export default {
         this.draggable
       );
       console.log(response.id);
+
+      this.$router.push({ path: "/appointments/" });
     },
   },
   components: {
@@ -297,16 +299,16 @@ export default {
 </script>
 
 <template>
-  <div id="calendar-body" class="container-fluid vh-100">
-    <div class="row align-items-center">
-      <div class="alert alert-danger col-12" v-if="step1To2Alert">
-        Please choose at least 1 hairdresser!
-      </div>
-      <div class="alert alert-danger col-12" v-if="step2To3Alert">
-        Please choose at least 1 service!
-      </div>
+  <div id="calendar-body" class="container-fluid gx-0">
+    <div class="alert alert-danger px-5 col-12" v-if="step1To2Alert">
+      Please choose at least 1 hairdresser!
+    </div>
+    <div class="alert alert-danger px-5 col-12" v-if="step2To3Alert">
+      Please choose at least 1 service!
+    </div>
+    <div v-if="step < 3" class="row mx-5">
       <div
-        class="col-lg-5 col-md-6 card border border-dark rounded-4 m-5"
+        class="col-lg-6 col-md-12 card border border-dark rounded-4 my-5"
         v-if="step === 1"
       >
         <div class="card-body p-5">
@@ -344,7 +346,7 @@ export default {
         </div>
       </div>
       <div
-        class="col-lg-5 col-md-6 card border border-dark rounded-4 m-5"
+        class="col-lg-6 col-md-12 card border border-dark rounded-4 my-5"
         v-if="step === 2"
       >
         <div class="card-body p-5">
@@ -386,165 +388,155 @@ export default {
           </div>
         </div>
       </div>
-      <div v-if="step === 3" class="row mt-5 px-5">
-        <div class="col-lg-4 col-md-12">
-          <div class="card border border-dark rounded-4">
-            <div class="p-5">
-              <h2>
-                Step 3: Drag and drop the event below to select your appointment
-                time
-              </h2>
-              <div class="d-flex flex-row justify-content-center py-3">
-                <div
-                  class="external-event p-2"
-                  draggable="true"
-                  @dragstart="onEventDragStart($event, draggable)"
-                  :key="draggable.id"
-                  v-if="showDraggable"
-                >
-                  <strong>{{ draggable.title }}</strong>
-                  <div>
-                    {{
-                      this.draggable.duration
-                        ? `${this.draggable.duration} min`
-                        : "no duration"
-                    }}
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex flex-row">
-                <button
-                  type="button"
-                  class="hover-button button mt-4 mb-4"
-                  @click="step -= 1"
-                >
-                  Back
-                </button>
-                <button
-                  type="button"
-                  class="hover-button button mt-4 mb-4 ms-auto"
-                  @click="step3To4()"
-                >
-                  Confirm
-                </button>
+    </div>
+    <div v-if="step === 3" class="row mx-5">
+      <div class="col-lg-4 col-md-12 mt-5">
+        <div class="card border border-dark rounded-4 p-5">
+          <h2>
+            Step 3: Drag and drop the event below to select your appointment
+            time
+          </h2>
+          <div class="d-flex flex-row justify-content-center py-3">
+            <div
+              class="external-event p-2"
+              draggable="true"
+              @dragstart="onEventDragStart($event, draggable)"
+              :key="draggable.id"
+              v-if="showDraggable"
+            >
+              <strong>{{ draggable.title }}</strong>
+              <div>
+                {{
+                  this.draggable.duration
+                    ? `${this.draggable.duration} min`
+                    : "no duration"
+                }}
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-lg-8 col-md-12">
-          <div class="card border border-dark rounded-4 h-0">
-            <VueCal
-              class="h-50 m-5"
-              :disable-views="['years', 'year', 'month']"
-              :time-from="open"
-              :time-to="close"
-              :time-step="30"
-              :events="appointments"
-              :snapToTime="15"
-              @event-drop="onEventDrop"
-              :editable-events="{
-                title: false,
-                drag: true,
-                resize: false,
-                delete: false,
-                create: false,
-              }"
-              @event-mouse-leave="eventInfo($event)"
-              :minCellWidth="200"
-              :stickySplitLabels="true"
-              :split-days="selectedHairdressers"
-            />
+          <div class="d-flex flex-row">
+            <button
+              type="button"
+              class="hover-button button mt-4 mb-4"
+              @click="step -= 1"
+            >
+              Back
+            </button>
+            <button
+              type="button"
+              class="hover-button button mt-4 mb-4 ms-auto"
+              @click="step3To4()"
+            >
+              Confirm
+            </button>
           </div>
         </div>
       </div>
-      <div v-if="step === 4" class="row mt-5 px-5 justify-content-center">
-        <div class="col-8 card border border-dark rounded-4">
-          <div class="p-5">
-            <h2>Here's your appointment!</h2>
-            <div class="mb-3">
-              <span class="field-title">Shop</span><br />
-              <span class="field-details">{{ shopData.shopName }}</span>
-            </div>
-            <div class="mb-3">
-              <span class="field-title">Address</span><br />
-              <span class="field-details">{{ shopData.location }}</span>
-            </div>
-            <div class="mb-3">
-              <span class="field-title">Date & Time</span><br />
-              <span class="field-details">{{ computedEventDate }}</span>
-            </div>
-            <div class="mb-3">
-              <span class="field-title">Hairdresser</span><br />
-              <span class="field-details">{{ selectedHairdresser }}</span>
-            </div>
-            <hr />
-            <span class="field-title">Selected Services</span><br />
-            <div
-              v-for="service in selectedServices"
-              :key="service.id"
-              class="d-flex flex-row field-details"
-            >
-              {{ service.name }} ({{ service.duration }} min)
-              <span class="ms-auto">${{ service.price }} </span>
-            </div>
-            <hr />
-            <p class="d-flex flex-row field-details">
-              Total Amount
-              <span class="ms-auto">${{ this.draggable.price }}</span>
-            </p>
-            <div class="mt-4">
-              <button
-                type="button"
-                class="btn w-100 border border-dark rounded-4"
-                v-if="!addedToGoogleCalendar"
-                @click="addToGoogleCal"
-              >
-                <img
-                  width="40"
-                  class="px-1"
-                  src="../assets/googleCalendar.png"
-                />
-                Add to Google Calendar
-              </button>
-              <button
-                type="button"
-                class="btn w-100 border border-dark rounded-4"
-                disabled
-                v-if="addedToGoogleCalendar"
-              >
-                <img
-                  width="40"
-                  class="px-1"
-                  src="../assets/googleCalendar.png"
-                />
-                Added to your Google Calendar!
-              </button>
-              <button
-                type="button"
-                class="btn w-100 border border-dark rounded-4 d-flex justify-content-center align-items-center"
-                v-if="addingToGoogleCalendar"
-              >
-                <div class="spinner-border me-2" role="status"></div>
-                Adding to your Google Calendar!
-              </button>
-            </div>
-            <div class="d-flex flex-row">
-              <button
-                type="button"
-                class="hover-button button mt-4 mb-4"
-                @click="step -= 1"
-              >
-                Back
-              </button>
-              <button
-                type="button"
-                class="hover-button button mt-4 mb-4 ms-auto"
-                @click="addAppointmentToDB()"
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
+      <div class="col-lg-8 col-md-12 my-5">
+        <div class="card border border-dark rounded-4 p-5">
+          <VueCal
+            class="h-50"
+            :disable-views="['years', 'year', 'month']"
+            :time-from="open"
+            :time-to="close"
+            :time-step="30"
+            :events="appointments"
+            :snapToTime="15"
+            @event-drop="onEventDrop"
+            :editable-events="{
+              title: false,
+              drag: true,
+              resize: false,
+              delete: false,
+              create: false,
+            }"
+            @event-mouse-leave="eventInfo($event)"
+            :minCellWidth="200"
+            :stickySplitLabels="true"
+            :split-days="selectedHairdressers"
+          />
+        </div>
+      </div>
+    </div>
+    <div v-if="step === 4" class="row mx-5 justify-content-center">
+      <div
+        class="col-lg-8 col-md-12 card border border-dark rounded-4 p-5 my-5"
+      >
+        <h2>Here's your appointment!</h2>
+        <div class="mb-3">
+          <span class="field-title">Shop</span><br />
+          <span class="field-details">{{ shopData.shopName }}</span>
+        </div>
+        <div class="mb-3">
+          <span class="field-title">Address</span><br />
+          <span class="field-details">{{ shopData.location }}</span>
+        </div>
+        <div class="mb-3">
+          <span class="field-title">Date & Time</span><br />
+          <span class="field-details">{{ computedEventDate }}</span>
+        </div>
+        <div class="mb-3">
+          <span class="field-title">Hairdresser</span><br />
+          <span class="field-details">{{ selectedHairdresser }}</span>
+        </div>
+        <hr />
+        <span class="field-title">Selected Services</span>
+        <div
+          v-for="service in selectedServices"
+          :key="service.id"
+          class="d-flex flex-row field-details"
+        >
+          {{ service.name }} ({{ service.duration }} min)
+          <span class="ms-auto">${{ service.price }} </span>
+        </div>
+        <hr />
+        <p class="d-flex flex-row field-details">
+          Total Amount
+          <span class="ms-auto">${{ this.draggable.price }}</span>
+        </p>
+        <div class="mt-4">
+          <button
+            type="button"
+            class="btn w-100 border border-dark rounded-4"
+            v-if="!addedToGoogleCalendar && !addingToGoogleCalendar"
+            @click="addToGoogleCal"
+          >
+            <img width="40" class="px-1" src="../assets/googleCalendar.png" />
+            Add to Google Calendar
+          </button>
+          <button
+            type="button"
+            class="btn w-100 border border-dark rounded-4"
+            disabled
+            v-if="addedToGoogleCalendar"
+          >
+            <img width="40" class="px-1" src="../assets/googleCalendar.png" />
+            Added to your Google Calendar!
+          </button>
+          <button
+            type="button"
+            class="btn w-100 border border-dark rounded-4 d-flex justify-content-center align-items-center"
+            v-if="addingToGoogleCalendar"
+          >
+            <div class="spinner-border me-2" role="status"></div>
+            Adding to your Google Calendar!
+          </button>
+        </div>
+        <div class="d-flex flex-row">
+          <button
+            type="button"
+            class="hover-button button mt-4 mb-4"
+            @click="step -= 1"
+          >
+            Back
+          </button>
+          <button
+            type="button"
+            class="hover-button button mt-4 mb-4 ms-auto"
+            @click="addAppointmentToDB()"
+          >
+            Confirm
+          </button>
         </div>
       </div>
     </div>
@@ -558,6 +550,8 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
   background-size: 1100px;
+  height: 100%;
+  min-height: 100vh;
 }
 
 .external-event {

@@ -77,7 +77,9 @@ export default {
 
       const appSnapshot = await getDocs(qAppointments);
       appSnapshot.forEach((doc) => {
-        this.appointments.push(doc.data());
+        var docData = doc.data();
+        docData.docID = doc.id;
+        this.appointments.push(docData);
       });
 
       var today = new Date();
@@ -101,7 +103,7 @@ export default {
 
       this.upcoming.sort(compareDates);
       this.pastappointments.sort(compareDates);
-
+      console.log(this.pastappointments);
       this.retrievingData = false;
     },
   },
