@@ -48,26 +48,19 @@
               <input
                 type="file"
                 class="form-control mb-2"
-                id="shopimg"
+                id="files"
                 accept="image/*"
                 v-bind="shopimg"
+                aria-describedby="filepicker"
               />
-            </div>
-          </div>
-        
-          <!-- Shop location -->
-          <div class="row my-2">
-            <div class="">
-              <label for="shoplocation" class="form-label"><strong>Shop Location</strong></label>
-            </div>
-            <div class="">
-              <input
-                type="text"
-                class="form-control mb-2"
-                id="shoplocation"
-                v-model="shoplocation"
-                placeholder="E.g. 6 Thompson Rd, Singapore 366481"
-              />
+              <!-- <button 
+                class="btn mb-2 btn-outline-secondary" 
+                type="button" 
+                id="filepicker"
+                @click="imgPicker()"
+              >
+                Upload
+              </button> -->
             </div>
           </div>
         
@@ -99,7 +92,45 @@
           </div>
         </div>
       </div>
-      
+
+      <hr/>
+
+      <!-- Shop Location -->
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Shop Location</h4>
+          <small class="text-muted">Provide some information where your shop is located.</small>
+        </div>
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="">
+              <label for="shoplocation" class="form-label"><strong>Shop Location</strong></label>
+            </div>
+            <div class="">
+              <input
+                type="text"
+                class="form-control mb-2"
+                id="shoplocation"
+                v-model="shoplocation"
+                placeholder="E.g. 6 Thompson Rd, Singapore 366481"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="">
+              <label class="form-label my-2"><strong>Nearest MRT Station</strong></label>
+            </div>
+            <div class="input-group mb-3">
+              <label class="input-group-text" for="inputGroupSelect01">Options</label>
+              <select class="form-select" id="inputGroupSelect01" v-model="selectedMRT">
+                <option selected>Choose...</option>
+                <option v-for="mrt of MRTs" >{{mrt}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <hr/>
       
       <!-- Add & remove available hairdressers -->
@@ -117,7 +148,6 @@
                 v-model="hairdresser.name"
                 class="form-control"
                 placeholder="E.g. Tom Chan"
-                required
               />
             </div>
             <div class="col-lg-5">
@@ -127,7 +157,6 @@
                 v-model="hairdresser.role"
                 class="form-control"
                 placeholder="E.g. Men's Haircut Specialist"
-                required
               />
             </div>
             <div class="col-lg-2">
@@ -165,7 +194,6 @@
                 v-model="service.name"
                 class="form-control"
                 placeholder="E.g. Hair Cut"
-                required
               />
             </div>
             <div class="col-lg-2">
@@ -175,7 +203,6 @@
                 v-model="service.price"
                 class="form-control"
                 placeholder="Price"
-                required
               />
             </div>
             <div class="col-lg-4">
@@ -185,7 +212,6 @@
                 v-model="service.duration"
                 class="form-control"
                 placeholder="Duration (min)"
-                required
               />
             </div>
             <div class="col-lg-1">
@@ -203,7 +229,31 @@
               Add Service
             </button>
           </div>
+        </div>
+      </div>
 
+      <hr/>
+
+      <!-- Check & uncheck shop tags -->
+      <div class="row my-4">
+        <div class="col-lg-4 mb-2">
+          <h4>Add Tags</h4>
+          <small class="text-muted">Choose the tags that describe your shop and services. This is optional but could help customers pick your shop based on their needs!</small>
+        </div>
+        <div class="col-lg-8">
+          <div class="row justify-content-around text-center">
+            <div class="col-sm-6 col-md-4" v-for="tag of tags" :key="tag">
+              <input 
+                type="checkbox" 
+                class="btn-check" 
+                :id="tag" 
+                autocomplete="off"
+                :value="tag"
+                v-model="selectedTags"
+              >
+              <label class="btn customlabel rounded-5 m-1" :for="tag">{{tag}}</label>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -228,9 +278,10 @@
 
 <script>
 import db from "../firebase.js";
-import { doc, addDoc, getDoc, collection } from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
+import "firebase/storage";
 
 export default {
   name: "CreateShop",
@@ -258,13 +309,51 @@ export default {
       }],
       shopnameAvail: 1,
       errors: [],
-      shopimg: "",
-      opening: "",
-      closing: "",
+      shopimg: '',
+      opening: '',
+      closing: '',
       validateForm: false,
+      tags: [
+        'Male Hairstyles', 
+        'Female Hairstyles',
+        'Perming',
+        'Colouring',
+        'Hair Cuts',
+        'Scalp Treatment',
+        'Wedding Hairstyles',
+        'Wellness',
+        'Bleaching',
+      ],
+      selectedTags: [],
+      MRTs: [
+        "Joo Koon",
+        "Jurong East",
+        "Bukit Panjang",
+        "Woodlands",
+        "Botanic Gardens",
+        "Buona Vista",
+        "Outram Park",
+        "Somerset",
+        "Newton",
+        "Bishan",
+        "Serangoon",
+        "City Hall",
+        "Bugis",
+        "Paya Lebar",
+        "Farrer Park",
+        "Hougang",
+        "Punggol",
+        "Bedok",
+        "Tampines",
+        "Marine Parade"
+      ],
+      selectedMRT: 'Choose...',
     };
   },
   methods: {
+    imgPicker() {
+
+    }, 
     checkAvail() {
       let name = this.shopname.replace(" ", "");
       var docRef = doc(db.db, "shop", name);
@@ -346,7 +435,7 @@ export default {
       }
       this.hairdressers.splice(index, 1);
     },
-    async createShop() {
+    createShop() {
       event.preventDefault();
       var final_hairdressers = [];
       for (var i=0; i < this.hairdressers.length; i++) {
@@ -358,32 +447,48 @@ export default {
         temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
         final_hairdressers.push(temp);
       }
-      //console.log(final_hairdressers);
-      //console.log(this.services);
 
-      if (
-          !(this.shopnameAvail==3) | 
-            this.shoplocation=="" | 
-            this.opening=="" | 
-            this.closing=="" | 
-            this.errors.length>0
-      ) {
-        console.log(this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
+      if (!(this.closing.length==4) || 
+          !(this.opening.length==4) ||
+          isNaN(this.opening)==true ||
+          isNaN(this.closing)==true ) {
+        var hourscheck = false;
+        alert("Error! Please enter valid opening hours in 24-hour clock format.");
+      } else {
+        var hourscheck = true;
+      }
+
+      if (!(this.shopnameAvail==3) || this.shoplocation=="" || this.errors.length>0 || hourscheck==false || this.selectedMRT=="Choose..." ) {
+        console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
         alert("Error! Please fill in all fields.");
       } else {
-        const docRef2 = await addDoc(collection(db.db, "shop"), {
+        let final_tags = this.selectedTags;
+        final_tags.push(this.selectedMRT);
+
+        let name = this.shopname.replace(" ", "");
+        const docRef2 = doc(db.db, "shop", name);
+
+        const data1 = {
           shopName: this.shopname,
           imgLink: this.shopimg,
           location: this.shoplocation,
           ownerEmail: this.email,
           services: this.services,
-          open: this.opening,
-          close: this.closing,
+          open: Number(this.opening.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
+          close: Number(this.closing.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
           hairdressers: final_hairdressers,
-        });
-        console.log("Document written with ID: " + docRef2.id);
-        alert("Success! Welcome, " + this.shopname);
-        this.$router.push("/hairdresserfeed");
+          tags: final_tags,
+        };
+
+        setDoc(docRef2, data1)
+          .then(() => {
+            console.log('Document was added successfully!');
+            alert("Success! Welcome, " + this.shopname);
+            this.$router.push("/hairdresserfeed");
+          })
+          .catch(error => {
+            console.log(error);
+          })
       }
     },
   },
@@ -391,18 +496,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h1 {
-  background-color: $pastel-yellow;
-}
-button.custom {
-  background-color: $pastel-yellow;
-  color: black;
-  border-color: black;
-}
-button {
-  border: 0ch;
-}
-button.custom-reset {
-  background-color: red($color: #000000);
-}
+  h1 {
+    background-color: $pastel-yellow;
+  }
+  button.custom {
+    background-color: $pastel-yellow;
+    color: black;
+    border-color: black;
+  }
+  button {
+    border: 0ch;
+  }
+  button.custom-reset {
+    background-color: red($color: #000000);
+  }
+  label.customlabel:hover {
+    background-color: $pastel-yellow;
+  }
+  label.customlabel:checked {
+    background-color: $pastel-yellow;
+    border: 1px;
+  }
 </style>

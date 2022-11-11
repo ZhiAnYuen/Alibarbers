@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.2.2",
-    "d3": "^7.6.1",
+    "chart.js": "^3.9.1",
     "firebase": "^9.11.0",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",
