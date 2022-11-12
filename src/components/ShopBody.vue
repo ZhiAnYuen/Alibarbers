@@ -1,27 +1,66 @@
 <template>
-  <div class="container-fluid">
-    <div class="row mb-5" id="shopHeader">
-      <div
-        class="col-md-5 p-5 d-flex justify-content-center align-items-center"
-      >
-        <img :src="shopDetails['imgLink']" id="shopImg" class="img-fluid" />
-      </div>
-      <div class="col-md-6 align-self-center ms-5">
-        <h1 class="mt-5">{{ shopDetails["shopName"] }}</h1>
-        <p class="mt-4 fs-4 fw-light">Rating: {{ shopDetails["rating"] }}</p>
-        <p class="mt-4 fs-4 fw-light">
-          Operating hours: {{ shopDetails["open"] }} to
-          {{ shopDetails["close"] }}
-        </p>
-        <p class="mt-4 fs-4 fw-light">{{ shopDetails["location"] }}</p>
-        <div class="row">
-          <button class="hover-button mt-3 mx-3 mb-5 col-6">Chat</button>
-          <button class="hover-button mt-3 mx-3 mb-5 col-6">Book</button>
+  <div class="container-fluid px-0">
+    <div id="shopHeader">
+      <div class="row d-flex flex-row px-5 py-4">
+        <div class="d-flex align-items-center col-lg-3 col-md-6 col-xs-12">
+          <img
+            :src="shopDetails['imgLink']"
+            class="shop-image img-fluid w-100"
+          />
+        </div>
+        <div
+          class="d-flex flex-column justify-content-between p-5 col-lg-9 col-md-6 col-xs-12"
+        >
+          <h1>{{ shopDetails["shopName"] }}</h1>
+          <span class="mt-2 d-flex flex-row">
+            <span class="me-3">{{
+              (totalStars / reviews.length).toFixed(1)
+            }}</span>
+            <star-rating
+              :rating="getRatings()"
+              :read-only="true"
+              :inline="true"
+              :increment="0.5"
+              :show-rating="false"
+              :star-size="20"
+            />
+            <span class="ms-3">{{ reviews.length }} reviews</span></span
+          ><br />
+          <div>
+            <img
+              src="https://img.icons8.com/material/24/000000/time-span.png"
+            />
+            <span class="ms-3">
+              {{ shopDetails["rawOpening"] }} to
+              {{ shopDetails["rawClosing"] }}
+            </span>
+          </div>
+          <div>
+            <img
+              src="https://img.icons8.com/material-rounded/24/000000/marker.png"
+            />
+            <span class="ms-3">{{ shopDetails["location"] }}</span>
+          </div>
+          <div class="row mt-4 p-0 gy-2">
+            <div class="col-lg-6 col-sm-12">
+              <button type="button" class="button hover-button w-100">
+                Start a Chat
+              </button>
+            </div>
+            <div class="col-lg-6 col-sm-12">
+              <button
+                class="button hover-button w-100"
+                @click="routeToBooking()"
+              >
+                Book an Appointment
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row justify-content-center">
-      <ul class="nav justify-content-center col-8" id="bodyNav">
+    <div class="mx-5 mt-5 p-0">
+      <ul class="nav" id="bodyNav">
         <li class="nav-item">
           <a
             class="nav-link"
@@ -55,31 +94,35 @@
           >
         </li>
       </ul>
-      <div v-if="state == 'Overview'" class="m-5 justify-content-center col-8">
+      <div v-if="state == 'Overview'" class="my-5">
         <OverviewBody />
       </div>
-      <div
-        v-if="state == 'Reviews'"
-        class="my-5 justify-content-center col-md-12 col-xl-8"
-      >
-        <ReviewsBody :shopName="shopDetails['shopName']" />
+      <div v-if="state == 'Reviews'" class="my-5">
+        <ReviewsBody :shopName="shopDetails['shopName']" :reviews="reviews" />
       </div>
-      <div v-if="state == 'Services'" class="m-5 justify-content-center col-8">
+      <div v-if="state == 'Services'" class="my-5">
         <ServicesBody :services="shopDetails['services']" />
       </div>
-      <div
-        v-if="state == 'Hairdressers'"
-        class="m-5 justify-content-center col-8"
-      >
-        <p><HairdressersBody :hairdressers="shopDetails['hairdressers']" /></p>
+      <div v-if="state == 'Hairdressers'" class="my-5">
+        <HairdressersBody :hairdressers="shopDetails['hairdressers']" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { doc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import db from "../firebase.js";
+
+import StarRating from "vue-star-rating";
+
 import OverviewBody from "./OverviewBody.vue";
 import ServicesBody from "./ServicesBody.vue";
 import HairdressersBody from "./HairdressersBody.vue";
@@ -92,11 +135,14 @@ export default {
     ServicesBody,
     ReviewsBody,
     HairdressersBody,
+    StarRating,
   },
   data() {
     return {
       shopDetails: {},
       state: "Overview",
+      reviews: [],
+      totalStars: 0,
     };
   },
   mounted() {
@@ -108,14 +154,31 @@ export default {
       getDoc(docRef).then((docSnap) => {
         if (docSnap.exists()) {
           this.shopDetails = docSnap.data();
-          // console.log("Document data:", docSnap.data());
+          this.getReviews();
         } else {
           console.log("No such document!");
         }
       });
     },
-    test() {
-      console.log(this.shopDetails["imgLink"]);
+    getReviews() {
+      const q = query(
+        collection(db.db, "reviews"),
+        where("shopName", "==", this.shopDetails.shopName)
+      );
+
+      getDocs(q).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          var docData = doc.data();
+          this.reviews.push(docData);
+          this.totalStars += Number(docData.ratingStars);
+        });
+      });
+    },
+    getRatings() {
+      return (this.totalStars / this.reviews.length).toFixed(1);
+    },
+    routeToBooking() {
+      this.$router.push({ path: "/booking/" + this.$route.params.id });
     },
   },
   computed: {
@@ -140,9 +203,9 @@ export default {
   background-color: $pastel-yellow;
 }
 
-#shopImg {
-  min-width: 300px;
-  max-width: 400px;
+.shop-image {
+  min-height: 200px;
+  max-height: 300px;
 }
 
 .hover-button {
@@ -151,7 +214,8 @@ export default {
 
 #bodyNav {
   border-bottom: solid 1px black;
-  // gap: 100px;
+  overflow: hidden;
+  flex-wrap: nowrap;
 }
 
 .nav-link,
@@ -162,5 +226,12 @@ export default {
 .nav-link.active {
   border-bottom: 3px solid black;
   margin: -1px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 500px) {
+  #bodyNav {
+    overflow-x: scroll;
+  }
 }
 </style>

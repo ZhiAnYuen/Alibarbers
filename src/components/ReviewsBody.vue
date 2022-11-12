@@ -1,7 +1,6 @@
 <template>
-  <h4 class="mb-4">Total reviews: {{ reviews.length }}</h4>
   <div v-for="(review, index) in reviews" :key="index">
-    <div class="card m-5">
+    <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title mb-2">{{ review["name"] }}</h5>
         <star-rating
@@ -18,38 +17,15 @@
 </template>
 
 <script>
-import { collection, query, where, getDocs } from "firebase/firestore";
 import StarRating from "vue-star-rating";
-import db from "../firebase.js";
 
 export default {
   name: "ReviewsBody",
   components: {
     StarRating,
   },
-  props: ["shopName"],
-  data() {
-    return {
-      reviews: [],
-    };
-  },
-  mounted() {
-    this.getReviews();
-  },
+  props: ["shopName", "reviews"],
   methods: {
-    getReviews() {
-      const q = query(
-        collection(db.db, "reviews"),
-        where("shopName", "==", this.shopName)
-      );
-
-      getDocs(q).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          // console.log(doc.data());
-          this.reviews.push(doc.data());
-        });
-      });
-    },
     getRatings(index) {
       return parseFloat(this.reviews[index]["ratingStars"]);
     },

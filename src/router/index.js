@@ -9,11 +9,8 @@ import CreateShopView from "../views/CreateShopView.vue";
 import HairdresserFeedBody from "../views/HairdresserFeedView.vue";
 import AppointmentsView from "../views/AppointmentsView.vue";
 import AppointmentView from "../views/AppointmentView.vue";
-<<<<<<< HEAD
 import ShopAppointmentsView from "../views/ShopAppointmentsView.vue";
-=======
 import ProfileBody from "../views/ProfileView.vue";
->>>>>>> c32400dd15268723dd288a589187a706a393c5ac
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -52,8 +49,8 @@ const router = createRouter({
       },
     },
     {
-      path: "/calendar",
-      name: "calendar",
+      path: "/booking/:id",
+      name: "booking",
       component: CalendarView,
       meta: {
         requiresAuth: true,

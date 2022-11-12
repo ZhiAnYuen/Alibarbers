@@ -1,14 +1,15 @@
 <template>
   <!-- <h3 class="text-center mb-4">Services Provided</h3> -->
   <div v-for="(service, index) in services" :key="index">
-    <div class="row justify-content-center m-3">
+    <div class="row">
       <div class="col-md-4 text-center">
-        <p class="fs-5 fw-light">{{ service["name"] }}</p>
+        <p>{{ service["name"] }}</p>
       </div>
       <div class="col-md-4 text-center">
-        <p class="fs-5 fw-light">
-          ${{ service["price"] }}, {{ service["duration"] }} mins
-        </p>
+        <p>${{ service["price"] }}</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <p>{{ service["duration"] }} mins</p>
       </div>
     </div>
   </div>

@@ -24,6 +24,7 @@
       :key="appointment.id"
       :appointmentData="appointment"
       type="upco"
+      @refresh="forceReload()"
     />
     <h3 class="mt-4">Past Appointments ({{ pastappointments.length }})</h3>
     <AppointmentDisplay
@@ -103,8 +104,13 @@ export default {
 
       this.upcoming.sort(compareDates);
       this.pastappointments.sort(compareDates);
-      console.log(this.pastappointments);
       this.retrievingData = false;
+    },
+    forceReload() {
+      this.appointments = [];
+      this.upcoming = [];
+      this.pastappointments = [];
+      this.retrieveData();
     },
   },
   computed: {
@@ -121,7 +127,7 @@ export default {
   components: {
     AppointmentDisplay,
   },
-  mounted() {
+  created() {
     this.retrieveData();
   },
 };

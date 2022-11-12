@@ -59,14 +59,14 @@
             <input
               type="checkbox"
               :value="service"
-              :id="service.id"
+              :id="service.name"
               class="mx-3"
               v-model="selectedServices"
             />
-            <label :for="service.id">
+            <label :for="service.name">
               <strong>{{ service.name }}</strong></label
             >
-            <label :for="service.id" class="ms-auto"
+            <label :for="service.name" class="ms-auto"
               >${{ service.price }}
             </label>
           </div>
@@ -194,34 +194,11 @@
           Total Amount
           <span class="ms-auto">${{ this.draggable.price }}</span>
         </p>
-        <div class="mt-4">
-          <button
-            type="button"
-            class="btn w-100 border border-dark rounded-4"
-            v-if="!addedToGoogleCalendar && !addingToGoogleCalendar"
-            @click="addToGoogleCal"
-          >
-            <img width="40" class="px-1" src="../assets/googleCalendar.png" />
-            Add to Google Calendar
-          </button>
-          <button
-            type="button"
-            class="btn w-100 border border-dark rounded-4"
-            disabled
-            v-if="addedToGoogleCalendar"
-          >
-            <img width="40" class="px-1" src="../assets/googleCalendar.png" />
-            Added to your Google Calendar!
-          </button>
-          <button
-            type="button"
-            class="btn w-100 border border-dark rounded-4 d-flex justify-content-center align-items-center"
-            v-if="addingToGoogleCalendar"
-          >
-            <div class="spinner-border me-2" role="status"></div>
-            Adding to your Google Calendar!
-          </button>
-        </div>
+        <AddToGoogleCalendar
+          :start="latestEvent.start"
+          :end="latestEvent.end"
+          :shopName="shopData.shopName"
+        />
         <div class="d-flex flex-row">
           <button
             type="button"
@@ -257,20 +234,22 @@ import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 
 import db from "../firebase.js";
-import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  doc,
+  getDoc,
+} from "firebase/firestore";
 
 import { computed } from "vue";
 import { useUserStore } from "../stores/users.js";
 
-import { StripeCheckout } from "@vue-stripe/vue-stripe";
+import AddToGoogleCalendar from "./AddToGoogleCalendar.vue";
 
-const CLIENT_ID =
-  "357278563537-alpo25u2cdl470r9p00siu1ub3rhoc6t.apps.googleusercontent.com";
-const API_KEY = "AIzaSyDLDs4YzPHLUHXA6eztyjLyntTUZE_-9k8";
-const DISCOVERY_DOC = [
-  "https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest",
-];
-const SCOPES = "https://www.googleapis.com/auth/calendar";
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
 
 const months = [
   "Jan",
@@ -306,16 +285,12 @@ export default {
         title: "My Appointment",
         duration: 60,
       },
-      latestEvent: undefined,
+      latestEvent: {},
       selectedHairdressers: [],
       selectedServices: [],
       step1To2Alert: false,
       step2To3Alert: false,
-      tokenClient: undefined,
       showDraggable: true,
-      googleCalendarEventLink: undefined,
-      addingToGoogleCalendar: false,
-      addedToGoogleCalendar: false,
       loadingStripe: false,
       stripeSuccessURL: "http://localhost:5173/appointments",
       stripeCancelURL: "http://localhost:5173/calendar",
@@ -335,24 +310,25 @@ export default {
     async retrieveData() {
       this.retrievingData = true;
 
-      const qShop = query(
-        collection(db.db, "shop"),
-        where("shopName", "==", "Test Shop")
+      const shopSnapshot = await getDoc(
+        doc(db.db, "shop", this.$route.params.id)
       );
 
-      const shopSnapshot = await getDocs(qShop);
-      shopSnapshot.forEach((doc) => {
-        var shopData = doc.data();
+      if (shopSnapshot.exists()) {
+        var shopData = shopSnapshot.data();
+        console.log(shopData);
         this.shopData = shopData;
         this.hairdressers = shopData.hairdressers;
         this.services = shopData.services;
         this.open = shopData.open;
         this.close = shopData.close;
-      });
+      } else {
+        console.log("No such shop");
+      }
 
       const qAppointments = query(
         collection(db.db, "appointments"),
-        where("shopName", "==", "Test Shop")
+        where("shopName", "==", this.shopData.shopName)
       );
 
       const appSnapshot = await getDocs(qAppointments);
@@ -380,6 +356,8 @@ export default {
       } else {
         this.step1To2Alert = true;
       }
+
+      console.log(this.selectedHairdressers);
     },
     step2To3() {
       if (this.selectedServices.length > 0) {
@@ -393,9 +371,11 @@ export default {
         }
         this.draggable.duration = totalDuration;
         this.draggable.price = totalPrice;
+        console.log(this.draggable);
       } else {
         this.step2To3Alert = true;
       }
+      console.log(this.selectedServices);
     },
     step3To4() {
       this.showDraggable = true;
@@ -404,72 +384,16 @@ export default {
         this.step += 1;
       }
     },
-    addToGoogleCal() {
-      this.addingToGoogleCalendar = true;
-      this.tokenClient.callback = async (resp) => {
-        if (resp.error !== undefined) {
-          throw resp;
-        }
-
-        function ISODateString(d) {
-          function pad(n) {
-            return n < 10 ? "0" + n : n;
-          }
-          return (
-            d.getUTCFullYear() +
-            "-" +
-            pad(d.getUTCMonth() + 1) +
-            "-" +
-            pad(d.getUTCDate()) +
-            "T" +
-            pad(d.getUTCHours()) +
-            ":" +
-            pad(d.getUTCMinutes()) +
-            ":" +
-            pad(d.getUTCSeconds()) +
-            "Z"
-          );
-        }
-
-        var startDate = new Date(this.latestEvent.start);
-        var endDate = new Date(this.latestEvent.end);
-        const googleCalEvent = {
-          summary: "Appointment at " + this.shopName,
-          start: {
-            dateTime: ISODateString(startDate),
-            timeZone: "Asia/Singapore",
-          },
-          end: {
-            dateTime: ISODateString(endDate),
-            timeZone: "Asia/Singapore",
-          },
-        };
-
-        const request = window.gapi.client.calendar.events.insert({
-          calendarId: "primary",
-          resource: googleCalEvent,
-        });
-
-        request.execute((event) => {
-          this.addingToGoogleCalendar = false;
-          this.addedToGoogleCalendar = true;
-          console.log("Event created:" + event.htmlLink);
-        });
-      };
-
-      if (window.gapi.client.getToken() === null) {
-        // Prompt the user to select a Google Account and ask for consent to share their data
-        // when establishing a new session.
-        this.tokenClient.requestAccessToken({ prompt: "consent" });
-      } else {
-        // Skip display of account chooser and consent dialog for an existing session.
-        this.tokenClient.requestAccessToken({ prompt: "" });
-      }
-    },
     eventInfo(event) {
       this.latestEvent = event;
     },
     async addAppointmentToDB() {
+      for (var service of this.selectedServices) {
+        this.stripeLineItems.push({
+          price: service.stripePriceID,
+          quantity: 1,
+        });
+      }
 
       // payment succeeds 4242 4242 4242 4242
       // payment requires authentication 4000 0025 0000 3155
@@ -507,38 +431,15 @@ export default {
       this.draggable.shopName = this.shopData.shopName;
       console.log(this.draggable);
 
-      const response = await addDoc(
-        collection(db.db, "appointments"),
-        this.draggable
-      );
-      console.log(response.id);
-
-      for (var service of this.selectedServices) {
-        this.stripeLineItems.push({
-          price: service.stripePriceID,
-          quantity: 1,
-        });
-      }
+      await addDoc(collection(db.db, "appointments"), this.draggable);
     },
   },
   components: {
     VueCal,
     StripeCheckout,
+    AddToGoogleCalendar,
   },
   mounted() {
-    this.tokenClient = window.google.accounts.oauth2.initTokenClient({
-      client_id: CLIENT_ID,
-      scope: SCOPES,
-      callback: "",
-    });
-
-    window.gapi.load("client", async () => {
-      await window.gapi.client.init({
-        apiKey: API_KEY,
-        discoveryDocs: DISCOVERY_DOC,
-      });
-    });
-
     this.retrieveData();
   },
   computed: {

@@ -1,50 +1,66 @@
 <template>
-  <div class="container-fluid">
-    <p class="text-start ms-5 mt-5 fw-semibold">Hello {{ name }},</p>
-    <h1 class="text-start ms-5 fw-semibold">Get a makeover today!</h1>
-    <div id="filter-row" class="row mt-5 justify-content-center">
-      <div class="row col-10 justify-content-center">
-        <div class="col-4">
-          <multiselect
-            v-model="services"
-            :options="servicesOptions"
-            placeholder="Filter services"
-            :show-labels="false"
-            :multiple="true"
-          />
-        </div>
-        <div class="col-4">
-          <multiselect
-            v-model="categories"
-            :options="categoriesOptions"
-            placeholder="Filter category"
-            :show-labels="false"
-            :multiple="true"
-          />
-        </div>
-        <div class="col-4">
-          <multiselect
-            v-model="locations"
-            :options="locationsOptions"
-            placeholder="Filter MRT location"
-            :show-labels="false"
-            :multiple="true"
-          />
-        </div>
-      </div>
-    </div>
-    <div class="row my-5 justify-content-center" v-auto-animate>
+  <div class="container-fluid mt-4 mx-5">
+    <span class="text-start fw-semibold">Hello {{ name }},</span>
+    <h1 class="text-start fw-semibold">Get a makeover today!</h1>
+    <div class="row">
       <div
-        v-for="feed in filtered"
-        :key="feed.id"
-        class="col-sm-6 col-md-4 col-lg-2 my-2"
+        class="col-lg-3 col-md-4 col-sm-12 card border border-dark rounded-4 mt-3 gy-2 p-4 h-100"
       >
-        <FeedCard
-          :imgLink="feed.imgLink"
-          :name="feed.shopName"
-          :rating="feed.rating"
-          :id="feed.id"
+        <div class="d-flex flex-row align-items-center">
+          <span class="text-start fw-semibold">Filters</span>
+          <button
+            type="button"
+            class="hover-button button ms-auto"
+            @click="
+              this.categories = null;
+              this.services = null;
+              this.locations = null;
+            "
+          >
+            Reset
+          </button>
+        </div>
+        <hr />
+        <span class="text-start fw-semibold">Services</span>
+        <multiselect
+          v-model="services"
+          :options="servicesOptions"
+          placeholder="Filter services"
+          :show-labels="false"
+          :multiple="true"
         />
+        <span class="text-start fw-semibold mt-4">Categories</span>
+        <multiselect
+          v-model="categories"
+          :options="categoriesOptions"
+          placeholder="Filter category"
+          :show-labels="false"
+          :multiple="true"
+        />
+        <span class="text-start fw-semibold mt-4">Locations</span>
+        <multiselect
+          v-model="locations"
+          :options="locationsOptions"
+          placeholder="Filter MRT location"
+          :show-labels="false"
+          :multiple="true"
+        />
+      </div>
+      <div class="col-lg-9 col-md-8 col-sm-12 ps-4">
+        <div class="row mt-4" v-auto-animate>
+          <div
+            v-for="feed in filtered"
+            :key="feed.id"
+            class="col-sm-6 col-md-4 col-lg-3"
+          >
+            <FeedCard
+              :imgLink="feed.imgLink"
+              :name="feed.shopName"
+              :rating="feed.rating"
+              :id="feed.id"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <!-- <button @click="test">test</button> -->
@@ -163,7 +179,7 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 <style lang="scss" scoped>
-.card {
+.feedcard {
   border-radius: 4px;
   background: #fff;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
@@ -174,14 +190,8 @@ export default {
   cursor: pointer;
 }
 
-.card:hover {
+.feedcard:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
-}
-
-@media screen and (max-width: 768px) {
-  #filter-row {
-    display: none !important;
-  }
 }
 </style>

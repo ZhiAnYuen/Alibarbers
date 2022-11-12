@@ -128,7 +128,11 @@
         <span>{{ appointmentData.selectedHairdresser.role }}</span>
       </div>
     </div>
-    <button v-if="type === 'upco'" class="col-lg-3 col-md-12 hover-button p-2">
+    <button
+      v-if="type === 'upco'"
+      class="col-lg-3 col-md-12 hover-button p-2"
+      @click="deleteAppointmentFromDB($event)"
+    >
       Cancel
     </button>
     <button
@@ -145,7 +149,7 @@
 import ReviewModal from "./ReviewModal.vue";
 
 import db from "../firebase.js";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, deleteDoc } from "firebase/firestore";
 
 import { computed } from "vue";
 import { useUserStore } from "../stores/users.js";
@@ -233,14 +237,12 @@ export default {
         this.errors.push("Please fill in some details about your experience.");
       }
       if (this.errors.length === 0) {
-        const response = await addDoc(collection(db.db, "reviews"), {
+        await addDoc(collection(db.db, "reviews"), {
           ratingStars: Number(this.ratingStars),
           reviewFeedback: this.reviewFeedback,
           email: this.userEmail,
           likedCategories: this.likedCategories,
         });
-
-        console.log(response.id);
 
         this.showModal = false;
       }
@@ -249,10 +251,14 @@ export default {
       this.$router.push({ path: "/appointment/" + this.appointmentData.docID });
     },
     openReviewModal(event) {
-      console.log(event);
       this.errors = [];
       this.showModal = !this.showModal;
       event.stopPropagation();
+    },
+    async deleteAppointmentFromDB(event) {
+      event.stopPropagation();
+      await deleteDoc(doc(db.db, "appointments", this.appointmentData.docID));
+      this.$emit("refresh");
     },
   },
 };
