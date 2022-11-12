@@ -70,12 +70,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <span
-              v-on:click="goChat"
-              class="nav-link fw-semibold text-dark"
-              style="cursor: pointer"
-              >Chats</span
+            <router-link
+              :to="{ name: 'chat', params: { uid: this.userID } }"
+              class="nav-link"
             >
+              <span class="fw-semibold text-dark"> Chats </span>
+            </router-link>
           </li>
           <li class="nav-item">
             <span
@@ -103,12 +103,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <span
-              v-on:click="goChat"
-              class="nav-link fw-semibold text-dark"
-              style="cursor: pointer"
-              >Chats</span
+            <router-link
+              :to="{ name: 'chat', params: { uid: this.userID } }"
+              class="nav-link"
             >
+              <span class="fw-semibold text-dark"> Chats </span>
+            </router-link>
           </li>
           <li class="nav-item">
             <span
@@ -163,7 +163,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style lang="scss" scoped>

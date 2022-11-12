@@ -16,7 +16,7 @@ export default {
 
 <style lang="scss" scoped>
 main {
-  background-color: #a7bcff;
+  background-color: $pastel-yellow;
   min-height: 100vh;
 }
 </style>

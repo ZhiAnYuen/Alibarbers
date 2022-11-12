@@ -1,41 +1,43 @@
 <template>
-  <div class="container-fluid">
+  <div class="container-fluid p-5">
     <!-- CHAT CARD -->
     <div class="row justify-content-center">
-      <div id="card" class="card m-5 border border-white rounded-4 col-8">
+      <div id="card" class="card m-5 border rounded-4">
         <div class="row" style="height: 100%">
           <!-- CONVO BLOCK -->
-          <div id="convoBlock" class="col-4">
+          <div id="convoBlock" class="col-3">
             <!-- CONVO HEADER -->
-            <div id="convoHeader" class="row">
-              <h4 id="name" class="text-end">{{ name }}'s Chats</h4>
+            <div id="convoHeader" class="row mx-1">
+              <h4 id="name" class="text-start text-dark">{{ name }}'s Chats</h4>
             </div>
 
             <!-- CONVO BODY -->
-            <div
-              v-for="(convo, index) of convos"
-              :key="index"
-              id="convoBody"
-              class="row"
-              @click="readConvo(convo.displayName, convo.uid)"
-            >
-              <div id="convoName">
-                <h5 class="text-light">
-                  {{ convo["displayName"] }}
-                </h5>
-              </div>
-              <div id="convoLastMsg">
-                <span class="text-white">Last Message</span>
+            <div id="convoBodyMain">
+              <div
+                v-for="(convo, index) of convos"
+                :key="index"
+                id="convoBody"
+                class="row mb-3 mx-3"
+                @click="readConvo(convo.displayName, convo.uid)"
+              >
+                <div id="convoName">
+                  <h5 class="text-dark">
+                    {{ convo["displayName"] }}
+                  </h5>
+                </div>
+                <div id="convoLastMsg">
+                  <span class="text-dark">Last Message</span>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- CHAT BLOCK -->
-          <div id="chatBlock" class="col-8">
+          <div id="chatBlock" class="col-9">
             <!-- CHAT HEADER -->
             <div class="row">
               <div id="chatInfo">
-                <h4>{{ chatHeaderName }}</h4>
+                <h4 class="m-2 text-white">{{ chatHeaderName }}</h4>
               </div>
             </div>
 
@@ -76,7 +78,7 @@
                   placeholder="Type something"
                 />
                 <button
-                  class="btn btn-outline-secondary"
+                  class="btn btn-dark"
                   type="button"
                   id="sendButton"
                   @click="sendMsg"
@@ -207,28 +209,32 @@ export default {
 
 #convoBlock {
   height: 100%;
-  border-right: 1px solid;
-  background-color: #3e3c61;
+  background-color: white;
+  gap: 10px;
 }
 
 #convoHeader {
-  background-color: #2f2d52;
+  background-color: white;
 }
 
 #name {
   padding: 20px;
-  color: #ddddf7;
+}
+
+#convoBodyMain {
+  overflow: auto;
 }
 
 #convoBody {
   height: 100px;
   padding: 20px;
   text-align: left;
-  border-bottom: solid 1px gray;
+  border-radius: 15px;
+  background-color: #f4f4f7;
   cursor: pointer;
 
   &:hover {
-    background-color: #2f2d52;
+    background-color: #a9b5bc !important;
   }
 }
 
@@ -237,9 +243,8 @@ export default {
 
   #chatInfo {
     min-height: 60px;
-    background-color: #5d5b8d;
+    background-color: black;
     padding: 10px;
-    color: lightgray;
   }
 
   #chatBodyContainer {
@@ -248,7 +253,9 @@ export default {
   }
 
   #chatBody {
-    background-color: #ddddf7;
+    background-color: #f4f4f7;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
     padding: 10px;
     overflow: auto;
 
@@ -277,31 +284,23 @@ export default {
         .messageContent {
           align-items: flex-end;
           p {
-            background-color: #8da4f1;
+            background-color: black;
             color: white;
             border-radius: 10px 0px 10px 10px;
           }
         }
       }
     }
-
-    // #chatContent p.owner {
-    //   max-width: 80%;
-    //   display: flex;
-    //   flex-direction: column;
-    //   gap: 10px;
-    //   flex-direction: row-reverse;
-    //   align-items: flex-end;
-    //   background-color: #8da4f1;
-    //   color: white;
-    //   border-radius: 10px 0px 10px 10px;
-    // }
   }
 
   #chatInput {
-    background-color: white;
     padding: 10px;
     margin: auto;
+  }
+
+  p {
+    margin: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
   }
 }
 </style>
