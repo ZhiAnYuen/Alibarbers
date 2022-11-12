@@ -49,7 +49,11 @@
           </div>
           <div class="row mt-4 p-0 gy-2">
             <div class="col-lg-6 col-sm-12">
-              <button type="button" class="button hover-button w-100">
+              <button
+                type="button"
+                class="button hover-button w-100"
+                @click="startConvo"
+              >
                 Start a Chat
               </button>
             </div>
@@ -199,6 +203,7 @@ export default {
       // Get current user conversation with other
       const docSnapUser = await getDoc(doc(db.db, "userChats", currentUID));
 
+      // If conversation does not exist, create conversation between users
       if (docSnapUser.exists() && !docSnapUser.data()[combinedUID]) {
         let nested = {
           displayName: this.shopDetails["shopName"],
@@ -211,8 +216,10 @@ export default {
         await updateDoc(doc(db.db, "userChats", currentUID), toAdd);
       }
 
+      // Get other user conversation with current user
       const docSnapOther = await getDoc(doc(db.db, "userChats", otherUID));
 
+      // If conversation does not exist, create conversation between users
       if (docSnapOther.exists() && !docSnapOther.data()[combinedUID]) {
         let nested = {
           displayName: user.name,
@@ -225,6 +232,7 @@ export default {
         await updateDoc(doc(db.db, "userChats", otherUID), toAdd);
       }
 
+      // Route to chat
       this.$router.push("/chat/" + currentUID);
     },
   },
