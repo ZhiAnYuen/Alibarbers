@@ -1,7 +1,6 @@
 <template>
-  <h1 class="text-center p-5">Welcome! Set up your shop here.</h1>
+  <h1 class="text-center p-5">Your Shop</h1>
   <div class="container" width="90%">
-    
     <form>
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
@@ -19,7 +18,7 @@
                 type="text"
                 class="form-control"
                 id="shopname"
-                v-model="shopname"
+                v-model="newshopname"
                 placeholder="E.g. Sally's Hairdressers"
               />
               <button
@@ -38,29 +37,6 @@
               <div v-if="shopnameAvail == 3" class="form-text my-2">
                 Shop Name Verified!
               </div>
-            </div>
-          </div>
-
-          <!-- Upload a picture of their shop -->
-          <div class="row">
-            <label class="my-2" for="shopimg"><strong>Shop Image</strong></label>
-            <div class="input-group">
-              <input
-                type="file"
-                class="form-control mb-2"
-                id="files"
-                accept="image/*"
-                v-bind="shopimg"
-                aria-describedby="filepicker"
-              />
-              <!-- <button 
-                class="btn mb-2 btn-outline-secondary" 
-                type="button" 
-                id="filepicker"
-                @click="imgPicker()"
-              >
-                Upload
-              </button> -->
             </div>
           </div>
         
@@ -264,27 +240,24 @@
 
       <!-- Form Validation & Submission -->
       <div class="row my-2 float-end col-auto">
-        <button type="reset" class="btn custom-reset col-auto mx-2 hover-button">
-          Reset Fields
-        </button>
-        <button type="submit" class="btn custom col-auto mx-2 hover-button" @click="createShop()">
-          Create Shop
+        <button type="submit" class="btn custom-submit col-auto mx-2 hover-button" @click="createShop()">
+          Edit Profile
         </button>
       </div>
     
     </form>
+      
   </div>
 </template>
 
 <script>
 import db from "../firebase.js";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { query, where, getDocs, collection, getDoc } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
-import "firebase/storage";
 
 export default {
-  name: "CreateShop",
+  name: 'ProfileBody',
   setup() {
     const user = useUserStore();
     return {
@@ -296,23 +269,6 @@ export default {
   },
   data() {
     return {
-      shopname: "",
-      shoplocation: "",
-      services: [{
-        name: '',
-        price: '',
-        duration: ''
-      }],
-      hairdressers: [{
-        name: '',
-        role: ''
-      }],
-      shopnameAvail: 1,
-      errors: [],
-      shopimg: '',
-      opening: '',
-      closing: '',
-      validateForm: false,
       tags: [
         'Male Hairstyles', 
         'Female Hairstyles',
@@ -324,7 +280,6 @@ export default {
         'Wellness',
         'Bleaching',
       ],
-      selectedTags: [],
       MRTs: [
         "Joo Koon",
         "Jurong East",
@@ -347,42 +302,78 @@ export default {
         "Tampines",
         "Marine Parade"
       ],
-      selectedMRT: 'Choose...',
-    };
+      shopdata: undefined,
+      hairdressers: [],
+      services: [],
+      shoplocation: '',
+      shopname: '',
+      newshopname: '',
+      shopimg: '../assets/shop1.img',
+      opening: '',
+      closing: '',
+      selectedTags: [],
+      selectedMRT: '',
+      errors: [],
+      shopnameAvail: 1,
+    }
+  },
+  async mounted() {
+    let shopsRef = collection(db.db, "shop");
+    let q = query(shopsRef, where("ownerEmail", "==", this.email));
+    let querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      console.log(doc.id, " => ", doc.data());
+      this.shopdata = doc.data();
+    });
+    // assign values to Vue app data for v-model ing
+    if (!(this.shopdata==undefined)) {
+      this.shopname = this.shopdata.shopName;
+      this.newshopname = this.shopdata.shopName;
+      this.closing = this.shopdata.rawClosing;
+      this.opening = this.shopdata.rawOpening;
+      this.hairdressers = this.shopdata.hairdressers;
+      this.services = this.shopdata.services;
+      this.shoplocation = this.shopdata.location;
+      this.selectedMRT = this.shopdata.selectedMRT;
+      this.selectedTags = this.shopdata.selectedTags;
+    }
   },
   methods: {
-    imgPicker() {}, 
     checkAvail() {
-      let name = this.shopname.replace(" ", "");
-      var docRef = doc(db.db, "shop", name);
-      getDoc(docRef).then((docSnap) => {
-        if (!docSnap.exists()) {
-          console.log("No matching document.");
-          this.shopnameAvail = 3; // Shop name will be verified
-          if (
-            this.errors.indexOf(
-              "The selected shop name has been taken. Please select another name for your shop."
-            ) != -1
-          ) {
-            let i = this.errors.indexOf(
-              "The selected shop name has been taken. Please select another name for your shop."
-            );
-            this.errors.splice(i, 1);
+      if (this.shopname == this.newshopname) {
+        this.shopnameAvail = 3; // Shop name will be verified
+      } else {
+        let name = this.newshopname.replace(" ", "");
+        var docRef = doc(db.db, "shop", name);
+        getDoc(docRef).then((docSnap) => {
+          if (!docSnap.exists()) {
+            console.log("No matching document.");
+            this.shopnameAvail = 3; // Shop name will be verified
+            if (
+              this.errors.indexOf(
+                "The selected shop name has been taken. Please select another name for your shop."
+              ) != -1
+            ) {
+              let i = this.errors.indexOf(
+                "The selected shop name has been taken. Please select another name for your shop."
+              );
+              this.errors.splice(i, 1);
+            }
+          } else {
+            console.log("Document data:", docSnap.data);
+            this.shopnameAvail = 2; // Error - shop name has been taken
+            if (
+              this.errors.indexOf(
+                "The selected shop name has been taken. Please select another name for your shop."
+              ) == -1
+            ) {
+              this.errors.push(
+                "The selected shop name has been taken. Please select another name for your shop."
+              );
+            }
           }
-        } else {
-          console.log("Document data:", docSnap.data);
-          this.shopnameAvail = 2; // Error - shop name has been taken
-          if (
-            this.errors.indexOf(
-              "The selected shop name has been taken. Please select another name for your shop."
-            ) == -1
-          ) {
-            this.errors.push(
-              "The selected shop name has been taken. Please select another name for your shop."
-            );
-          }
-        }
-      });
+        });
+      }
     },
     addService() {
       this.services.push({
@@ -433,68 +424,8 @@ export default {
       }
       this.hairdressers.splice(index, 1);
     },
-    createShop() {
-      event.preventDefault();
-      var final_hairdressers = [];
-      for (var i=0; i < this.hairdressers.length; i++) {
-        let temp = {};
-        temp['class'] = this.hairdressers[i]['name'].replace(" ", "");
-        temp['id'] = i+1;
-        temp['role'] = this.hairdressers[i]['role'];
-        temp['name'] = this.hairdressers[i]['name'];
-        temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
-        final_hairdressers.push(temp);
-      }
+    editShop() {
 
-      if (!(this.closing.length==4) || 
-          !(this.opening.length==4) ||
-          isNaN(this.opening)==true ||
-          isNaN(this.closing)==true ) {
-        var hourscheck = false;
-        alert("Error! Please enter valid opening hours in 24-hour clock format.");
-      } else {
-        var hourscheck = true;
-      }
-
-      if (!(this.shopnameAvail==3) || this.shoplocation=="" || this.errors.length>0 || hourscheck==false || this.selectedMRT=="Choose..." ) {
-        console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
-        alert("Error! Please fill in all fields.");
-      } else {
-        let final_tags = [];
-        for (let tag of this.selectedTags) {
-          final_tags.push(tag);
-        }
-        final_tags.push(this.selectedMRT);
-
-        let name = this.shopname.replace(" ", "");
-        const docRef2 = doc(db.db, "shop", name);
-
-        const data1 = {
-          shopName: this.shopname,
-          imgLink: this.shopimg,
-          location: this.shoplocation,
-          ownerEmail: this.email,
-          services: this.services,
-          open: Number(this.opening.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
-          close: Number(this.closing.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
-          hairdressers: final_hairdressers,
-          tags: final_tags,
-          selectedMRT: this.selectedMRT,
-          rawClosing: this.closing,
-          rawOpening: this.opening,
-          selectedTags: this.selectedTags,
-        };
-
-        setDoc(docRef2, data1)
-          .then(() => {
-            console.log('Document was added successfully!');
-            alert("Success! Welcome, " + this.shopname);
-            this.$router.push("/hairdresserfeed");
-          })
-          .catch(error => {
-            console.log(error);
-          })
-      }
     },
   },
 };
@@ -504,16 +435,20 @@ export default {
   h1 {
     background-color: $pastel-yellow;
   }
+  img.custom {
+    height: 130px;
+    width: 150px;
+    object-fit: cover;
+  }
   button.custom {
-    background-color: $pastel-yellow;
     color: black;
     border-color: black;
   }
-  button {
-    border: 0ch;
+  button.custom:hover {
+    background-color: $pastel-yellow;
   }
-  button.custom-reset {
-    background-color: red($color: #000000);
+  button.custom-submit:hover {
+    background-color: $pastel-yellow;
   }
   label.customlabel:hover {
     background-color: $pastel-yellow;

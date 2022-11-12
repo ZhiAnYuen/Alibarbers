@@ -9,6 +9,7 @@ import CreateShopView from "../views/CreateShopView.vue";
 import HairdresserFeedBody from "../views/HairdresserFeedView.vue";
 import AppointmentsView from "../views/AppointmentsView.vue";
 import AppointmentView from "../views/AppointmentView.vue";
+import ProfileBody from "../views/ProfileView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,6 +84,14 @@ const router = createRouter({
       path: "/hairdresserfeed",
       name: "hairdresserfeed",
       component: HairdresserFeedBody,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/hairdresserprofile",
+      name: "hairdresserprofile",
+      component: ProfileBody,
       meta: {
         requiresAuth: true,
       },

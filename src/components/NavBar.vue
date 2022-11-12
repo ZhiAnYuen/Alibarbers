@@ -46,7 +46,7 @@
           </li>
           <li class="nav-item">
             <router-link to="#" class="nav-link">
-              <span class="fw-semibold text-dark"> Chats </span>
+              <span class="fw-semibold text-dark"> My Chats </span>
             </router-link>
           </li>
           <li class="nav-item">
@@ -73,7 +73,12 @@
           </li>
           <li class="nav-item">
             <router-link to="#" class="nav-link">
-              <span class="fw-semibold text-dark"> Chats </span>
+              <span class="fw-semibold text-dark"> My Chats </span>
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link to="/hairdresserprofile" class="nav-link">
+              <span class="fw-semibold text-dark"> My Profile </span>
             </router-link>
           </li>
           <li class="nav-item">

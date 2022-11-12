@@ -123,7 +123,6 @@ export default {
     };
   },
   async mounted() {
-    
     // find shopname based on user's email
     var shopsRef = collection(db.db, "shop");
     var q = query(shopsRef, where("ownerEmail", "==", this.email));
@@ -215,7 +214,7 @@ export default {
         } else {
           services_data[appt.selectedServices[ind].name] = 1;
         }
-        console.log(appt.selectedServices[ind]);
+        //console.log(appt.selectedServices[ind]);
       }
     }
     let avgRev = (this.totalRevenue / this.appts.length).toFixed(2)
@@ -309,7 +308,6 @@ export default {
   methods: {},
 };
 </script>
-
 
 <style lang="scss" scoped>
   .custom-size {
