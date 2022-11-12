@@ -9,12 +9,9 @@ import CreateShopView from "../views/CreateShopView.vue";
 import HairdresserFeedView from "../views/HairdresserFeedView.vue";
 import AppointmentsView from "../views/AppointmentsView.vue";
 import AppointmentView from "../views/AppointmentView.vue";
-<<<<<<< HEAD
 import ShopAppointmentsView from "../views/ShopAppointmentsView.vue";
 import ProfileBody from "../views/ProfileView.vue";
-=======
 import ChatView from "../views/ChatView.vue";
->>>>>>> feed
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -108,6 +105,8 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
       },
+    },
+    {
       path: "/chat/:uid",
       name: "chat",
       component: ChatView,
