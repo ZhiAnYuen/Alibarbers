@@ -395,8 +395,9 @@ export default {
     var docRef = doc(db.db, "shop", this.userID);
     getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
-        //this.$router.push("/hairdresserfeed");
-        console.log(docSnap.data());
+        alert('You have already created a shop profile.')
+        this.$router.push("/hairdresserfeed");
+        //console.log(docSnap.data());
       }
     });
     this.contactemail = this.email;
