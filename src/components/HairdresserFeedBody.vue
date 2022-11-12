@@ -1,7 +1,7 @@
 <template>
-  <div class="container" width="95%">
+  <div class="container-fluid px-5">
     <br />
-    <p class="text-start fw-semibold">Hello {{ name }},</p>
+    <span class="text-start fw-semibold">Hello {{ name }},</span>
     <h1 class="text-start fw-semibold">Welcome to your Insights Dashboard.</h1>
 
     <!-- <div class="row mt-5" v-if="check==false">
@@ -14,25 +14,16 @@
         </button>
     </div> -->
 
-    <div class="row g-3 mt-2 p-3" v-if="check == true">
+    <div class="row mt-4 gx-3" v-if="check == true">
       <!-- Revenue -->
       <div
-        class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center"
+        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
       >
-        <div class="row justify-content-evenly">
-          <div class="col mt-4 mx-4">
-            <h3 class="fw-semibold">Revenue</h3>
-          </div>
-          <div class="col">
-            <img
-              src="../assets/revenue.png"
-              class="img-fluid custom-size mt-3"
-            />
-          </div>
+        <div class="d-flex flex-row justify-content-between">
+          <h3 class="fw-semibold">Revenue</h3>
+          <img src="../assets/revenue.png" class="img-fluid custom-size" />
         </div>
-        <div class="mt-3 mx-3">
-          <canvas id="revenueChart"></canvas>
-        </div>
+        <canvas id="revenueChart"></canvas>
         <div class="card-body text-center">
           Average Revenue per Booking: <strong>${{ averageRevenue }}</strong>
           <br />
@@ -40,26 +31,15 @@
         </div>
       </div>
 
-      <div class="col-md-1 d-none d-md-block"></div>
-
       <!-- bookings -->
       <div
-        class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center"
+        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
       >
-        <div class="row justify-content-evenly">
-          <div class="col mt-4 mx-4">
-            <h3 class="fw-semibold">Bookings</h3>
-          </div>
-          <div class="col">
-            <img
-              src="../assets/booking.png"
-              class="img-fluid custom-size mt-3"
-            />
-          </div>
+        <div class="d-flex flex-row justify-content-between">
+          <h3 class="fw-semibold">Bookings</h3>
+          <img src="../assets/booking.png" class="img-fluid custom-size" />
         </div>
-        <div class="my-3 mx-3">
-          <canvas id="bookingsChart"></canvas>
-        </div>
+        <canvas id="bookingsChart"></canvas>
         <div class="card-body text-center">
           Total Bookings: <strong>{{ totalBookings }}</strong>
         </div>
@@ -67,18 +47,11 @@
 
       <!-- ratings -->
       <div
-        class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center"
+        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
       >
-        <div class="row justify-content-evenly">
-          <div class="col mt-4 mx-4">
-            <h3 class="fw-semibold">Ratings</h3>
-          </div>
-          <div class="col">
-            <img
-              src="../assets/rating.png"
-              class="img-fluid custom-size mt-3"
-            />
-          </div>
+        <div class="d-flex flex-row justify-content-between">
+          <h3 class="fw-semibold">Ratings</h3>
+          <img src="../assets/rating.png" class="img-fluid custom-size" />
         </div>
         <div class="mt-3 mx-3">
           <canvas id="ratingsChart"></canvas>
@@ -88,28 +61,22 @@
         </div>
       </div>
 
-      <div class="col-md-1 d-none d-md-block"></div>
-
       <!-- services -->
       <div
-        class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center"
+        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
       >
-        <div class="row justify-content-evenly">
-          <div class="col mt-4 mx-4">
-            <h3 class="fw-semibold">Services</h3>
-          </div>
-          <div class="col">
-            <img
-              src="../assets/service.png"
-              class="img-fluid custom-size mt-3"
-            />
-          </div>
+        <div class="d-flex flex-row justify-content-between">
+          <h3 class="fw-semibold">Services</h3>
+          <img src="../assets/service.png" class="img-fluid custom-size" />
         </div>
         <div class="my-2 d-flex flex-row justify-content-center">
           <canvas
             class="justify-content-center mb-2"
             id="servicesChart"
           ></canvas>
+        </div>
+        <div class="card-body text-center">
+          Total Services: <strong>{{ totalServices }}</strong>
         </div>
       </div>
     </div>
@@ -153,6 +120,7 @@ export default {
       totalRevenue: 0,
       check: false,
       totalBookings: 0,
+      totalServices: 0,
     };
   },
   async mounted() {
@@ -199,7 +167,7 @@ export default {
       const ratingsChart = new Chart(ctx1, {
         type: "bar",
         data: {
-          labels: ["1-star", "2-star", "3-star", "5-star", "5-star"],
+          labels: ["1-star", "2-star", "3-star", "4-star", "5-star"],
           datasets: [
             {
               labels: "# of Ratings", // this does not show up
@@ -288,6 +256,7 @@ export default {
         revenue_data[regex[date.getMonth()]] += Number(appt.price);
         this.totalRevenue += Number(appt.price);
         for (var ind in appt.selectedServices) {
+          this.totalServices += 1;
           if (appt.selectedServices[ind].name in services_data) {
             services_data[appt.selectedServices[ind].name] += 1;
           } else {
