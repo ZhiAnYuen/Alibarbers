@@ -1,0 +1,301 @@
+<template>
+  <div class="container-fluid">
+    <!-- CHAT CARD -->
+    <div class="row justify-content-center">
+      <div id="card" class="card m-5 border border-white rounded-4 col-8">
+        <div class="row" style="height: 100%">
+          <!-- CONVO BLOCK -->
+          <div id="convoBlock" class="col-4">
+            <!-- CONVO HEADER -->
+            <div id="convoHeader" class="row">
+              <h4 id="name" class="text-end">{{ name }}'s Chats</h4>
+            </div>
+
+            <!-- CONVO BODY -->
+            <div
+              v-for="(convo, index) of convos"
+              :key="index"
+              id="convoBody"
+              class="row"
+              @click="readConvo(convo.displayName, convo.uid)"
+            >
+              <div id="convoName">
+                <h5 class="text-light">
+                  {{ convo["displayName"] }}
+                </h5>
+              </div>
+              <div id="convoLastMsg">
+                <span class="text-white">Last Message</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHAT BLOCK -->
+          <div id="chatBlock" class="col-8">
+            <!-- CHAT HEADER -->
+            <div class="row">
+              <div id="chatInfo">
+                <h4>{{ chatHeaderName }}</h4>
+              </div>
+            </div>
+
+            <!-- CHAT BODY -->
+            <div id="chatBodyContainer" class="row">
+              <div id="chatBody">
+                <!-- CHAT MESSAGE -->
+                <template v-for="message of messages" :key="message.index">
+                  <div
+                    v-if="message['uid'] == this.currentUID"
+                    class="massagesList owner"
+                  >
+                    <div class="messageContent">
+                      <p>
+                        {{ message.text }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div v-else class="massagesList">
+                    <div class="messageContent">
+                      <p>
+                        {{ message.text }}
+                      </p>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <!-- CHAT INPUT -->
+            <div id="chatInput" class="row">
+              <div class="input-group mb-3">
+                <input
+                  v-model="inputText"
+                  type="text"
+                  class="form-control"
+                  placeholder="Type something"
+                />
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="sendButton"
+                  @click="sendMsg"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { doc, onSnapshot, getDoc, setDoc } from "firebase/firestore";
+import db from "../firebase.js";
+import { useUserStore } from "../stores/users.js";
+
+export default {
+  name: "ChatBody",
+  components: {},
+  data() {
+    const user = useUserStore();
+
+    return {
+      currentUID: user.userID,
+      name: user.name,
+      otherUID: "",
+      convos: [],
+      chatHeaderName: "",
+      messages: [],
+      inputText: "",
+    };
+  },
+  async mounted() {
+    // Get user's convo
+    const docSnap = await getDoc(doc(db.db, "userChats", this.currentUID));
+
+    if (!docSnap.exists()) {
+      await setDoc(doc(db.db, "userChats", this.currentUID), {});
+    }
+
+    onSnapshot(doc(db.db, "userChats", this.currentUID), (doc) => {
+      let entries = Object.entries(doc.data());
+      for (let entry of entries) {
+        this.convos.push(entry[1]);
+      }
+    });
+  },
+  methods: {
+    // Retrieve conversation and display
+    async readConvo(name, uid) {
+      this.otherUID = uid;
+      this.chatHeaderName = name;
+
+      // Find conversation based on combined UID
+      const combinedUID =
+        this.currentUID > this.otherUID
+          ? this.currentUID + this.otherUID
+          : this.otherUID + this.currentUID;
+
+      const docSnap = await getDoc(doc(db.db, "chats", combinedUID));
+
+      if (!docSnap.exists()) {
+        await setDoc(doc(db.db, "chats", combinedUID), {
+          messages: [],
+        });
+      }
+      onSnapshot(doc(db.db, "chats", combinedUID), (doc) => {
+        this.messages = doc.data()["messages"];
+      });
+      this.inputText = "";
+    },
+    // Send message
+    async sendMsg() {
+      if (this.otherUID == "") {
+        return;
+      }
+
+      // Change message to send as object
+      let obj = {
+        text: this.inputText,
+        uid: this.currentUID,
+      };
+
+      const combinedUID =
+        this.currentUID > this.otherUID
+          ? this.currentUID + this.otherUID
+          : this.otherUID + this.currentUID;
+
+      // Get current conversation
+      const docSnap = await getDoc(doc(db.db, "chats", combinedUID));
+
+      // Append message to send to conversation
+      let curr = docSnap.data()["messages"];
+
+      if (curr == null) {
+        await setDoc(doc(db.db, "chats", combinedUID), {
+          messages: [obj],
+        });
+      } else {
+        curr.push(obj);
+
+        // Update conversation
+        await setDoc(doc(db.db, "chats", combinedUID), {
+          messages: curr,
+        });
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.card {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
+  height: 75vh;
+  overflow: hidden;
+}
+
+#convoBlock {
+  height: 100%;
+  border-right: 1px solid;
+  background-color: #3e3c61;
+}
+
+#convoHeader {
+  background-color: #2f2d52;
+}
+
+#name {
+  padding: 20px;
+  color: #ddddf7;
+}
+
+#convoBody {
+  height: 100px;
+  padding: 20px;
+  text-align: left;
+  border-bottom: solid 1px gray;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #2f2d52;
+  }
+}
+
+#chatBlock {
+  max-height: 100%;
+
+  #chatInfo {
+    min-height: 60px;
+    background-color: #5d5b8d;
+    padding: 10px;
+    color: lightgray;
+  }
+
+  #chatBodyContainer {
+    height: calc(100% - 130px);
+    overflow: auto;
+  }
+
+  #chatBody {
+    background-color: #ddddf7;
+    padding: 10px;
+    overflow: auto;
+
+    .massagesList {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+
+      .messageContent {
+        max-width: 80%;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        p {
+          background-color: white;
+          padding: 10px 20px;
+          border-radius: 0px 10px 10px 10px;
+          max-width: max-content;
+        }
+      }
+
+      &.owner {
+        flex-direction: row-reverse;
+
+        .messageContent {
+          align-items: flex-end;
+          p {
+            background-color: #8da4f1;
+            color: white;
+            border-radius: 10px 0px 10px 10px;
+          }
+        }
+      }
+    }
+
+    // #chatContent p.owner {
+    //   max-width: 80%;
+    //   display: flex;
+    //   flex-direction: column;
+    //   gap: 10px;
+    //   flex-direction: row-reverse;
+    //   align-items: flex-end;
+    //   background-color: #8da4f1;
+    //   color: white;
+    //   border-radius: 10px 0px 10px 10px;
+    // }
+  }
+
+  #chatInput {
+    background-color: white;
+    padding: 10px;
+    margin: auto;
+  }
+}
+</style>

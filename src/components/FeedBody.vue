@@ -2,9 +2,9 @@
   <div class="container-fluid">
     <p class="text-start ms-5 mt-5 fw-semibold">Hello {{ name }},</p>
     <h1 class="text-start ms-5 fw-semibold">Get a makeover today!</h1>
-    <div id="filter-row" class="row mt-5 justify-content-center">
-      <div class="row col-10 justify-content-center">
-        <div class="col-4">
+    <div id="filter-row" class="row mt-3 justify-content-center">
+      <div class="row col-10 justify-content-center gy-3">
+        <div class="col-md-4 col-sm-12">
           <multiselect
             v-model="services"
             :options="servicesOptions"
@@ -13,7 +13,7 @@
             :multiple="true"
           />
         </div>
-        <div class="col-4">
+        <div class="col-md-4 col-sm-12">
           <multiselect
             v-model="categories"
             :options="categoriesOptions"
@@ -22,7 +22,7 @@
             :multiple="true"
           />
         </div>
-        <div class="col-4">
+        <div class="col-md-4 col-sm-12">
           <multiselect
             v-model="locations"
             :options="locationsOptions"
@@ -179,9 +179,9 @@ export default {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
-@media screen and (max-width: 768px) {
-  #filter-row {
-    display: none !important;
-  }
-}
+// @media screen and (max-width: 768px) {
+//   #filter-row {
+//     display: none !important;
+//   }
+// }
 </style>

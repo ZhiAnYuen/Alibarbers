@@ -15,7 +15,9 @@
         </p>
         <p class="mt-4 fs-4 fw-light">{{ shopDetails["location"] }}</p>
         <div class="row">
-          <button class="hover-button mt-3 mx-3 mb-5 col-6">Chat</button>
+          <button class="hover-button mt-3 mx-3 mb-5 col-6" @click="startConvo">
+            Chat
+          </button>
           <button class="hover-button mt-3 mx-3 mb-5 col-6">Book</button>
         </div>
       </div>
@@ -78,12 +80,13 @@
 </template>
 
 <script>
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import db from "../firebase.js";
 import OverviewBody from "./OverviewBody.vue";
 import ServicesBody from "./ServicesBody.vue";
 import HairdressersBody from "./HairdressersBody.vue";
 import ReviewsBody from "./ReviewsBody.vue";
+import { useUserStore } from "../stores/users.js";
 
 export default {
   name: "ShopBody",
@@ -108,14 +111,49 @@ export default {
       getDoc(docRef).then((docSnap) => {
         if (docSnap.exists()) {
           this.shopDetails = docSnap.data();
-          // console.log("Document data:", docSnap.data());
         } else {
           console.log("No such document!");
         }
       });
     },
-    test() {
-      console.log(this.shopDetails["imgLink"]);
+    async startConvo() {
+      const user = useUserStore();
+      let currentUID = user.userID;
+      let otherUID = this.$route.params["id"];
+
+      const combinedUID =
+        currentUID > otherUID ? currentUID + otherUID : otherUID + currentUID;
+
+      // Get current user conversation with other
+      const docSnapUser = await getDoc(doc(db.db, "userChats", currentUID));
+
+      if (docSnapUser.exists() && !docSnapUser.data()[combinedUID]) {
+        let nested = {
+          displayName: this.shopDetails["shopName"],
+          uid: otherUID,
+        };
+
+        let toAdd = {};
+        toAdd[combinedUID] = nested;
+
+        await updateDoc(doc(db.db, "userChats", currentUID), toAdd);
+      }
+
+      const docSnapOther = await getDoc(doc(db.db, "userChats", otherUID));
+
+      if (docSnapOther.exists() && !docSnapOther.data()[combinedUID]) {
+        let nested = {
+          displayName: user.name,
+          uid: currentUID,
+        };
+
+        let toAdd = {};
+        toAdd[combinedUID] = nested;
+
+        await updateDoc(doc(db.db, "userChats", otherUID), toAdd);
+      }
+
+      this.$router.push("/chat/" + currentUID);
     },
   },
   computed: {

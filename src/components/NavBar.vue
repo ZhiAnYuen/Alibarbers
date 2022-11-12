@@ -16,9 +16,8 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse p-3" id="navbarNav">
-        <!-- v-if="isLoggedIn($route.name) == false" -->
         <ul
-          v-if="isLoggedIn == false"
+          v-if="ifLoggedIn($route.name) == false"
           class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
         >
           <li class="nav-item">
@@ -34,9 +33,8 @@
         </ul>
 
         <!-- Navbar for Customers -->
-        <!-- v-if="isLoggedIn($route.name) == 'Customer'" -->
         <ul
-          v-if="userType == 'Customer'"
+          v-if="ifLoggedIn($route.name) == 'Customer'"
           class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
         >
           <li class="nav-item">
@@ -50,9 +48,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="#" class="nav-link">
-              <span class="fw-semibold text-dark"> Chats </span>
-            </router-link>
+            <span
+              v-on:click="goChat"
+              class="nav-link fw-semibold text-dark"
+              style="cursor: pointer"
+              >Chats</span
+            >
           </li>
           <li class="nav-item">
             <span
@@ -65,9 +66,8 @@
         </ul>
 
         <!-- Navbar for Hairdressers -->
-        <!-- v-if="isLoggedIn($route.name) == 'Hairdresser'" -->
         <ul
-          v-if="userType == 'Hairdresser'"
+          v-if="ifLoggedIn($route.name) == 'Hairdresser'"
           class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
         >
           <li class="nav-item">
@@ -81,9 +81,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="#" class="nav-link">
-              <span class="fw-semibold text-dark"> Chats </span>
-            </router-link>
+            <span
+              v-on:click="goChat"
+              class="nav-link fw-semibold text-dark"
+              style="cursor: pointer"
+              >Chats</span
+            >
           </li>
           <li class="nav-item">
             <span
@@ -113,6 +116,7 @@ export default {
       email: computed(() => user.email),
       isLoggedIn: computed(() => user.isLoggedIn),
       userType: computed(() => user.userType),
+      userID: computed(() => user.userID),
     };
   },
   methods: {
@@ -122,6 +126,18 @@ export default {
         user.logout();
         this.$router.push("/home");
       });
+    },
+    goChat() {
+      this.$router.push("/chat/" + this.userID);
+    },
+    ifLoggedIn(routeName) {
+      if (["home", "login", "signup"].includes(routeName)) {
+        return false;
+      } else if (this.userType == "Hairdresser") {
+        return "Hairdresser";
+      } else {
+        return "Customer";
+      }
     },
   },
 };
