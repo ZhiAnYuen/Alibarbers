@@ -73,6 +73,10 @@
           >
             Sign Up
           </button>
+          <vue-recaptcha
+            sitekey="6LdW9usiAAAAADjdwQP9CRnAsoyl3Aw7o7BvF9R-"
+            class="mb-4"
+          ></vue-recaptcha>
           <p>
             Already have an account?
             <router-link to="/login"><span>Login</span></router-link>
@@ -84,14 +88,16 @@
   </div>
 </template>
 
-<script>
+<script lang="js">
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import db from "../firebase.js";
 import { useUserStore } from "../stores/users.js";
+import { VueRecaptcha } from 'vue-recaptcha';
 
 export default {
   name: "SignUp",
+  components: { VueRecaptcha },
   data() {
     return {
       name: "",
@@ -135,7 +141,6 @@ export default {
 #card {
   z-index: 0;
   width: 600px;
-  height: 570px;
 }
 
 span {

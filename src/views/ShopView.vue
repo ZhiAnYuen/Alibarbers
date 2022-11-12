@@ -15,9 +15,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-main {
-  background-color: $pastel-yellow;
-  background: linear-gradient(0deg, white 0%, $pastel-yellow 100%);
-  height: 35vh;
-}
+// main {
+//   background-color: $pastel-yellow;
+//   height: 40vh;
+// }
 </style>

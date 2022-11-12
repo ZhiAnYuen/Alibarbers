@@ -133,7 +133,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .navbar-nav {
   gap: 10px;
 }
