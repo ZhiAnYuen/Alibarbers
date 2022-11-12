@@ -3,19 +3,40 @@
     <img :src="imgLink" class="card-img-top" />
     <div class="card-body">
       <h5 class="card-title">{{ name }}</h5>
-      <p class="card-text">Rating: {{ rating }}</p>
+      <div class="card-text" v-if="!isNaN(averageRating)">
+        <star-rating
+          :rating="averageRating"
+          :read-only="true"
+          :inline="true"
+          :increment="0.5"
+          :show-rating="true"
+          :star-size="20"
+        />
+        ({{ ratingCount }})
+      </div>
+      <div v-else>Not yet reviewed</div>
     </div>
     <span @click="routeShop" class="stretched-link"></span>
   </div>
 </template>
 
 <script>
+import StarRating from "vue-star-rating";
+
 export default {
   name: "FeedCard",
-  props: ["imgLink", "name", "rating", "id"],
+  props: ["imgLink", "name", "ratingSum", "ratingCount", "id"],
   methods: {
     routeShop() {
       this.$router.push({ path: "/shop/" + this.id });
+    },
+  },
+  components: {
+    StarRating,
+  },
+  computed: {
+    averageRating() {
+      return (this.ratingSum / this.ratingCount).toFixed(1);
     },
   },
 };

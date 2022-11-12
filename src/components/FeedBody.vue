@@ -51,12 +51,13 @@
           <div
             v-for="feed in filtered"
             :key="feed.id"
-            class="col-sm-6 col-md-4 col-lg-3"
+            class="col-sm-6 col-lg-4"
           >
             <FeedCard
               :imgLink="feed.imgLink"
               :name="feed.shopName"
-              :rating="feed.rating"
+              :ratingSum="feed.ratingSum"
+              :ratingCount="feed.ratingCount"
               :id="feed.id"
             />
           </div>
@@ -70,7 +71,7 @@
 <script>
 import { computed } from "vue";
 import { useUserStore } from "../stores/users.js";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import db from "../firebase.js";
 import FeedCard from "./FeedCard.vue";
 import Multiselect from "vue-multiselect";
@@ -163,9 +164,28 @@ export default {
     async getAllShops() {
       getDocs(collection(db.db, "shop")).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          let obj = doc.data();
-          obj["id"] = doc.id;
-          this.feeds.push(obj);
+          let shopData = doc.data();
+          shopData["id"] = doc.id;
+
+          const qReviews = query(
+            collection(db.db, "reviews"),
+            where("shopName", "==", shopData.shopName)
+          );
+
+          var ratingSum = 0;
+          var ratingCount = 0;
+
+          getDocs(qReviews).then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              var reviewData = doc.data();
+              ratingSum += Number(reviewData.ratingStars);
+              ratingCount += 1;
+            });
+
+            shopData.ratingSum = ratingSum;
+            shopData.ratingCount = ratingCount;
+            this.feeds.push(shopData);
+          });
         });
       });
     },

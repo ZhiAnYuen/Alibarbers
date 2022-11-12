@@ -161,12 +161,12 @@ export default {
       });
     },
     getReviews() {
-      const q = query(
+      const qReviews = query(
         collection(db.db, "reviews"),
         where("shopName", "==", this.shopDetails.shopName)
       );
 
-      getDocs(q).then((querySnapshot) => {
+      getDocs(qReviews).then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           var docData = doc.data();
           this.reviews.push(docData);
