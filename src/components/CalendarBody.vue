@@ -470,6 +470,12 @@ export default {
       this.latestEvent = event;
     },
     async addAppointmentToDB() {
+
+      // payment succeeds 4242 4242 4242 4242
+      // payment requires authentication 4000 0025 0000 3155
+      // payment is declined 4000 0000 0000 9995
+      this.$refs.checkoutRef.redirectToCheckout();
+
       function convertToDateString(dateTime) {
         var dateObj = new Date(dateTime);
         return (
@@ -513,8 +519,6 @@ export default {
           quantity: 1,
         });
       }
-
-      this.$refs.checkoutRef.redirectToCheckout();
     },
   },
   components: {
