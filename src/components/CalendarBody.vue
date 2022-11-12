@@ -238,6 +238,15 @@
             Confirm
           </button>
         </div>
+        <StripeCheckout
+          ref="checkoutRef"
+          mode="payment"
+          :pk="publishableKey"
+          :line-items="stripeLineItems"
+          :success-url="stripeSuccessURL"
+          :cancel-url="stripeCancelURL"
+          @loading="(v) => (loadingStripe = v)"
+        />
       </div>
     </div>
   </div>
@@ -252,6 +261,8 @@ import { collection, query, where, getDocs, addDoc } from "firebase/firestore";
 
 import { computed } from "vue";
 import { useUserStore } from "../stores/users.js";
+
+import { StripeCheckout } from "@vue-stripe/vue-stripe";
 
 const CLIENT_ID =
   "357278563537-alpo25u2cdl470r9p00siu1ub3rhoc6t.apps.googleusercontent.com";
@@ -279,6 +290,8 @@ const months = [
 export default {
   name: "CalendarBody",
   data() {
+    this.publishableKey =
+      "pk_test_51M2yabJNfrkeeQDMLASnhqlKK4KZhBn4RpE7eMS6bPjLrqECWRc5YzJRr1KgWuPg1EA78oiz5mOpwpBkp2exI9ge00KhAE9F6G";
     return {
       step: 1,
       retrievingData: false,
@@ -303,6 +316,10 @@ export default {
       googleCalendarEventLink: undefined,
       addingToGoogleCalendar: false,
       addedToGoogleCalendar: false,
+      loadingStripe: false,
+      stripeSuccessURL: "http://localhost:5173/appointments",
+      stripeCancelURL: "http://localhost:5173/calendar",
+      stripeLineItems: [],
     };
   },
   setup() {
@@ -490,11 +507,19 @@ export default {
       );
       console.log(response.id);
 
-      this.$router.push({ path: "/appointments/" });
+      for (var service of this.selectedServices) {
+        this.stripeLineItems.push({
+          price: service.stripePriceID,
+          quantity: 1,
+        });
+      }
+
+      this.$refs.checkoutRef.redirectToCheckout();
     },
   },
   components: {
     VueCal,
+    StripeCheckout,
   },
   mounted() {
     this.tokenClient = window.google.accounts.oauth2.initTokenClient({
@@ -542,7 +567,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang="scss">
 #calendar-body {
