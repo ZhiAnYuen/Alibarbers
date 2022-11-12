@@ -1,5 +1,5 @@
 <template>
-  <main class="d-flex align-items-center">
+  <main>
     <ChatBody />
   </main>
 </template>
@@ -16,7 +16,8 @@ export default {
 
 <style lang="scss" scoped>
 main {
-  background-color: #a7bcff;
+  background-color: $pastel-yellow;
+  height: 100%;
   min-height: 100vh;
 }
 </style>

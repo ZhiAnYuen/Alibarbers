@@ -12,7 +12,7 @@
           class="d-flex flex-column justify-content-between p-5 col-lg-9 col-md-6 col-xs-12"
         >
           <h1>{{ shopDetails["shopName"] }}</h1>
-          <span class="mt-2 d-flex flex-row">
+          <span class="mt-1 d-flex flex-row">
             <span class="me-3">{{
               (totalStars / reviews.length).toFixed(1)
             }}</span>
@@ -26,7 +26,7 @@
             />
             <span class="ms-3">{{ reviews.length }} reviews</span></span
           ><br />
-          <div>
+          <div class="mt-1">
             <img
               src="https://img.icons8.com/material/24/000000/time-span.png"
             />
@@ -35,11 +35,17 @@
               {{ shopDetails["rawClosing"] }}
             </span>
           </div>
-          <div>
+          <div class="mt-1">
             <img
               src="https://img.icons8.com/material-rounded/24/000000/marker.png"
             />
             <span class="ms-3">{{ shopDetails["location"] }}</span>
+          </div>
+          <div class="mt-1">
+            <img
+              src="https://img.icons8.com/ios-glyphs/24/000000/ringer-volume.png"
+            />
+            <span class="ms-3">+65 {{ shopDetails["phoneNum"] }}</span>
           </div>
           <div class="row mt-4 p-0 gy-2">
             <div class="col-lg-6 col-sm-12">
@@ -95,7 +101,7 @@
         </li>
       </ul>
       <div v-if="state == 'Overview'" class="my-5">
-        <OverviewBody />
+        <OverviewBody :shopDescription="shopDetails['shopDescription']" />
       </div>
       <div v-if="state == 'Reviews'" class="my-5">
         <ReviewsBody :shopName="shopDetails['shopName']" :reviews="reviews" />
@@ -118,7 +124,7 @@ import {
   query,
   where,
   getDocs,
-  updateDoc 
+  updateDoc,
 } from "firebase/firestore";
 import db from "../firebase.js";
 

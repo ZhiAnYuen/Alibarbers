@@ -126,6 +126,7 @@ export default {
       for (let entry of entries) {
         this.convos.push(entry[1]);
       }
+      console.log(this.convos);
     });
   },
   methods: {

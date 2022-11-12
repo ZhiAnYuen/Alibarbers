@@ -8,13 +8,17 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@vue-stripe/vue-stripe": "^4.4.4",
     "@formkit/auto-animate": "^1.0.0-beta.3",
+    "@popperjs/core": "^2.11.6",
+    "@types/events": "^3.0.0",
+    "@vue-stripe/vue-stripe": "^4.4.4",
     "bootstrap": "^5.2.2",
     "chart.js": "^3.9.1",
+    "events": "^3.3.0",
     "firebase": "^9.11.0",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",
+    "stripe": "^10.17.0",
     "vue": "^3.2.38",
     "vue-cal": "^4.8.0",
     "vue-multiselect": "^3.0.0-alpha.2",

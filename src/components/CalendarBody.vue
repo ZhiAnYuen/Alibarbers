@@ -293,7 +293,7 @@ export default {
       showDraggable: true,
       loadingStripe: false,
       stripeSuccessURL: "http://localhost:5173/appointments",
-      stripeCancelURL: "http://localhost:5173/calendar",
+      stripeCancelURL: "http://localhost:5173/feed",
       stripeLineItems: [],
     };
   },
