@@ -70,9 +70,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="#" class="nav-link">
-              <span class="fw-semibold text-dark"> My Chats </span>
-            </router-link>
+            <span
+              v-on:click="goChat"
+              class="nav-link fw-semibold text-dark"
+              style="cursor: pointer"
+              >Chats</span
+            >
           </li>
           <li class="nav-item">
             <span
@@ -100,14 +103,12 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link to="#" class="nav-link">
-              <span class="fw-semibold text-dark"> My Chats </span>
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link to="/hairdresserprofile" class="nav-link">
-              <span class="fw-semibold text-dark"> My Profile </span>
-            </router-link>
+            <span
+              v-on:click="goChat"
+              class="nav-link fw-semibold text-dark"
+              style="cursor: pointer"
+              >Chats</span
+            >
           </li>
           <li class="nav-item">
             <span
@@ -137,6 +138,7 @@ export default {
       email: computed(() => user.email),
       isLoggedIn: computed(() => user.isLoggedIn),
       userType: computed(() => user.userType),
+      userID: computed(() => user.userID),
     };
   },
   methods: {
@@ -147,8 +149,11 @@ export default {
         this.$router.push("/home");
       });
     },
-    checkIsLoggedIn(routename) {
-      if (["home", "login", "signup"].includes(routename)) {
+    goChat() {
+      this.$router.push("/chat/" + this.userID);
+    },
+    checkIsLoggedIn(routeName) {
+      if (["home", "login", "signup"].includes(routeName)) {
         return false;
       } else if (this.userType == "Hairdresser") {
         return "Hairdresser";

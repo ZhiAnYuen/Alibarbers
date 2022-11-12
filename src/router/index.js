@@ -6,11 +6,15 @@ import FeedView from "../views/FeedView.vue";
 import ShopView from "../views/ShopView.vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import CreateShopView from "../views/CreateShopView.vue";
-import HairdresserFeedBody from "../views/HairdresserFeedView.vue";
+import HairdresserFeedView from "../views/HairdresserFeedView.vue";
 import AppointmentsView from "../views/AppointmentsView.vue";
 import AppointmentView from "../views/AppointmentView.vue";
+<<<<<<< HEAD
 import ShopAppointmentsView from "../views/ShopAppointmentsView.vue";
 import ProfileBody from "../views/ProfileView.vue";
+=======
+import ChatView from "../views/ChatView.vue";
+>>>>>>> feed
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -84,7 +88,7 @@ const router = createRouter({
     {
       path: "/hairdresserfeed",
       name: "hairdresserfeed",
-      component: HairdresserFeedBody,
+      component: HairdresserFeedView,
       meta: {
         requiresAuth: true,
       },
@@ -104,6 +108,9 @@ const router = createRouter({
       meta: {
         requiresAuth: true,
       },
+      path: "/chat/:uid",
+      name: "chat",
+      component: ChatView,
     },
   ],
 });

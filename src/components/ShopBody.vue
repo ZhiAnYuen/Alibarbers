@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div class="container-fluid px-0">
     <div id="shopHeader">
       <div class="row d-flex flex-row px-5 py-4">
@@ -56,6 +57,28 @@
               </button>
             </div>
           </div>
+=======
+  <div class="container-fluid">
+    <div class="row mb-5" id="shopHeader">
+      <div
+        class="col-md-5 p-5 d-flex justify-content-center align-items-center"
+      >
+        <img :src="shopDetails['imgLink']" id="shopImg" class="img-fluid" />
+      </div>
+      <div class="col-md-6 align-self-center ms-5">
+        <h1 class="mt-5">{{ shopDetails["shopName"] }}</h1>
+        <p class="mt-4 fs-4 fw-light">Rating: {{ shopDetails["rating"] }}</p>
+        <p class="mt-4 fs-4 fw-light">
+          Operating hours: {{ shopDetails["open"] }} to
+          {{ shopDetails["close"] }}
+        </p>
+        <p class="mt-4 fs-4 fw-light">{{ shopDetails["location"] }}</p>
+        <div class="row">
+          <button class="hover-button mt-3 mx-3 mb-5 col-6" @click="startConvo">
+            Chat
+          </button>
+          <button class="hover-button mt-3 mx-3 mb-5 col-6">Book</button>
+>>>>>>> feed
         </div>
       </div>
     </div>
@@ -111,6 +134,7 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import {
   doc,
   getDoc,
@@ -119,6 +143,9 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
+=======
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+>>>>>>> feed
 import db from "../firebase.js";
 
 import StarRating from "vue-star-rating";
@@ -127,6 +154,7 @@ import OverviewBody from "./OverviewBody.vue";
 import ServicesBody from "./ServicesBody.vue";
 import HairdressersBody from "./HairdressersBody.vue";
 import ReviewsBody from "./ReviewsBody.vue";
+import { useUserStore } from "../stores/users.js";
 
 export default {
   name: "ShopBody",
@@ -154,12 +182,16 @@ export default {
       getDoc(docRef).then((docSnap) => {
         if (docSnap.exists()) {
           this.shopDetails = docSnap.data();
+<<<<<<< HEAD
           this.getReviews();
+=======
+>>>>>>> feed
         } else {
           console.log("No such document!");
         }
       });
     },
+<<<<<<< HEAD
     getReviews() {
       const qReviews = query(
         collection(db.db, "reviews"),
@@ -179,6 +211,46 @@ export default {
     },
     routeToBooking() {
       this.$router.push({ path: "/booking/" + this.$route.params.id });
+=======
+    async startConvo() {
+      const user = useUserStore();
+      let currentUID = user.userID;
+      let otherUID = this.$route.params["id"];
+
+      const combinedUID =
+        currentUID > otherUID ? currentUID + otherUID : otherUID + currentUID;
+
+      // Get current user conversation with other
+      const docSnapUser = await getDoc(doc(db.db, "userChats", currentUID));
+
+      if (docSnapUser.exists() && !docSnapUser.data()[combinedUID]) {
+        let nested = {
+          displayName: this.shopDetails["shopName"],
+          uid: otherUID,
+        };
+
+        let toAdd = {};
+        toAdd[combinedUID] = nested;
+
+        await updateDoc(doc(db.db, "userChats", currentUID), toAdd);
+      }
+
+      const docSnapOther = await getDoc(doc(db.db, "userChats", otherUID));
+
+      if (docSnapOther.exists() && !docSnapOther.data()[combinedUID]) {
+        let nested = {
+          displayName: user.name,
+          uid: currentUID,
+        };
+
+        let toAdd = {};
+        toAdd[combinedUID] = nested;
+
+        await updateDoc(doc(db.db, "userChats", otherUID), toAdd);
+      }
+
+      this.$router.push("/chat/" + currentUID);
+>>>>>>> feed
     },
   },
   computed: {

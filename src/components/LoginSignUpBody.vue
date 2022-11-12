@@ -1,9 +1,7 @@
 <template>
   <div id="login-body" class="container-fluid">
-    <!-- <transition name="fade" mode="out-in"> -->
     <LoginBox v-if="$route.meta.isLogin" />
     <SignUpBox v-else />
-    <!-- </transition> -->
   </div>
 </template>
 
@@ -20,13 +18,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease-out;
-}
-</style>
+<style lang="scss" scoped></style>

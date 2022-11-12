@@ -123,7 +123,9 @@ export default {
 
           const user = useUserStore();
           user.login(this.name, this.signUpEmail, this.userType, cred.user.uid);
-        
+
+          setDoc(doc(db.db, "userChats", cred.user.uid), {});
+
           alert("Registration was Successful!");
           if (this.userType == "Customer") this.$router.push("/feed");
           if (this.userType == "Hairdresser") this.$router.push("/createshop");
