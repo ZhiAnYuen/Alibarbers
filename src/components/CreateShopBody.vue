@@ -9,6 +9,7 @@
           <small class="text-muted">Provide some information about your shop.</small>
         </div>
         <div class="col-lg-8">
+
           <!-- Shop name input and verification -->
           <div class="row">
             <div class="">
@@ -40,6 +41,18 @@
               </div>
             </div>
           </div>
+          <!-- Errors -->
+          <div class="alert alert-danger col-12" v-for="error in shopnameerror">
+            {{ error }}
+          </div>
+
+          <!-- Shop Description -->
+          <div class="row">
+            <label class="my-2" for="shopdesc"><strong>Shop Description</strong></label>
+            <div class="">
+              <textarea class="form-control" id="shopdesc" rows="3" v-model="shopdesc"></textarea>
+            </div>
+          </div>
 
           <!-- Upload a picture of their shop -->
           <div class="row">
@@ -53,43 +66,65 @@
                 v-bind="shopimg"
                 aria-describedby="filepicker"
               />
-              <!-- <button 
-                class="btn mb-2 btn-outline-secondary" 
-                type="button" 
-                id="filepicker"
-                @click="imgPicker()"
-              >
-                Upload
-              </button> -->
             </div>
           </div>
         
-          <!-- Opening hours -->
+          <!-- Opening Hours -->
           <div class="row my-2">
             <div class="">
               <label for="hours" class="form-label"><strong>Opening Hours</strong> (24-hour clock)</label>
             </div>
-            <div class="row">
-              <div class="col-lg-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="hours"
-                  v-model="opening"
-                  placeholder="E.g. 0800"
-                />
-              </div>
-              <div class="col-lg-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="hours"
-                  v-model="closing"
-                  placeholder="E.g. 1800"
-                />
+            <div class="">
+              <div class="row">
+                <div class="col-sm-6 mb-2 mb-xs-0">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hours"
+                    v-model="opening"
+                    placeholder="E.g. 0800"
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hours"
+                    v-model="closing"
+                    placeholder="E.g. 1800"
+                  />
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- Contact Information -->
+          <div class="row">
+            <label class="my-2" for="contact"><strong>Contact Information</strong></label>
+            <div class="">
+              <div class="row">
+                <div class="col-sm-6 mb-2 mb-xs-0">
+                  <input 
+                    type="tel" 
+                    class="form-control"
+                    id="contact"
+                    v-model="phoneno"
+                    placeholder="Phone/Office Number"
+                  />
+                </div>
+                <div class="col-sm-6 mb-2 mb-xs-0">
+                  <input 
+                    type="email" 
+                    class="form-control"
+                    id="contact"
+                    v-model="contactemail"
+                    placeholder="Email"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -141,7 +176,7 @@
         </div>
         <div class="col-lg-8 mb-2">
           <div class="form-group row mb-2" v-for="(hairdresser, index) in hairdressers" :key="index">
-            <div class="col-lg-5">
+            <div class="col-md-5 mb-2 mb-md-0">
               <input
                 type="text"
                 :name="'hairdresser[' + index + '][name]'"
@@ -150,7 +185,7 @@
                 placeholder="E.g. Tom Chan"
               />
             </div>
-            <div class="col-lg-5">
+            <div class="col-md-5 mb-2 mb-md-0">
               <input
                 type="text"
                 :name="'hairdresser[' + index + '][role]'"
@@ -159,7 +194,7 @@
                 placeholder="E.g. Men's Haircut Specialist"
               />
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2">
               <button
                 type="button"
                 @click="removeHairdresser(index)"
@@ -187,7 +222,7 @@
         </div>
         <div class="col-lg-8">
           <div class="form-group row mb-2" v-for="(service, index) in services" :key="index">
-            <div class="col-lg-4">
+            <div class="col-md-4 mb-2 mb-md-0">
               <input
                 type="text"
                 :name="'service[' + index + '][name]'"
@@ -196,7 +231,7 @@
                 placeholder="E.g. Hair Cut"
               />
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2 mb-2 mb-md-0">
               <input
                 type="number"
                 :name="'service[' + index + '][price]'"
@@ -205,7 +240,7 @@
                 placeholder="Price"
               />
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4 mb-2 mb-md-0">
               <input
                 type="number"
                 :name="'service[' + index + '][duration]'"
@@ -214,7 +249,7 @@
                 placeholder="Duration (min)"
               />
             </div>
-            <div class="col-lg-1">
+            <div class="col-md-1">
               <button
                 type="button"
                 @click="removeService(index)"
@@ -235,7 +270,7 @@
       <hr/>
 
       <!-- Check & uncheck shop tags -->
-      <div class="row my-4">
+      <div class="row mt-4 mb-3">
         <div class="col-lg-4 mb-2">
           <h4>Add Tags</h4>
           <small class="text-muted">Choose the tags that describe your shop and services. This is optional but could help customers pick your shop based on their needs!</small>
@@ -257,13 +292,13 @@
         </div>
       </div>
 
-      <!-- Errors -->
+      <!-- Other Errors -->
       <div class="alert alert-danger col-12" v-for="error in errors">
         {{ error }}
       </div>
 
       <!-- Form Validation & Submission -->
-      <div class="row my-2 float-end col-auto">
+      <div class="row pb-3 float-end col-auto">
         <button type="reset" class="btn custom-reset col-auto mx-2 hover-button">
           Reset Fields
         </button>
@@ -278,7 +313,7 @@
 
 <script>
 import db from "../firebase.js";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, query, where, collection } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
 import "firebase/storage";
@@ -292,12 +327,16 @@ export default {
       email: computed(() => user.email),
       isLoggedIn: computed(() => user.isLoggedIn),
       userType: computed(() => user.userType),
+      userID: computed(() => user.userID),
     };
   },
   data() {
     return {
-      shopname: "",
-      shoplocation: "",
+      shopdata: undefined,
+      shopname: '',
+      shoplocation: '',
+      contactemail: '',
+      phoneno: '',
       services: [{
         name: '',
         price: '',
@@ -309,10 +348,12 @@ export default {
       }],
       shopnameAvail: 1,
       errors: [],
+      shopnameerror: [],
       shopimg: '',
       opening: '',
       closing: '',
       validateForm: false,
+      shopdesc: '',
       tags: [
         'Male Hairstyles', 
         'Female Hairstyles',
@@ -350,39 +391,56 @@ export default {
       selectedMRT: 'Choose...',
     };
   },
+  mounted() {
+    var docRef = doc(db.db, "shop", this.userID);
+    getDoc(docRef).then((docSnap) => {
+      if (docSnap.exists()) {
+        //this.$router.push("/hairdresserfeed");
+        console.log(docSnap.data());
+      }
+    });
+    this.contactemail = this.email;
+  },
   methods: {
-    imgPicker() {}, 
     checkAvail() {
-      let name = this.shopname.replace(" ", "");
-      var docRef = doc(db.db, "shop", name);
-      getDoc(docRef).then((docSnap) => {
-        if (!docSnap.exists()) {
-          console.log("No matching document.");
-          this.shopnameAvail = 3; // Shop name will be verified
-          if (
-            this.errors.indexOf(
-              "The selected shop name has been taken. Please select another name for your shop."
-            ) != -1
-          ) {
-            let i = this.errors.indexOf(
-              "The selected shop name has been taken. Please select another name for your shop."
-            );
-            this.errors.splice(i, 1);
+      this.shopdata = undefined;
+      let q = query(collection(db.db, "shop"), where("shopName", "==", this.shopname));
+      getDocs(q)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.shopdata = doc.data();
+          })
+          //console.log(this.shopdata);
+          if (this.shopdata == undefined) {
+            //console.log("No matching document.");
+            this.shopnameAvail = 3; // Shop name will be verified
+            if (
+              this.shopnameerror.indexOf(
+                "This shop name has been taken. Please select another name for your shop."
+              ) != -1
+            ) {
+              let i = this.shopnameerror.indexOf(
+                "This shop name has been taken. Please select another name for your shop."
+              );
+              this.shopnameerror.splice(i, 1);
+            }
+          } else {
+            //console.log('ERROR SHOULD SHOW!')
+            this.shopnameAvail = 2; // Error - shop name has been taken
+            if (
+              this.shopnameerror.indexOf(
+                "This shop name has been taken. Please select another name for your shop."
+              ) == -1
+            ) {
+              this.shopnameerror.push(
+                "This shop name has been taken. Please select another name for your shop."
+              );
+            }
           }
-        } else {
-          console.log("Document data:", docSnap.data);
-          this.shopnameAvail = 2; // Error - shop name has been taken
-          if (
-            this.errors.indexOf(
-              "The selected shop name has been taken. Please select another name for your shop."
-            ) == -1
-          ) {
-            this.errors.push(
-              "The selected shop name has been taken. Please select another name for your shop."
-            );
-          }
-        }
-      });
+        })
+        .catch(error => {
+          console.log(error);
+        })
     },
     addService() {
       this.services.push({
@@ -457,17 +515,17 @@ export default {
       }
 
       if (!(this.shopnameAvail==3) || this.shoplocation=="" || this.errors.length>0 || hourscheck==false || this.selectedMRT=="Choose..." ) {
-        console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
+        //console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
         alert("Error! Please fill in all fields.");
       } else {
+        // getting tags
         let final_tags = [];
         for (let tag of this.selectedTags) {
           final_tags.push(tag);
         }
         final_tags.push(this.selectedMRT);
 
-        let name = this.shopname.replace(" ", "");
-        const docRef2 = doc(db.db, "shop", name);
+        const docRef2 = doc(db.db, "shop", this.userID);
 
         const data1 = {
           shopName: this.shopname,
@@ -483,11 +541,14 @@ export default {
           rawClosing: this.closing,
           rawOpening: this.opening,
           selectedTags: this.selectedTags,
+          shopDescription: shopdesc,
+          phoneNum: this.phoneno,
+          contactEmail: this.contactemail,
         };
 
         setDoc(docRef2, data1)
           .then(() => {
-            console.log('Document was added successfully!');
+            //console.log('Document was added successfully!');
             alert("Success! Welcome, " + this.shopname);
             this.$router.push("/hairdresserfeed");
           })
@@ -497,6 +558,7 @@ export default {
       }
     },
   },
+
 };
 </script>
 
@@ -507,10 +569,9 @@ export default {
   button.custom {
     background-color: $pastel-yellow;
     color: black;
-    border-color: black;
   }
-  button {
-    border: 0ch;
+  button.custom:hover {
+    border-color: black;
   }
   button.custom-reset {
     background-color: red($color: #000000);

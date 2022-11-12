@@ -20,6 +20,7 @@
                 id="shopname"
                 v-model="newshopname"
                 placeholder="E.g. Sally's Hairdressers"
+                @change="changeAvail()"
               />
               <button
                 v-if="shopnameAvail == 1"
@@ -39,33 +40,75 @@
               </div>
             </div>
           </div>
+          <!-- Errors -->
+          <div class="alert alert-danger col-12" v-for="error in shopnameerror">
+            {{ error }}
+          </div>
+
+          <!-- Shop Description -->
+          <div class="row">
+            <label class="my-2" for="shopdesc"><strong>Shop Description</strong></label>
+            <div class="">
+              <textarea class="form-control" id="shopdesc" rows="3" v-model="shopdesc"></textarea>
+            </div>
+          </div>
         
-          <!-- Opening hours -->
+          <!-- Opening Hours -->
           <div class="row my-2">
             <div class="">
               <label for="hours" class="form-label"><strong>Opening Hours</strong> (24-hour clock)</label>
             </div>
-            <div class="row">
-              <div class="col-lg-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="hours"
-                  v-model="opening"
-                  placeholder="E.g. 0800"
-                />
-              </div>
-              <div class="col-lg-6">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="hours"
-                  v-model="closing"
-                  placeholder="E.g. 1800"
-                />
+            <div class="">
+              <div class="row">
+                <div class="col-sm-6 mb-2 mb-xs-0">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hours"
+                    v-model="opening"
+                    placeholder="E.g. 0800"
+                  />
+                </div>
+                <div class="col-sm-6">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="hours"
+                    v-model="closing"
+                    placeholder="E.g. 1800"
+                  />
+                </div>
               </div>
             </div>
           </div>
+
+          <!-- Contact Information -->
+          <div class="row">
+            <label class="my-2" for="contact"><strong>Contact Information</strong></label>
+            <div class="">
+              <div class="row">
+                <div class="col-sm-6 mb-2 mb-xs-0">
+                  <input 
+                    type="tel" 
+                    class="form-control"
+                    id="contact"
+                    v-model="phoneno"
+                    placeholder="Phone/Office Number"
+                  />
+                </div>
+                <div class="col-sm-6 mb-2 mb-xs-0">
+                  <input 
+                    type="email" 
+                    class="form-control"
+                    id="contact"
+                    v-model="contactemail"
+                    placeholder="Email"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -117,7 +160,7 @@
         </div>
         <div class="col-lg-8 mb-2">
           <div class="form-group row mb-2" v-for="(hairdresser, index) in hairdressers" :key="index">
-            <div class="col-lg-5">
+            <div class="col-md-5 mb-2 mb-md-0">
               <input
                 type="text"
                 :name="'hairdresser[' + index + '][name]'"
@@ -126,7 +169,7 @@
                 placeholder="E.g. Tom Chan"
               />
             </div>
-            <div class="col-lg-5">
+            <div class="col-md-5 mb-2 mb-md-0">
               <input
                 type="text"
                 :name="'hairdresser[' + index + '][role]'"
@@ -135,7 +178,7 @@
                 placeholder="E.g. Men's Haircut Specialist"
               />
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2">
               <button
                 type="button"
                 @click="removeHairdresser(index)"
@@ -163,7 +206,7 @@
         </div>
         <div class="col-lg-8">
           <div class="form-group row mb-2" v-for="(service, index) in services" :key="index">
-            <div class="col-lg-4">
+            <div class="col-md-4 mb-2 mb-md-0">
               <input
                 type="text"
                 :name="'service[' + index + '][name]'"
@@ -172,7 +215,7 @@
                 placeholder="E.g. Hair Cut"
               />
             </div>
-            <div class="col-lg-2">
+            <div class="col-md-2 mb-2 mb-md-0">
               <input
                 type="number"
                 :name="'service[' + index + '][price]'"
@@ -181,7 +224,7 @@
                 placeholder="Price"
               />
             </div>
-            <div class="col-lg-4">
+            <div class="col-md-4 mb-2 mb-md-0">
               <input
                 type="number"
                 :name="'service[' + index + '][duration]'"
@@ -190,7 +233,7 @@
                 placeholder="Duration (min)"
               />
             </div>
-            <div class="col-lg-1">
+            <div class="col-md-1">
               <button
                 type="button"
                 @click="removeService(index)"
@@ -211,7 +254,7 @@
       <hr/>
 
       <!-- Check & uncheck shop tags -->
-      <div class="row my-4">
+      <div class="row mt-4 mb-3">
         <div class="col-lg-4 mb-2">
           <h4>Add Tags</h4>
           <small class="text-muted">Choose the tags that describe your shop and services. This is optional but could help customers pick your shop based on their needs!</small>
@@ -239,8 +282,11 @@
       </div>
 
       <!-- Form Validation & Submission -->
-      <div class="row my-2 float-end col-auto">
-        <button type="submit" class="btn custom-submit col-auto mx-2 hover-button" @click="createShop()">
+      <div class="row pb-3 float-end col-auto">
+        <button type="button" class="btn custom-reset col-auto mx-2 hover-button" @click="cancelEdit()">
+          Reset Fields
+        </button>
+        <button type="submit" class="btn custom col-auto mx-2 hover-button" @click="updateProfile()">
           Edit Profile
         </button>
       </div>
@@ -252,7 +298,7 @@
 
 <script>
 import db from "../firebase.js";
-import { query, where, getDocs, collection, getDoc } from "firebase/firestore";
+import { query, where, getDocs, collection, doc, setDoc } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
 
@@ -265,6 +311,7 @@ export default {
       email: computed(() => user.email),
       isLoggedIn: computed(() => user.isLoggedIn),
       userType: computed(() => user.userType),
+      userID: computed(() => user.userID),
     };
   },
   data() {
@@ -314,17 +361,23 @@ export default {
       selectedTags: [],
       selectedMRT: '',
       errors: [],
-      shopnameAvail: 1,
+      shopnameAvail: 3,
+      shopnameerror: [],
+      shopdesc: '',
+      contactemail: '',
+      phoneno: '',
     }
   },
   async mounted() {
+    // get shop details based on user's email
     let shopsRef = collection(db.db, "shop");
     let q = query(shopsRef, where("ownerEmail", "==", this.email));
     let querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
+      //console.log(doc.id, " => ", doc.data());
       this.shopdata = doc.data();
     });
+
     // assign values to Vue app data for v-model ing
     if (!(this.shopdata==undefined)) {
       this.shopname = this.shopdata.shopName;
@@ -336,43 +389,70 @@ export default {
       this.shoplocation = this.shopdata.location;
       this.selectedMRT = this.shopdata.selectedMRT;
       this.selectedTags = this.shopdata.selectedTags;
+      this.shopdesc = this.shopdata.shopDescription;
+      this.contactemail = this.shopdata.contactEmail;
+      this.phoneno = this.shopdata.phoneNum;
+    } else {
+      alert("You have not set up your shop yet!");
+      this.$router.push("/createshop");
     }
   },
   methods: {
+    changeAvail() {
+      this.shopnameAvail = 1;
+    },
     checkAvail() {
+      let othershopdata = undefined;
       if (this.shopname == this.newshopname) {
         this.shopnameAvail = 3; // Shop name will be verified
+        if (
+          this.shopnameerror.indexOf(
+            "This shop name has been taken. Please select another name for your shop."
+          ) != -1
+        ) {
+          let i = this.shopnameerror.indexOf(
+            "This shop name has been taken. Please select another name for your shop."
+          );
+          this.shopnameerror.splice(i, 1);
+        }
       } else {
-        let name = this.newshopname.replace(" ", "");
-        var docRef = doc(db.db, "shop", name);
-        getDoc(docRef).then((docSnap) => {
-          if (!docSnap.exists()) {
-            console.log("No matching document.");
-            this.shopnameAvail = 3; // Shop name will be verified
-            if (
-              this.errors.indexOf(
-                "The selected shop name has been taken. Please select another name for your shop."
-              ) != -1
-            ) {
-              let i = this.errors.indexOf(
-                "The selected shop name has been taken. Please select another name for your shop."
-              );
-              this.errors.splice(i, 1);
+        let q = query(collection(db.db, "shop"), where("shopName", "==", this.newshopname));
+        getDocs(q)
+          .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              othershopdata = doc.data();
+            })
+            console.log(othershopdata);
+            if (othershopdata == undefined) {
+              console.log("No matching document.");
+              this.shopnameAvail = 3; // Shop name will be verified
+              if (
+                this.shopnameerror.indexOf(
+                  "This shop name has been taken. Please select another name for your shop."
+                ) != -1
+              ) {
+                let i = this.shopnameerror.indexOf(
+                  "This shop name has been taken. Please select another name for your shop."
+                );
+                this.shopnameerror.splice(i, 1);
+              }
+            } else {
+              console.log('ERROR SHOULD SHOW!')
+              this.shopnameAvail = 2; // Error - shop name has been taken
+              if (
+                this.shopnameerror.indexOf(
+                  "This shop name has been taken. Please select another name for your shop."
+                ) == -1
+              ) {
+                this.shopnameerror.push(
+                  "This shop name has been taken. Please select another name for your shop."
+                );
+              }
             }
-          } else {
-            console.log("Document data:", docSnap.data);
-            this.shopnameAvail = 2; // Error - shop name has been taken
-            if (
-              this.errors.indexOf(
-                "The selected shop name has been taken. Please select another name for your shop."
-              ) == -1
-            ) {
-              this.errors.push(
-                "The selected shop name has been taken. Please select another name for your shop."
-              );
-            }
-          }
-        });
+          })
+          .catch(error => {
+            console.log(error);
+          })
       }
     },
     addService() {
@@ -424,9 +504,71 @@ export default {
       }
       this.hairdressers.splice(index, 1);
     },
-    editShop() {
+    updateProfile() {
+      event.preventDefault();
+      var final_hairdressers = [];
+      for (var i=0; i < this.hairdressers.length; i++) {
+        let temp = {};
+        temp['class'] = this.hairdressers[i]['name'].replace(" ", "");
+        temp['id'] = i+1;
+        temp['role'] = this.hairdressers[i]['role'];
+        temp['name'] = this.hairdressers[i]['name'];
+        temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
+        final_hairdressers.push(temp);
+      }
+
+      if (!(this.closing.length==4) || 
+          !(this.opening.length==4) ||
+          isNaN(this.opening)==true ||
+          isNaN(this.closing)==true ) {
+        var hourscheck = false;
+        alert("Error! Please enter valid opening hours in 24-hour clock format.");
+      } else {
+        var hourscheck = true;
+      }
+      
+      if (!(this.shopnameAvail==3) || this.shoplocation=="" || this.errors.length>0 || hourscheck==false || this.selectedMRT=="Choose..." ) {
+        alert("Error! Please fill in all fields.");
+      } else {
+        // getting tags
+        let final_tags = [];
+        for (let tag of this.selectedTags) {
+          final_tags.push(tag);
+        }
+        final_tags.push(this.selectedMRT);
+
+        const docRef2 = doc(db.db, "shop", this.userID);
+        const data1 = {
+          shopName: this.newshopname,
+          location: this.shoplocation,
+          services: this.services,
+          open: Number(this.opening.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
+          close: Number(this.closing.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
+          hairdressers: final_hairdressers,
+          tags: final_tags,
+          selectedMRT: this.selectedMRT,
+          rawClosing: this.closing,
+          rawOpening: this.opening,
+          selectedTags: this.selectedTags,
+          shopDescription: this.shopdesc,
+          phoneNum: this.phoneno,
+          contactEmail: this.contactemail,
+        };
+        setDoc(docRef2, data1, {merge: true})
+          .then(() => {
+            //console.log('Document was added successfully!');
+            alert("You have successfully edited your shop profile.");
+            location.reload();
+          })
+          .catch(error => {
+            console.log(error);
+          })
+        }
 
     },
+    cancelEdit() {
+      location.reload();
+    }
   },
 };
 </script>
@@ -441,11 +583,11 @@ export default {
     object-fit: cover;
   }
   button.custom {
+    background-color: $pastel-yellow;
     color: black;
-    border-color: black;
   }
   button.custom:hover {
-    background-color: $pastel-yellow;
+    border-color: black;
   }
   button.custom-submit:hover {
     background-color: $pastel-yellow;
