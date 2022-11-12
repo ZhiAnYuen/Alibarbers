@@ -117,10 +117,12 @@ export default {
     // Get user's convo
     const docSnap = await getDoc(doc(db.db, "userChats", this.currentUID));
 
+    // Create user's convo document if does not exists
     if (!docSnap.exists()) {
       await setDoc(doc(db.db, "userChats", this.currentUID), {});
     }
 
+    // Keep look out on changes on user's convo document
     onSnapshot(doc(db.db, "userChats", this.currentUID), (doc) => {
       let entries = Object.entries(doc.data());
       for (let entry of entries) {
@@ -142,14 +144,18 @@ export default {
 
       const docSnap = await getDoc(doc(db.db, "chats", combinedUID));
 
+      // If user and other user conversation does not exist, start one.
       if (!docSnap.exists()) {
         await setDoc(doc(db.db, "chats", combinedUID), {
           messages: [],
         });
       }
+
+      // Keep track of messages of this convo
       onSnapshot(doc(db.db, "chats", combinedUID), (doc) => {
         this.messages = doc.data()["messages"];
       });
+
       this.inputText = "";
     },
     // Send message
