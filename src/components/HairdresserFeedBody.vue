@@ -5,121 +5,92 @@
     <h1 class="text-start fw-semibold">
       Welcome to your Insights Dashboard.
     </h1>
-    
-    <!-- Dashboard -->
-    <div class="row justify-content-center">
-      <div class="card border border-dark rounded-4 text-center my-3">
-        <div class="row">
-          <div class="col-lg-4 col-md-6 col-sm-12 my-3">
-            <h5 class="fw-semibold">Focused View</h5>
-            <button
-              type="button"
-              class="btn btn-outline-secondary m-1"
-              @click="reset()"
-            >
-              Reset
-            </button>
-          </div>
-          <div class="col-lg-4 col-md-5 col-sm-12 my-3">
-            <h5 class="fw-semibold">Analytics Type</h5>
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-custom m-1"
-              @click="revenue()"
-            >
-              Revenue
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-custom m-1"
-              @click="bookings()"
-            >
-              Bookings
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-custom m-1"
-              @click="rating()"
-            >
-              Ratings
-            </button>
-          </div>
-          <div class="col-lg-4 col-md-6 col-sm-12 my-3">
-            <h5 class="fw-semibold">View Option</h5>
-            <!-- <button type="button" class="btn btn-outline-secondary btn-custom m-1">Monthly</button> -->
-            <button
-              type="button"
-              class="btn btn-outline-secondary btn-custom m-1"
-              @click="changeView()"
-            >
-              Weekly
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Default View -->
-    <div class="row g-3" v-if="timeInterval == 'YTD' && showAll == true">
-        <!-- Revenue -->
-        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
-          <div class="row justify-content-evenly">
-            <div class="col mt-2">
-              <h5 class="fw-semibold">Y.t.d<br/>Revenue</h5>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/revenue.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
+    <div class="row g-3 mt-2 p-3">
+      
+      <!-- Revenue -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Revenue</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/revenue.png"
+              class="img-fluid custom-size mt-3"
+            />
           </div>
         </div>
-        <!-- bookings -->
-        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
-          <div class="row justify-content-evenly">
-            <div class="col mt-2">
-              <h5 class="fw-semibold">Y.t.d<br/>Bookings</h5>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/booking.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
-          </div>
+        <div class="mt-3 mx-3">
+          <canvas id="revenueChart"></canvas>
         </div>
-        <!-- ratings -->
-        <div class="card col-xl-4 col-md-6 col-sm-12 border border-dark rounded-4 text-center">
-          <div class="row justify-content">
-            <div class="col mt-2">
-              <h5 class="fw-semibold">Y.t.d<br/>Ratings</h5>
-            </div>
-            <div class="col">
-              <img
-                src="../assets/rating.png"
-                class="img-fluid custom-size mt-3"
-              />
-            </div>
-            <div id="svg-ytd-rating"></div>
-          </div>
+        <div class="card-body text-center">
+          Average Revenue per Booking: <strong>${{averageRevenue}}</strong> <br/>
+          Total YTD Revenue: <strong>${{totalRevenue}}</strong>
         </div>
       </div>
 
-      <!-- revenue stats only -->
-      <div v-if="showRevenueStats">revenue</div>
+      <div class="col-md-1 d-none d-md-block"></div>
+        
+      <!-- bookings -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Bookings</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/booking.png"
+              class="img-fluid custom-size mt-3"
+            />
+          </div>
+        </div>
+        <div class="my-3 mx-3">
+          <canvas id="bookingsChart"></canvas>
+        </div>
+      </div>
 
-      <!-- rating stats only -->
-      <div v-if="showRatingStats">rating</div>
+      <!-- ratings -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Ratings</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/rating.png"
+              class="img-fluid custom-size mt-3"
+            />
+          </div>
+        </div>
+        <div class="mt-3 mx-3">
+          <canvas id="ratingsChart"></canvas>
+        </div>
+        <div class="card-body text-center">Average Rating: <strong>{{averageRating}} stars</strong></div>
+      </div>
 
-      <!-- booking stats only -->
-      <div v-if="showBookingStats">booking</div>
+      <div class="col-md-1 d-none d-md-block"></div>
 
-      <p class="text-center">{{ email }}</p>
+      <!-- services -->
+      <div class="card col-md-5 col-xs-10 border border-dark rounded-4 text-center">
+        <div class="row justify-content-evenly">
+          <div class="col mt-4 mx-4">
+            <h3 class="fw-semibold">Services</h3>
+          </div>
+          <div class="col">
+            <img
+              src="../assets/service.png"
+              class="img-fluid custom-size mt-3"
+            />
+          </div>
+        </div>
+        <div class="my-2 d-flex flex-row justify-content-center">
+          <canvas class="justify-content-center mb-2" id="servicesChart"></canvas>
+        </div>
+      </div>
+
     </div>
-
-
-
+  </div>
 </template>
 
 <script>
@@ -127,7 +98,7 @@ import db from "../firebase.js";
 import { useUserStore } from "../stores/users.js";
 import { computed } from "vue";
 import { collection, query, where, getDocs } from "firebase/firestore";
-import * as d3 from "d3";
+import Chart from 'chart.js/auto'
 
 export default {
   name: "HairdresserFeedBody",
@@ -143,106 +114,208 @@ export default {
   data() {
     return {
       shopdata: {},
-      ratings: [
-        { date: "1-10-22", rating: 5 },
-        { date: "3-10-22", rating: 3.5 },
-        { date: "6-10-22", rating: 4 },
-        { date: "11-10-22", rating: 4.5 },
-      ],
-      showAll: true,
-      showRevenueStats: false,
-      showRatingStats: false,
-      showBookingStats: false,
-      timeInterval: "YTD", // other options: week, month
+      reviews: [],
+      shopname: "",
+      averageRating: 0,
+      appts: [],
+      averageRevenue: 0,
+      totalRevenue: 0,
     };
   },
   async mounted() {
+    // find shopname based on user's email
     var shopsRef = collection(db.db, "shop");
-    var q = query(shopsRef, where("shopName", "==", "Test Shop"));
+    var q = query(shopsRef, where("ownerEmail", "==", this.email));
     var querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
+      //console.log(doc.id, " => ", doc.data());
+      this.shopname = doc.data().shopName;
+      console.log(this.shopname);
     });
-    var svg_ytd_revenue = d3
-      .select("#svg-ytd-rating")
-      .append("svg")
-      .attr("width", 600)
-      .attr("height", 400);
 
-    svg_ytd_revenue
-      .selectAll("rect")
-      .data(this.ratings)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("height", "250")
-      .attr("width", "40")
-      .attr("x", function (d, i) {
-        return i * 60 + 25;
-      })
-      .attr("y", "15");
-    //.attr("y", function(d,i) {return 400 - (d * 10)});
+    // find all ratings based on shopName
+    var reviewsRef = collection(db.db, "reviews");
+    var q2 = query(reviewsRef, where("shopName", "==", this.shopname)); 
+    var querySnapshot2 = await getDocs(q2);
+    querySnapshot2.forEach((doc) => {
+      //console.log(doc.id, " => ", doc.data());
+      this.reviews.push(doc.data());
+    });
+    //console.log(this.reviews)
+
+    // graph for reviews
+    let ratings = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0};
+    let totalrating = 0;
+    for (const review of this.reviews) {
+      ratings[review.ratingStars] ++;
+      totalrating += Number(review.ratingStars);
+    }
+    let avgRating = (totalrating / this.reviews.length).toFixed(2);
+    if ( !isNaN(avgRating) ) { this.averageRating = (totalrating / this.reviews.length).toFixed(2); }
+
+    //console.log(ratings);
+    //console.log(Object.values(ratings));
+    const ctx1 = document.getElementById('ratingsChart');
+    const ratingsChart = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['1-star', '2-star', '3-star', '5-star', '5-star'],
+        datasets: [{
+          labels: '# of Ratings', // this does not show up
+          data: Object.values(ratings),
+          backgroundColor: [
+            'rgba(255, 0, 0, 0.55)',
+            'rgba(255, 171, 120, 0.75)',
+            'rgba(255, 255, 120, 0.75)',
+            'rgba(211, 255, 120, 0.75)',
+            'rgba(154, 255, 120, 0.75)'
+          ],
+          borderColor: 'rgba(0, 0, 0, 1)',
+          borderWidth: 1,
+          barThickness: 30,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+              display: false,
+          },
+        },
+        scales: {
+          y: { beginAtZero: true }
+        },
+      }
+    })
+
+    // find all appointments based on shopName
+    var appointmentsRef = collection(db.db, "appointments");
+    var q3 = query(appointmentsRef, where("shopName", "==", this.shopname)); 
+    var querySnapshot3 = await getDocs(q3);
+    querySnapshot3.forEach((doc) => {
+      //console.log(doc.id, " => ", doc.data());
+      this.appts.push(doc.data());
+    });
+
+    // getting number of bookings & revenue per month
+      // months are hardcoded as 2022 YTD
+    let bookings_data = {'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0, 'May': 0, 'Jun': 0, 'Jul': 0, 'Aug': 0, 'Sept': 0, 'Oct': 0, 'Nov': 0};
+    let revenue_data = {'Jan': 0, 'Feb': 0, 'Mar': 0, 'Apr': 0, 'May': 0, 'Jun': 0, 'Jul': 0, 'Aug': 0, 'Sept': 0, 'Oct': 0, 'Nov': 0};
+    let regex = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov' ];
+    let services_data = {};
+    for (var appt of this.appts) {
+      let date = new Date(appt.start);
+      bookings_data[regex[date.getMonth()]] ++;
+      revenue_data[regex[date.getMonth()]] += Number(appt.price);
+      this.totalRevenue += Number(appt.price);
+      for (var ind in appt.selectedServices) {
+        if (appt.selectedServices[ind].name in services_data) {
+          services_data[appt.selectedServices[ind].name] += 1;
+        } else {
+          services_data[appt.selectedServices[ind].name] = 1;
+        }
+        //console.log(appt.selectedServices[ind]);
+      }
+    }
+    let avgRev = (this.totalRevenue / this.appts.length).toFixed(2)
+    if ( !isNaN(avgRev) ) { this.averageRevenue = (this.totalRevenue / this.appts.length).toFixed(2) }
+    
+    // graph for bookings
+    const ctx2 = document.getElementById('bookingsChart');
+    const bookingsChart = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: Object.keys(bookings_data),
+        datasets: [{
+          label: 'Number of Monthly Bookings',
+          data: Object.values(bookings_data),
+          borderColor: 'rgba(255, 210, 76, 0.75)',
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+              display: true,
+          },
+        },
+        scales: {
+          y: { 
+            beginAtZero: true,
+          },
+        },
+      }
+    })
+
+    // graph for revenue
+    const ctx3 = document.getElementById('revenueChart');
+    const revenueChart = new Chart(ctx3, {
+      type: 'line',
+      data: {
+        labels: Object.keys(revenue_data),
+        datasets: [{
+          label: 'Monthly Revenue', 
+          data: Object.values(revenue_data),
+          borderColor: 'rgba(146, 180, 236, 1)',
+          tension: 0.3
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+              display: true,
+          },
+        },
+        scales: {
+          y: { 
+            beginAtZero: true,
+          },
+        },
+      }
+    })
+
+    // pie chart for services
+    let colors = [
+      'rgba(255, 0, 0, 0.6)', 
+      'rgba(146, 180, 236, 0.8)', 
+      'rgba(255, 171, 120, 0.75)', 
+      'rgba(255, 255, 120, 0.75)',
+      'rgba(255, 230, 154, 0.8)'
+    ];
+    const ctx4 = document.getElementById('servicesChart');
+    const servicesChart = new Chart(ctx4, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(services_data),
+        datasets: [{
+          data: Object.values(services_data),
+          backgroundColor: colors.splice(0, Object.keys(services_data).length),
+        }],
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: true,
+          },
+        },
+      }
+    })
+
   },
-  methods: {
-    getRatings() {
-      getDocs(collection(db.db, "ratings")).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let obj = doc.data();
-          obj["id"] = doc.id;
-          this.ratings.push(obj);
-        });
-      });
-    },
-    changeView() {
-      this.timeInterval = "weekly";
-    },
-    reset() {
-      this.timeInterval = "YTD";
-      this.showRevenueStats = false;
-      this.showRatingStats = false;
-      this.showBookingStats = false;
-      this.showAll = true;
-    },
-    revenue() {
-      this.showAll = false;
-      this.showRevenueStats = true;
-      this.showRatingStats = false;
-      this.showBookingStats = false;
-    },
-    bookings() {
-      this.showAll = false;
-      this.showBookingStats = true;
-      this.showRevenueStats = false;
-      this.showRatingStats = false;
-    },
-    rating() {
-      this.showAll = false;
-      this.showRatingStats = true;
-      this.showBookingStats = false;
-      this.showRevenueStats = false;
-    },
-  },
+  methods: {},
 };
 </script>
 
 <style lang="scss" scoped>
-.btn-custom:active {
-  box-shadow: lightslategray;
-}
-.custom-size {
-  height: 30px;
-  width: auto;
-}
-.bar {
-  fill: blue;
-  stroke: black;
-  stroke-width: 3;
-}
-.bar:hover {
-  fill: red;
-}
-.card{
-    padding-left: 5px;
-    padding-right: 5px;
-}
+  .custom-size {
+    height: 48px;
+    width: auto;
+  }
+  .card{
+      padding-left: 5px;
+      padding-right: 5px;
+  }
 </style>
