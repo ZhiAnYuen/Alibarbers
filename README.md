@@ -15,3 +15,13 @@ npm run dev
 ```sh
 npm run lint
 ```
+
+### List of User Emails & Passwords for testing
+
+#### As a hairdresser
+##### email: hairdresser@gmail.com
+##### password: hairdresser
+
+#### As a customer
+##### email: customer@gmail.com
+##### password: customer
