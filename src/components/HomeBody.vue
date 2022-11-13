@@ -1,26 +1,30 @@
 <template>
-  <div class="container-fluid vh-100">
-    <div class="row align-items-center vh-100">
+  <div class="container-fluid">
+    <div class="row align-items-center">
       <div class="col-md-6 col-sm-12 align-self-center">
         <h1 class="text-center col-12">Singapore's No. 1</h1>
         <h1 class="text-center col-12">Hair Marketplace</h1>
         <h3 class="text-center text-muted m-4">Handling All Your Hair Needs</h3>
         <div class="row justify-content-center">
           <div class="col-md-4 col-sm-6 col-xs-12">
+            <a href="#customer">
             <button
               type="button"
               class="hover-button button mt-4 mb-4 mx-auto d-block"
             >
               For Customers
             </button>
+          </a>
           </div>
           <div class="col-md-4 col-sm-6 col-xs-12">
+            <a href="#hairdresser">
             <button
               type="button"
               class="hover-button button mt-4 mb-4 mx-auto d-block"
             >
               For Hairdressers
             </button>
+          </a>
           </div>
         </div>
       </div>
@@ -30,8 +34,8 @@
     </div>
   </div>
 
-  <div class="container-fluid vh-100" id="customer">
-    <div class="row align-items-center vh-110">
+  <div class="container-fluid" id="customer">
+    <div class="row align-items-center">
       <div class="align-self-center">
         <h5 class="colouredHeader">For Customers</h5>
         <h3 class="colouredSubHeader">
@@ -39,7 +43,7 @@
         </h3>
 
         <div class="row justify-content-center">
-          <div class="card">
+          <div class="card col-sm-4">
             <div class="card-body">
               <h5 class="card-title">
                 <img src="../assets/icons8-earth-globe-100.png" class="image" />
@@ -86,17 +90,18 @@
         <button
           type="button"
           class="hover-button button mt-4 mb-4 mx-auto d-block"
-          style="position: absolute; left:4em"
+          style="position: absolute; width:fit-content;"
           v-on:click="$router.push('/signup')"
         >
           Get Started
         </button>
       </div>
     </div>
+    
   </div>
   <div>
-    <div class="container-fluid vh-100" id="hairdresser">
-      <div class="row align-items-center vh-110">
+    <div class="container-fluid" id="hairdresser">
+      <div class="row align-items-center">
         <div class="align-self-center">
           <h5 class="colouredHeader" s>For Hairdressers</h5>
           <h3 class="colouredSubHeader">Expand Your Reach & Generate Sales</h3>
@@ -150,12 +155,13 @@
           </div>
           <button
             type="button"
-            class="hover-button button mt-4 mb-4 mx-auto d-block"
-            style="position: absolute; right:4em"
+            class="hover-button button mt-4 mb-4"
+            style="position: absolute; right:4em; width:fit-content;"
             v-on:click="$router.push('/signup')"
           >
             Join Us
           </button>
+        
         </div>
       </div>
     </div>
@@ -183,12 +189,17 @@ h5 {
   font-weight: bold;
 }
 
+a {
+      text-decoration:none;
+   }
+
 #customer {
   background-color: #ffe69a;
 }
 
 #hairdresser {
   background-color: #92b4ec;
+  text-align: right;
 }
 
 .image {
