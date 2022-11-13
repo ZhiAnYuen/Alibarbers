@@ -129,79 +129,75 @@
       Get Started
     </button>
   </div>
-  <div>
-    <div class="container-fluid p-5" id="hairdresser-section">
-      <div class="d-flex flex-column flex-end">
-        <u class="text-end fw-semibold">For Hairdressers</u>
-        <h3 class="text-end fw-semibold mt-2">
-          Expand Your Reach & Generate Sales
-        </h3>
+  <div class="container-fluid p-5" id="hairdresser-section">
+    <div class="d-flex flex-column flex-end">
+      <u class="text-end fw-semibold">For Hairdressers</u>
+      <h3 class="text-end fw-semibold mt-2">
+        Expand Your Reach & Generate Sales
+      </h3>
+    </div>
+
+    <div class="gy-2 gx-2 row px-0 mx-0 mt-4">
+      <div class="col-lg-4 col-sm-12">
+        <div class="card rounded-4 h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <img
+                src="../assets/icons8-customer-96.png"
+                class="image"
+                @mouseover="allocateIsHovering = true"
+                @mouseout="allocateIsHovering = false"
+                :class="{ gelatine: allocateIsHovering }"
+              />
+            </h5>
+            <h6 class="card-title"><b>Allocate Manpower</b></h6>
+            <p class="card-text">
+              Receive appointments online instead of via call. View all your
+              scheduled appointments easily using our calendar.
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="gy-2 gx-2 row px-0 d-flex flex-row mx-0 mt-4">
-        <div class="col-lg-4 col-sm-12">
-          <div class="card rounded-4 h-100">
-            <div class="card-body">
-              <h5 class="card-title">
-                <img
-                  src="../assets/icons8-customer-96.png"
-                  class="image"
-                  @mouseover="allocateIsHovering = true"
-                  @mouseout="allocateIsHovering = false"
-                  :class="{ gelatine: allocateIsHovering }"
-                />
-              </h5>
-              <h6 class="card-title"><b>Allocate Manpower</b></h6>
-              <p class="card-text">
-                Receive appointments online instead of via call. View all your
-                scheduled appointments easily using our calendar.
-              </p>
-            </div>
+      <div class="col-lg-4 col-sm-12">
+        <div class="card rounded-4 h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <img
+                src="../assets/icons8-communication-100.png"
+                class="image"
+                @mouseover="clarifyIsHovering = true"
+                @mouseout="clarifyIsHovering = false"
+                :class="{ gelatine: clarifyIsHovering }"
+              />
+            </h5>
+            <h6 class="card-title">
+              <b>Clarify Doubts Directly</b>
+            </h6>
+            <p class="card-text">
+              Directly reach out to customers via our chat function to resolve
+              any queries or issues. Receive direct feedback on your services
+              after appointments!
+            </p>
           </div>
         </div>
       </div>
 
-        <div class="col-lg-4 col-sm-12">
-          <div class="card rounded-4 h-100">
-            <div class="card-body">
-              <h5 class="card-title">
-                <img
-                  src="../assets/icons8-communication-100.png"
-                  class="image"
-                  @mouseover="clarifyIsHovering = true"
-                  @mouseout="clarifyIsHovering = false"
-                  :class="{ gelatine: clarifyIsHovering }"
-                />
-              </h5>
-              <h6 class="card-title">
-                <b>Clarify Doubts Directly</b>
-              </h6>
-              <p class="card-text">
-                Directly reach out to customers via our chat function to resolve
-                any queries or issues. Receive direct feedback on your services
-                after appointments!
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-        <div class="col-lg-4 col-sm-12">
-          <div class="card rounded-4 h-100">
-            <div class="card-body">
-              <h5 class="card-title">
-                <img
-                  src="../assets/icons8-combo-chart-100.png"
-                  class="image"
-                  @mouseover="analyticsIsHovering = true"
-                  @mouseout="analyticsIsHovering = false"
-                  :class="{ gelatine: analyticsIsHovering }"
-                />
-              </h5>
-              <h6 class="card-title"><b>Store Analytics</b></h6>
-              <p class="card-text">
-                Analyse how well your store is doing with our dashboards.
-              </p>
-            </div>
+      <div class="col-lg-4 col-sm-12">
+        <div class="card rounded-4 h-100">
+          <div class="card-body">
+            <h5 class="card-title">
+              <img
+                src="../assets/icons8-combo-chart-100.png"
+                class="image"
+                @mouseover="analyticsIsHovering = true"
+                @mouseout="analyticsIsHovering = false"
+                :class="{ gelatine: analyticsIsHovering }"
+              />
+            </h5>
+            <h6 class="card-title"><b>Store Analytics</b></h6>
+            <p class="card-text">
+              Analyse how well your store is doing with our dashboards.
+            </p>
           </div>
         </div>
       </div>
