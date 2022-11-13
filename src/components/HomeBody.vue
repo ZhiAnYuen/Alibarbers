@@ -87,7 +87,7 @@
                 class="image"
                 @mouseover="speedyIsHovering = true"
                 @mouseout="speedyIsHovering = false"
-                :class="{ gelatine: speedyIsHovering }"
+                :class="{ shake: speedyIsHovering }"
               />
             </h5>
             <h6 class="card-title"><b>Speedy Bookings</b></h6>
@@ -109,7 +109,7 @@
                 class="image"
                 @mouseover="communicateIsHovering = true"
                 @mouseout="communicateIsHovering = false"
-                :class="{ gelatine: communicateIsHovering }"
+                :class="{ hithere: communicateIsHovering }"
               />
             </h5>
             <h6 class="card-title"><b>Communicate via Chat</b></h6>
@@ -167,7 +167,7 @@
                 class="image"
                 @mouseover="clarifyIsHovering = true"
                 @mouseout="clarifyIsHovering = false"
-                :class="{ gelatine: clarifyIsHovering }"
+                :class="{ shake: clarifyIsHovering }"
               />
             </h5>
             <h6 class="card-title">
@@ -191,7 +191,7 @@
                 class="image"
                 @mouseover="analyticsIsHovering = true"
                 @mouseout="analyticsIsHovering = false"
-                :class="{ gelatine: analyticsIsHovering }"
+                :class="{ hithere: analyticsIsHovering }"
               />
             </h5>
             <h6 class="card-title"><b>Store Analytics</b></h6>
@@ -270,6 +270,51 @@ export default {
   }
   75% {
     transform: scale(0.95, 1.05);
+  }
+}
+
+.shake {
+  animation: shake 2s ease infinite;
+}
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-10px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+.hithere {
+  animation: hithere 1s ease infinite;
+}
+@keyframes hithere {
+  30% {
+    transform: scale(1.2);
+  }
+  40%,
+  60% {
+    transform: rotate(-20deg) scale(1.2);
+  }
+  50% {
+    transform: rotate(20deg) scale(1.2);
+  }
+  70% {
+    transform: rotate(0deg) scale(1.2);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>
