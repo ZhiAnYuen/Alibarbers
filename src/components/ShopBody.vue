@@ -13,9 +13,7 @@
         >
           <h1>{{ shopDetails["shopName"] }}</h1>
           <span class="mt-1 d-flex flex-row">
-            <span class="me-3">{{
-              (totalStars / reviews.length).toFixed(1)
-            }}</span>
+            <span class="me-3">{{ getAvgRating() }}</span>
             <star-rating
               :rating="getRatings()"
               :read-only="true"
@@ -185,6 +183,13 @@ export default {
           this.totalStars += Number(docData.ratingStars);
         });
       });
+    },
+    getAvgRating() {
+      if (isNaN((this.totalStars / this.reviews.length).toFixed(1))) {
+        return "Not Yet Reviewed";
+      } else {
+        return (this.totalStars / this.reviews.length).toFixed(1);
+      }
     },
     getRatings() {
       return (this.totalStars / this.reviews.length).toFixed(1);

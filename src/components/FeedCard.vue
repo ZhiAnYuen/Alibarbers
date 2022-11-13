@@ -14,7 +14,7 @@
         />
         ({{ ratingCount }})
       </div>
-      <div v-else>Not yet reviewed</div>
+      <div v-else>Not Yet Reviewed</div>
     </div>
     <span @click="routeShop" class="stretched-link"></span>
   </div>
