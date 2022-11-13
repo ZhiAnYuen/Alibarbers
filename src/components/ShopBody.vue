@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid px-0">
     <div id="shopHeader">
-      <div class="row d-flex flex-row px-5 py-4">
+      <div class="row d-flex flex-row px-lg-5 px-md-4 px-sm-4 px-4 py-4">
         <div class="d-flex align-items-center col-lg-3 col-md-6 col-xs-12">
           <img
             :src="shopDetails['imgLink']"
@@ -9,7 +9,7 @@
           />
         </div>
         <div
-          class="d-flex flex-column justify-content-between p-5 col-lg-9 col-md-6 col-xs-12"
+          class="d-flex flex-column justify-content-between p-lg-5 p-4 col-lg-9 col-md-6 col-xs-12"
         >
           <h1>{{ shopDetails["shopName"] }}</h1>
           <span class="mt-1 d-flex flex-row">
@@ -67,7 +67,7 @@
         </div>
       </div>
     </div>
-    <div class="mx-5 mt-5 p-0">
+    <div class="px-lg-5 px-md-4 px-sm-4 px-4 mt-5">
       <ul class="nav" id="bodyNav">
         <li class="nav-item">
           <a
@@ -294,4 +294,5 @@ export default {
     overflow-x: scroll;
   }
 }
+
 </style>

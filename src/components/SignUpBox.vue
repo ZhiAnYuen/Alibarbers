@@ -1,7 +1,7 @@
 <template>
-  <div class="row align-items-center">
+  <div class="row">
     <div class="col-lg-6 d-flex justify-content-center">
-      <div id="card" class="card m-5 border border-dark rounded-4">
+      <div id="card" class="card border border-dark rounded-4">
         <div class="card-body p-5">
           <h1>Create an account</h1>
           <p>I am a...</p>
@@ -143,6 +143,7 @@ export default {
 #card {
   z-index: 0;
   width: 600px;
+  overflow-x: scroll;
 }
 
 span {

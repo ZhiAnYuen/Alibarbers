@@ -1,71 +1,78 @@
 <template>
-  <div id="page-body" class="container-fluid gx-0">
-    <div class="alert alert-danger px-5 col-12" v-if="noSuchAppointment">
+  <div
+    id="page-body"
+    class="container-fluid px-lg-5 px-md-4 px-sm-3 px-3 py-4 gx-0"
+  >
+    <div class="alert alert-danger col-12" v-if="noSuchAppointment">
       Error: Appointment Not Found
     </div>
-    <div v-if="!noSuchAppointment" class="row justify-content-center mx-5">
-      <div
-        class="col-lg-8 col-md-12 card border border-dark rounded-4 p-5 my-5"
-      >
-        <h2>Here's your appointment!</h2>
-        <div
-          v-if="retrievingData"
-          class="d-flex justify-content-center align-items-center"
-        >
-          <div class="spinner-border text-warning" role="status"></div>
-        </div>
-        <div v-if="!retrievingData">
-          <div class="mb-3">
-            <span class="field-title">Shop</span><br />
-            <span class="field-details">{{ appointmentData.shopName }}</span>
-          </div>
-          <div class="mb-3">
-            <span class="field-title">Address</span><br />
-            <span class="field-details">{{ appointmentData.location }}</span>
-          </div>
-          <div class="mb-3">
-            <span class="field-title">Date & Time</span><br />
-            <span class="field-details">{{ computedEventDate }}</span>
-          </div>
-          <div class="mb-3">
-            <span class="field-title">Hairdresser</span><br />
-            <span class="field-details">{{ selectedHairdresserName }}</span>
-          </div>
-          <hr />
-          <span class="field-title">Selected Services</span>
+    <div v-if="!noSuchAppointment" class="row justify-content-center">
+      <div class="col-lg-8 col-md-12">
+        <div class="card border border-dark rounded-4 p-5">
+          <h2>Here's your appointment!</h2>
           <div
-            v-for="service in appointmentData.selectedServices"
-            :key="service.id"
-            class="d-flex flex-row field-details"
+            v-if="retrievingData"
+            class="d-flex justify-content-center align-items-center"
           >
-            {{ service.name }} ({{ service.duration }} min)
-            <span class="ms-auto">${{ service.price }} </span>
+            <div class="spinner-border text-warning" role="status"></div>
           </div>
-          <hr />
-          <p class="d-flex flex-row field-details">
-            Total Amount
-            <span class="ms-auto">${{ appointmentData.totalPrice }}</span>
-          </p>
-          <AddToGoogleCalendar
-            :start="appointmentData.start"
-            :end="appointmentData.end"
-            :shopName="appointmentData.shopName"
-          />
-          <div class="d-flex flex-row">
-            <button
-              type="button"
-              class="hover-button button mt-4 mb-4"
-              @click="routeToAppointments()"
+          <div v-if="!retrievingData">
+            <div class="mb-3">
+              <span class="field-title">Shop</span><br />
+              <span class="field-details">{{ appointmentData.shopName }}</span>
+            </div>
+            <div class="mb-3">
+              <span class="field-title">Address</span><br />
+              <span class="field-details">{{ appointmentData.location }}</span>
+            </div>
+            <div class="mb-3">
+              <span class="field-title">Date & Time</span><br />
+              <span class="field-details">{{ computedEventDate }}</span>
+            </div>
+            <div class="mb-3">
+              <span class="field-title">Hairdresser</span><br />
+              <span class="field-details">{{ selectedHairdresserName }}</span>
+            </div>
+            <hr />
+            <span class="field-title">Selected Services</span>
+            <div
+              v-for="service in appointmentData.selectedServices"
+              :key="service.id"
+              class="d-flex flex-row field-details"
             >
-              Back
-            </button>
-            <button
-              type="button"
-              class="hover-button button mt-4 mb-4 ms-auto"
-              @click="deleteAppointmentFromDB()"
-            >
-              Cancel My Appointment
-            </button>
+              {{ service.name }} ({{ service.duration }} min)
+              <span class="ms-auto">${{ service.price }} </span>
+            </div>
+            <hr />
+            <p class="d-flex flex-row field-details">
+              Total Amount
+              <span class="ms-auto">${{ appointmentData.totalPrice }}</span>
+            </p>
+            <AddToGoogleCalendar
+              :start="appointmentData.start"
+              :end="appointmentData.end"
+              :shopName="appointmentData.shopName"
+            />
+            <div class="row">
+              <div class="col-lg-6 col-sm-12">
+                <button
+                  type="button"
+                  class="hover-button button mt-4 w-100"
+                  @click="routeToAppointments()"
+                >
+                  Back
+                </button>
+              </div>
+              <div class="col-lg-6 col-sm-12">
+                <button
+                  type="button"
+                  class="hover-button button mt-4 ms-auto w-100"
+                  @click="deleteAppointmentFromDB()"
+                >
+                  Cancel My Appointment
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

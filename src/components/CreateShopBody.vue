@@ -1,19 +1,21 @@
 <template>
   <h1 class="text-center p-5">Welcome! Set up your shop here.</h1>
   <div class="container" width="90%">
-    
     <form>
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
           <h4>Basic Information</h4>
-          <small class="text-muted">Provide some information about your shop.</small>
+          <small class="text-muted"
+            >Provide some information about your shop.</small
+          >
         </div>
         <div class="col-lg-8">
-
           <!-- Shop name input and verification -->
           <div class="row">
             <div class="">
-              <label for="shopname" class="form-label"><strong>Shop Name</strong></label>
+              <label for="shopname" class="form-label"
+                ><strong>Shop Name</strong></label
+              >
             </div>
             <div class="">
               <input
@@ -33,7 +35,11 @@
                 Verify Shop Name
               </button>
               <span v-if="shopnameAvail == 2" class="form-text">
-                <button type="button" class="btn custom my-2" @click="checkAvail()">
+                <button
+                  type="button"
+                  class="btn custom my-2"
+                  @click="checkAvail()"
+                >
                   Verify Shop Name
                 </button>
               </span>
@@ -49,9 +55,16 @@
 
           <!-- Shop Description -->
           <div class="row">
-            <label class="my-2" for="shopdesc"><strong>Shop Description</strong></label>
+            <label class="my-2" for="shopdesc"
+              ><strong>Shop Description</strong></label
+            >
             <div class="">
-              <textarea class="form-control" id="shopdesc" rows="3" v-model="shopdesc"></textarea>
+              <textarea
+                class="form-control"
+                id="shopdesc"
+                rows="3"
+                v-model="shopdesc"
+              ></textarea>
             </div>
           </div>
 
@@ -73,7 +86,9 @@
           <!-- Opening Hours -->
           <div class="row my-2">
             <div class="">
-              <label for="hours" class="form-label"><strong>Opening Hours</strong> (24-hour clock)</label>
+              <label for="hours" class="form-label"
+                ><strong>Opening Hours</strong> (24-hour clock)</label
+              >
             </div>
             <div class="">
               <div class="row">
@@ -101,12 +116,14 @@
 
           <!-- Contact Information -->
           <div class="row">
-            <label class="my-2" for="contact"><strong>Contact Information</strong></label>
+            <label class="my-2" for="contact"
+              ><strong>Contact Information</strong></label
+            >
             <div class="">
               <div class="row">
                 <div class="col-sm-6 mb-2 mb-xs-0">
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     class="form-control"
                     id="contact"
                     v-model="phoneno"
@@ -114,8 +131,8 @@
                   />
                 </div>
                 <div class="col-sm-6 mb-2 mb-xs-0">
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     class="form-control"
                     id="contact"
                     v-model="contactemail"
@@ -125,22 +142,25 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
 
-      <hr/>
+      <hr />
 
       <!-- Shop Location -->
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
           <h4>Shop Location</h4>
-          <small class="text-muted">Provide some information where your shop is located.</small>
+          <small class="text-muted"
+            >Provide some information where your shop is located.</small
+          >
         </div>
         <div class="col-lg-8">
           <div class="row">
             <div class="">
-              <label for="shoplocation" class="form-label"><strong>Shop Location</strong></label>
+              <label for="shoplocation" class="form-label"
+                ><strong>Shop Location</strong></label
+              >
             </div>
             <div class="">
               <input
@@ -154,29 +174,43 @@
           </div>
           <div class="row">
             <div class="">
-              <label class="form-label my-2"><strong>Nearest MRT Station</strong></label>
+              <label class="form-label my-2"
+                ><strong>Nearest MRT Station</strong></label
+              >
             </div>
             <div class="input-group mb-3">
-              <label class="input-group-text" for="inputGroupSelect01">Options</label>
-              <select class="form-select" id="inputGroupSelect01" v-model="selectedMRT">
+              <label class="input-group-text" for="inputGroupSelect01"
+                >Options</label
+              >
+              <select
+                class="form-select"
+                id="inputGroupSelect01"
+                v-model="selectedMRT"
+              >
                 <option selected>Choose...</option>
-                <option v-for="mrt of MRTs" >{{mrt}}</option>
+                <option v-for="mrt of MRTs">{{ mrt }}</option>
               </select>
             </div>
           </div>
         </div>
       </div>
 
-      <hr/>
-      
+      <hr />
+
       <!-- Add & remove available hairdressers -->
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
           <h4>Add One or More Hairdressers</h4>
-          <small class="text-muted">Provide some information about you and/or your staff.</small>
+          <small class="text-muted"
+            >Provide some information about you and/or your staff.</small
+          >
         </div>
         <div class="col-lg-8 mb-2">
-          <div class="form-group row mb-2" v-for="(hairdresser, index) in hairdressers" :key="index">
+          <div
+            class="form-group row mb-2"
+            v-for="(hairdresser, index) in hairdressers"
+            :key="index"
+          >
             <div class="col-md-5 mb-2 mb-md-0">
               <input
                 type="text"
@@ -206,23 +240,30 @@
             </div>
           </div>
           <div class="">
-              <button type="button" @click="addHairdresser()" class="btn custom">
-                Add Hairdresser
-              </button>
+            <button type="button" @click="addHairdresser()" class="btn custom">
+              Add Hairdresser
+            </button>
           </div>
         </div>
       </div>
 
-      <hr/>
+      <hr />
 
       <!-- Add & remove available services -->
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
           <h4>Add One or More Services</h4>
-          <small class="text-muted">Provide some information about the hairdressing services your shop offers.</small>
+          <small class="text-muted"
+            >Provide some information about the hairdressing services your shop
+            offers.</small
+          >
         </div>
         <div class="col-lg-8">
-          <div class="form-group row mb-2" v-for="(service, index) in services" :key="index">
+          <div
+            class="form-group row mb-2"
+            v-for="(service, index) in services"
+            :key="index"
+          >
             <div class="col-md-4 mb-2 mb-md-0">
               <input
                 type="text"
@@ -268,26 +309,32 @@
         </div>
       </div>
 
-      <hr/>
+      <hr />
 
       <!-- Check & uncheck shop tags -->
       <div class="row mt-4 mb-3">
         <div class="col-lg-4 mb-2">
           <h4>Add Tags</h4>
-          <small class="text-muted">Choose the tags that describe your shop and services. This is optional but could help customers pick your shop based on their needs!</small>
+          <small class="text-muted"
+            >Choose the tags that describe your shop and services. This is
+            optional but could help customers pick your shop based on their
+            needs!</small
+          >
         </div>
         <div class="col-lg-8">
           <div class="row justify-content-around text-center">
             <div class="col-sm-6 col-md-4" v-for="tag of tags" :key="tag">
-              <input 
-                type="checkbox" 
-                class="btn-check" 
-                :id="tag" 
+              <input
+                type="checkbox"
+                class="btn-check"
+                :id="tag"
                 autocomplete="off"
                 :value="tag"
                 v-model="selectedTags"
-              >
-              <label class="btn customlabel rounded-5 m-1" :for="tag">{{tag}}</label>
+              />
+              <label class="btn customlabel rounded-5 m-1" :for="tag">{{
+                tag
+              }}</label>
             </div>
           </div>
         </div>
@@ -300,21 +347,35 @@
 
       <!-- Form Validation & Submission -->
       <div class="row pb-3 float-end col-auto">
-        <button type="reset" class="btn custom-reset col-auto mx-2 hover-button">
+        <button
+          type="reset"
+          class="btn custom-reset col-auto mx-2 hover-button"
+        >
           Reset Fields
         </button>
-        <button type="submit" class="btn custom col-auto mx-2 hover-button" @click="createShop()">
+        <button
+          type="submit"
+          class="btn custom col-auto mx-2 hover-button"
+          @click="createShop()"
+        >
           Create Shop
         </button>
       </div>
-    
     </form>
   </div>
 </template>
 
 <script>
 import db from "../firebase.js";
-import { doc, setDoc, getDoc, getDocs, query, where, collection } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  collection,
+} from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
 import "firebase/storage";
@@ -334,37 +395,41 @@ export default {
   data() {
     return {
       shopdata: undefined,
-      shopname: '',
-      shoplocation: '',
-      contactemail: '',
-      phoneno: '',
-      services: [{
-        name: '',
-        price: '',
-        duration: ''
-      }],
-      hairdressers: [{
-        name: '',
-        role: ''
-      }],
+      shopname: "",
+      shoplocation: "",
+      contactemail: "",
+      phoneno: "",
+      services: [
+        {
+          name: "",
+          price: "",
+          duration: "",
+        },
+      ],
+      hairdressers: [
+        {
+          name: "",
+          role: "",
+        },
+      ],
       shopnameAvail: 1,
       errors: [],
       shopnameerror: [],
-      shopimg: '',
-      opening: '',
-      closing: '',
+      shopimg: "",
+      opening: "",
+      closing: "",
       validateForm: false,
-      shopdesc: '',
+      shopdesc: "",
       tags: [
-        'Male Hairstyles', 
-        'Female Hairstyles',
-        'Perming',
-        'Colouring',
-        'Hair Cuts',
-        'Scalp Treatment',
-        'Wedding Hairstyles',
-        'Wellness',
-        'Bleaching',
+        "Male Hairstyles",
+        "Female Hairstyles",
+        "Perming",
+        "Colouring",
+        "Hair Cuts",
+        "Scalp Treatment",
+        "Wedding Hairstyles",
+        "Wellness",
+        "Bleaching",
       ],
       selectedTags: [],
       MRTs: [
@@ -387,16 +452,16 @@ export default {
         "Punggol",
         "Bedok",
         "Tampines",
-        "Marine Parade"
+        "Marine Parade",
       ],
-      selectedMRT: 'Choose...',
+      selectedMRT: "Choose...",
     };
   },
   mounted() {
     var docRef = doc(db.db, "shop", this.userID);
     getDoc(docRef).then((docSnap) => {
       if (docSnap.exists()) {
-        alert('You have already created a shop profile.')
+        alert("You have already created a shop profile.");
         this.$router.push("/hairdresserfeed");
         //console.log(docSnap.data());
       }
@@ -409,12 +474,15 @@ export default {
     },
     checkAvail() {
       this.shopdata = undefined;
-      let q = query(collection(db.db, "shop"), where("shopName", "==", this.shopname));
+      let q = query(
+        collection(db.db, "shop"),
+        where("shopName", "==", this.shopname)
+      );
       getDocs(q)
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             this.shopdata = doc.data();
-          })
+          });
           //console.log(this.shopdata);
           if (this.shopdata == undefined) {
             //console.log("No matching document.");
@@ -443,9 +511,9 @@ export default {
             }
           }
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
-        })
+        });
     },
     addService() {
       this.services.push({
@@ -478,9 +546,8 @@ export default {
         role: "",
       });
       if (
-        this.errors.indexOf(
-          "Your shop has to have at least 1 hairdresser!"
-        ) != -1
+        this.errors.indexOf("Your shop has to have at least 1 hairdresser!") !=
+        -1
       ) {
         let i = this.errors.indexOf(
           "Your shop has to have at least 1 hairdresser!"
@@ -490,36 +557,44 @@ export default {
     },
     removeHairdresser(index) {
       if (this.hairdressers.length <= 1) {
-        this.errors.push(
-          "Your shop has to have at least 1 hairdresser!"
-        );
+        this.errors.push("Your shop has to have at least 1 hairdresser!");
       }
       this.hairdressers.splice(index, 1);
     },
     createShop() {
       event.preventDefault();
       var final_hairdressers = [];
-      for (var i=0; i < this.hairdressers.length; i++) {
+      for (var i = 0; i < this.hairdressers.length; i++) {
         let temp = {};
-        temp['class'] = this.hairdressers[i]['name'].replace(" ", "");
-        temp['id'] = i+1;
-        temp['role'] = this.hairdressers[i]['role'];
-        temp['name'] = this.hairdressers[i]['name'];
-        temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
+        temp["class"] = this.hairdressers[i]["name"].replace(" ", "");
+        temp["id"] = i + 1;
+        temp["role"] = this.hairdressers[i]["role"];
+        temp["name"] = this.hairdressers[i]["name"];
+        temp["label"] = this.hairdressers[i]["name"].replace(" ", "");
         final_hairdressers.push(temp);
       }
 
-      if (!(this.closing.length==4) || 
-          !(this.opening.length==4) ||
-          isNaN(this.opening)==true ||
-          isNaN(this.closing)==true ) {
+      if (
+        !(this.closing.length == 4) ||
+        !(this.opening.length == 4) ||
+        isNaN(this.opening) == true ||
+        isNaN(this.closing) == true
+      ) {
         var hourscheck = false;
-        alert("Error! Please enter valid opening hours in 24-hour clock format.");
+        alert(
+          "Error! Please enter valid opening hours in 24-hour clock format."
+        );
       } else {
         var hourscheck = true;
       }
 
-      if (!(this.shopnameAvail==3) || this.shoplocation=="" || this.errors.length>0 || hourscheck==false || this.selectedMRT=="Choose..." ) {
+      if (
+        !(this.shopnameAvail == 3) ||
+        this.shoplocation == "" ||
+        this.errors.length > 0 ||
+        hourscheck == false ||
+        this.selectedMRT == "Choose..."
+      ) {
         //console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
         alert("Error! Please fill in all fields.");
       } else {
@@ -538,8 +613,12 @@ export default {
           location: this.shoplocation,
           ownerEmail: this.email,
           services: this.services,
-          open: Number(this.opening.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
-          close: Number(this.closing.substring(0,2))*60 + (Number(this.opening.substring(2))/60)*60,
+          open:
+            Number(this.opening.substring(0, 2)) * 60 +
+            (Number(this.opening.substring(2)) / 60) * 60,
+          close:
+            Number(this.closing.substring(0, 2)) * 60 +
+            (Number(this.opening.substring(2)) / 60) * 60,
           hairdressers: final_hairdressers,
           tags: final_tags,
           selectedMRT: this.selectedMRT,
@@ -557,35 +636,34 @@ export default {
             alert("Success! Welcome, " + this.shopname);
             this.$router.push("/hairdresserfeed");
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
-          })
+          });
       }
     },
   },
-
 };
 </script>
 
 <style lang="scss" scoped>
-  h1 {
-    background-color: $pastel-yellow;
-  }
-  button.custom {
-    background-color: $pastel-yellow;
-    color: black;
-  }
-  button.custom:hover {
-    border-color: black;
-  }
-  button.custom-reset {
-    background-color: red($color: #000000);
-  }
-  label.customlabel:hover {
-    background-color: $pastel-yellow;
-  }
-  label.customlabel:checked {
-    background-color: $pastel-yellow;
-    border: 1px;
-  }
+h1 {
+  background-color: $pastel-yellow;
+}
+button.custom {
+  background-color: $pastel-yellow;
+  color: black;
+}
+button.custom:hover {
+  border-color: black;
+}
+button.custom-reset {
+  background-color: red($color: #000000);
+}
+label.customlabel:hover {
+  background-color: $pastel-yellow;
+}
+label.customlabel:checked {
+  background-color: $pastel-yellow;
+  border: 1px;
+}
 </style>

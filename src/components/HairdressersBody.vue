@@ -1,13 +1,12 @@
 <template>
   <div v-for="(hairdresser, index) in hairdressers" :key="index">
-    <div class="row">
-      <div class="col-md-6 text-center">
-        <p>{{ hairdresser["name"] }}</p>
-      </div>
-      <div class="col-md-6 text-center">
-        <p>
-          {{ hairdresser["role"] }}
-        </p>
+    <div class="card mb-4">
+      <div class="card-body">
+        <span class="card-title fs-4 fw-semibold mb-2">{{
+          hairdresser["name"]
+        }}</span>
+        <br />
+        <span>{{ hairdresser["role"] }}</span>
       </div>
     </div>
   </div>

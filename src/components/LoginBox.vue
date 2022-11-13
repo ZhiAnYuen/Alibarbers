@@ -1,8 +1,8 @@
 <template>
-  <div class="row align-items-center">
+  <div class="row">
     <div class="col-lg-6 d-md-none d-lg-block"></div>
     <div class="col-lg-6 d-flex justify-content-center">
-      <div id="card" class="card m-5 border border-dark rounded-4">
+      <div id="card" class="card border border-dark rounded-4">
         <div class="card-body p-5">
           <h1>Welcome Back!</h1>
           <p>Sign in to your account below.</p>

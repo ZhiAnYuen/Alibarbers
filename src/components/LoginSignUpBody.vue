@@ -1,5 +1,8 @@
 <template>
-  <div id="login-body" class="container-fluid">
+  <div
+    id="login-body"
+    class="container-fluid py-5 px-lg-5 px-md-4 px-sm-4 px-4"
+  >
     <LoginBox v-if="$route.meta.isLogin" />
     <SignUpBox v-else />
   </div>
