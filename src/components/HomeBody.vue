@@ -158,6 +158,7 @@
             </div>
           </div>
         </div>
+      </div>
 
         <div class="col-lg-4 col-sm-12">
           <div class="card rounded-4 h-100">
@@ -182,6 +183,7 @@
             </div>
           </div>
         </div>
+      </div>
 
         <div class="col-lg-4 col-sm-12">
           <div class="card rounded-4 h-100">
@@ -203,14 +205,14 @@
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        class="hover-button button ms-auto mt-4"
-        v-on:click="$router.push('/signup')"
-      >
-        Join Us
-      </button>
     </div>
+    <button
+      type="button"
+      class="hover-button button ms-auto mt-4"
+      v-on:click="$router.push('/signup')"
+    >
+      Join Us
+    </button>
   </div>
 </template>
 
