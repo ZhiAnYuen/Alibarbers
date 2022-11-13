@@ -76,6 +76,7 @@
           <vue-recaptcha
             id="recaptcha"
             sitekey="6LdW9usiAAAAADjdwQP9CRnAsoyl3Aw7o7BvF9R-"
+            @verify="verifyMethod"
             class="mb-4"
           ></vue-recaptcha>
           <p>
@@ -105,10 +106,18 @@ export default {
       signUpEmail: "",
       signUpPassword: "",
       userType: "",
+      isVerified: false,
     };
   },
   methods: {
+    verifyMethod() {
+      this.isVerified = true;
+    },
     signUp() {
+      if (!this.isVerified) {
+        alert("reCAPTCHA not verified!");
+        return;
+      };
       const auth = getAuth();
       createUserWithEmailAndPassword(
         auth,
@@ -132,7 +141,6 @@ export default {
           if (this.userType == "Hairdresser") this.$router.push("/createshop");
         })
         .catch((error) => {
-          //console.log(error.code + ": " + error.message);
           alert(error.code + ": " + error.message);
         });
     },
@@ -144,7 +152,7 @@ export default {
 #card {
   z-index: 0;
   width: 600px;
-  overflow-x: scroll;
+  // overflow-x: scroll;
 }
 
 span {
