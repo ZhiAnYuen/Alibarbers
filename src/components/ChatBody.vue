@@ -46,7 +46,7 @@
         </div>
       </div>
 
-      <div id="card" class="card m-5 border rounded-4">
+      <div id="card" class="card border rounded-4">
         <div class="row" style="height: 100%">
           <!-- CONVO BLOCK -->
           <div id="convoBlock" class="col-lg-12 col-xl-3">
