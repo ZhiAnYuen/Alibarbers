@@ -423,9 +423,9 @@ export default {
             querySnapshot.forEach((doc) => {
               othershopdata = doc.data();
             })
-            console.log(othershopdata);
+            //console.log(othershopdata);
             if (othershopdata == undefined) {
-              console.log("No matching document.");
+              //console.log("No matching document.");
               this.shopnameAvail = 3; // Shop name will be verified
               if (
                 this.shopnameerror.indexOf(
@@ -438,7 +438,7 @@ export default {
                 this.shopnameerror.splice(i, 1);
               }
             } else {
-              console.log('ERROR SHOULD SHOW!')
+              //console.log('ERROR SHOULD SHOW!')
               this.shopnameAvail = 2; // Error - shop name has been taken
               if (
                 this.shopnameerror.indexOf(
@@ -452,7 +452,8 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
+            alert(error.code + ": " + error.message);
+            //console.log(error);
           })
       }
     },
@@ -514,7 +515,7 @@ export default {
         temp['id'] = i+1;
         temp['role'] = this.hairdressers[i]['role'];
         temp['name'] = this.hairdressers[i]['name'];
-        temp['label'] = this.hairdressers[i]['name'].replace(" ", "");
+        temp['label'] = this.hairdressers[i]['name'];
         final_hairdressers.push(temp);
       }
 
@@ -562,7 +563,8 @@ export default {
             location.reload();
           })
           .catch(error => {
-            console.log(error);
+            alert(error.code + ": " + error.message);
+            //console.log(error);
           })
         }
 

@@ -511,7 +511,8 @@ export default {
           }
         })
         .catch((error) => {
-          console.log(error);
+          alert(error.code + ": " + error.message);
+          //console.log(error);
         });
     },
     addService() {
@@ -569,7 +570,7 @@ export default {
         temp["id"] = i + 1;
         temp["role"] = this.hairdressers[i]["role"];
         temp["name"] = this.hairdressers[i]["name"];
-        temp["label"] = this.hairdressers[i]["name"].replace(" ", "");
+        temp["label"] = this.hairdressers[i]["name"];
         final_hairdressers.push(temp);
       }
 
@@ -646,7 +647,8 @@ export default {
             this.$router.push("/hairdresserfeed");
           })
           .catch((error) => {
-            console.log(error);
+            alert(error.code + ": " + error.message);
+            //console.log(error);
           });
       }
     },
