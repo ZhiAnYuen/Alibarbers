@@ -12,6 +12,7 @@ import AppointmentView from "../views/AppointmentView.vue";
 import ShopAppointmentsView from "../views/ShopAppointmentsView.vue";
 import ProfileBody from "../views/ProfileView.vue";
 import ChatView from "../views/ChatView.vue";
+import { useUserStore } from "../stores/users.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -133,6 +134,34 @@ const getCurrUser = () => {
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (await getCurrUser()) {
+      const user = useUserStore();
+      let userType = user.userType;
+      // console.log(user.userType);
+      let custRoutes = [
+        "feed",
+        "shop",
+        "booking",
+        "appointment",
+        "appointments",
+        "chat",
+      ];
+      let shopRoutes = [
+        "hairdresserfeed",
+        "createshop",
+        "hairdresserprofile",
+        "shopappointments",
+        "chat",
+      ];
+
+      if (userType == "Hairdresser" && custRoutes.includes(to.name)) {
+        alert("You do not have access to this page!");
+        next("/hairdresserfeed");
+      }
+
+      if (userType == "Customer" && shopRoutes.includes(to.name)) {
+        alert("You do not have access to this page!");
+        next("/feed");
+      }
       next();
     } else {
       alert("Please log in to access this page.");

@@ -37,10 +37,13 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse p-3" id="navbarNav">
+      <div
+        class="collapse navbar-collapse px-lg-5 px-md-4 px-sm-4 px-4 py-3"
+        id="navbarNav"
+      >
         <ul
           v-if="checkIsLoggedIn($route.name) == false"
-          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
+          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 w-100"
         >
           <li class="nav-item">
             <router-link to="/login" class="nav-link">
@@ -57,7 +60,7 @@
         <!-- Navbar for Customers -->
         <ul
           v-if="checkIsLoggedIn($route.name) == 'Customer'"
-          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
+          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 w-100"
         >
           <li class="nav-item">
             <router-link to="/feed" class="nav-link">
@@ -87,7 +90,7 @@
         <!-- Navbar for Hairdressers -->
         <ul
           v-if="checkIsLoggedIn($route.name) == 'Hairdresser'"
-          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
+          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 w-100"
         >
           <li class="nav-item">
             <router-link to="/hairdresserfeed" class="nav-link">

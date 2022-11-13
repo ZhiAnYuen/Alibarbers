@@ -74,6 +74,7 @@
             Sign Up
           </button>
           <vue-recaptcha
+            id="recaptcha"
             sitekey="6LdW9usiAAAAADjdwQP9CRnAsoyl3Aw7o7BvF9R-"
             class="mb-4"
           ></vue-recaptcha>
@@ -150,5 +151,11 @@ span {
   color: black;
   font-weight: bold;
   text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  #recaptcha {
+    display: none;
+  }
 }
 </style>
