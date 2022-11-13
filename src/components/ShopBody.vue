@@ -263,9 +263,10 @@ export default {
   background-color: $pastel-yellow;
 }
 
-.shop-image {
+img.shop-image {
   min-height: 200px;
   max-height: 300px;
+  object-fit: cover;
 }
 
 .hover-button {
