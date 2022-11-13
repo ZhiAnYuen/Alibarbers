@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="col-md-6 col-sm-12 align-self-center">
-        <img class="img-fluid" src="../assets/main-image.PNG" alt="..." />
+        <img class="img-fluid" src="../assets/main-image.jpg" alt="..." />
       </div>
     </div>
   </div>
