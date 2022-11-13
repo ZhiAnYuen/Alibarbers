@@ -249,6 +249,7 @@ export default {
           messages: curr,
         });
       }
+      this.inputText = "";
     },
   },
 };
