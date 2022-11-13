@@ -95,8 +95,6 @@ export default {
       feeds: [],
       services: null,
       servicesOptions: [
-        "Hair-cutting",
-        "Colouring",
         "Styling",
         "Perming",
         "Colouring",
@@ -107,7 +105,7 @@ export default {
         "Bleaching",
       ],
       categories: null,
-      categoriesOptions: ["Most Popular", "Male Hairstyle", "Female Hairstyle"],
+      categoriesOptions: ["Male Hairstyle", "Female Hairstyle"],
       locations: null,
       locationsOptions: [
         "Sembawang",

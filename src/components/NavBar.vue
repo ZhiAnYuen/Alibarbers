@@ -26,7 +26,7 @@
       </router-link>
 
       <button
-        class="navbar-toggler"
+        class="navbar-toggler me-3"
         type="button"
         data-bs-toggle="collapse"
         data-bs-target="#navbarNav"
