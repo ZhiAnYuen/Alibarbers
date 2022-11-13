@@ -22,6 +22,7 @@
                 id="shopname"
                 v-model="shopname"
                 placeholder="E.g. Sally's Hairdressers"
+                @change="changeAvail()"
               />
               <button
                 v-if="shopnameAvail == 1"
@@ -55,7 +56,7 @@
           </div>
 
           <!-- Upload a picture of their shop -->
-          <div class="row">
+          <!-- <div class="row">
             <label class="my-2" for="shopimg"><strong>Shop Image</strong></label>
             <div class="input-group">
               <input
@@ -67,7 +68,7 @@
                 aria-describedby="filepicker"
               />
             </div>
-          </div>
+          </div> -->
         
           <!-- Opening Hours -->
           <div class="row my-2">
@@ -403,6 +404,9 @@ export default {
     this.contactemail = this.email;
   },
   methods: {
+    changeAvail() {
+      this.shopnameAvail = 1;
+    },
     checkAvail() {
       this.shopdata = undefined;
       let q = query(collection(db.db, "shop"), where("shopName", "==", this.shopname));
@@ -542,7 +546,7 @@ export default {
           rawClosing: this.closing,
           rawOpening: this.opening,
           selectedTags: this.selectedTags,
-          shopDescription: shopdesc,
+          shopDescription: this.shopdesc,
           phoneNum: this.phoneno,
           contactEmail: this.contactemail,
         };

@@ -105,6 +105,11 @@
             </router-link>
           </li>
           <li class="nav-item">
+            <router-link to="/hairdresserprofile" class="nav-link">
+              <span class="fw-semibold text-dark"> My Profile </span>
+            </router-link>
+          </li>
+          <li class="nav-item">
             <span
               v-on:click="signOut"
               class="nav-link fw-semibold text-dark"
