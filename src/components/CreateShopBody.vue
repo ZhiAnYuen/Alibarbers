@@ -415,7 +415,6 @@ export default {
       shopnameAvail: 1,
       errors: [],
       shopnameerror: [],
-      shopimg: "",
       opening: "",
       closing: "",
       validateForm: false,
@@ -607,9 +606,19 @@ export default {
 
         const docRef2 = doc(db.db, "shop", this.userID);
 
+        // random image picker
+        var images = [
+          'https://www.byrdie.com/thmb/eYl7tehdeBDzIXWNV6zOxa8mVvY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/capella-salon-cc77d352d7c5429599eeb260c40cc4db.jpg',
+          'https://media.timeout.com/images/104686361/1372/1029/image.jpg',
+          'https://media.timeout.com/images/101842791/1372/1029/image.jpg',
+          'https://www.byrdie.com/thmb/SPvqSC_DJA9HKbLjjc0w8p375hQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__city-guide-these-are-the-best-hair-salons-in-la-2007482-1481135787.700x0c-79b54a039afe492a8a73fd0a0dd1f657.jpg',
+          'https://www.byrdie.com/thmb/hXdqb5lltpDAvOL7nvlCjXLns-A=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__stag-hair-parlor-2007533-1481140732.700x0c-3ec2838467724f92b0873fa33597b269.jpg',
+        ];
+        var random = Math.floor(Math.random() * images.length);
+
         const data1 = {
           shopName: this.shopname,
-          imgLink: this.shopimg,
+          imgLink: images[random],
           location: this.shoplocation,
           ownerEmail: this.email,
           services: this.services,
