@@ -1,5 +1,6 @@
 <template>
   <h1 class="text-center p-5">Your Shop</h1>
+  
   <div class="container" width="90%">
     <form>
       <div class="row my-4">
