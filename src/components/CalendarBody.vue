@@ -301,8 +301,8 @@ export default {
       step2To3Alert: false,
       showDraggable: true,
       loadingStripe: false,
-      stripeSuccessURL: "http://localhost:5173/appointments",
-      stripeCancelURL: "http://localhost:5173/feed",
+      stripeSuccessURL: "https://alibarbers.netlify.app/appointments",
+      stripeCancelURL: "https://alibarbers.netlify.app/feed",
       stripeLineItems: [],
     };
   },
