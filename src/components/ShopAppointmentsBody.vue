@@ -91,7 +91,9 @@ import "vue-cal/dist/vuecal.css";
 import AppointmentModal from "./AppointmentModal.vue";
 
 import db from "../firebase.js";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc, doc } from "firebase/firestore";
+import { useUserStore } from "../stores/users.js";
+import { computed } from "vue";
 
 const months = [
   "Jan",
@@ -110,6 +112,16 @@ const months = [
 
 export default {
   name: "ShopAppointmentsBody",
+  setup() {
+    const user = useUserStore();
+    return {
+      name: computed(() => user.name),
+      email: computed(() => user.email),
+      isLoggedIn: computed(() => user.isLoggedIn),
+      userType: computed(() => user.userType),
+      userID: computed(() => user.userID),
+    };
+  },
   data() {
     return {
       retrievingData: false,
@@ -131,9 +143,16 @@ export default {
     async retrieveData() {
       this.retrievingData = true;
 
+      // find shopname based on userID
+      let docRef = doc(db.db, 'shop', this.userID);
+      let docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        var shopname = docSnap.data().shopName;
+      }
+
       const qAppointments = query(
         collection(db.db, "appointments"),
-        where("shopName", "==", "Test Shop")
+        where("shopName", "==", shopname)
       );
 
       const appSnapshot = await getDocs(qAppointments);
@@ -145,7 +164,7 @@ export default {
 
       const qShop = query(
         collection(db.db, "shop"),
-        where("shopName", "==", "Test Shop")
+        where("shopName", "==", shopname)
       );
 
       const shopSnapshot = await getDocs(qShop);
@@ -157,14 +176,14 @@ export default {
       });
 
       this.retrievingData = false;
-      console.log(this.appointmentsData);
+      //console.log(this.appointmentsData);
     },
     onCalendarEventClick(event, e) {
       this.popUpEventModal = event;
       this.showModal = true;
 
       e.stopPropagation();
-      console.log(event);
+      //console.log(event);
 
       var startDate = new Date(this.popUpEventModal.start);
       var endDate = new Date(this.popUpEventModal.end);
