@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid ps-0">
+    <div class="container-fluid px-0">
       <router-link
         v-if="checkIsLoggedIn($route.name) == false"
         to="/home"
@@ -43,7 +43,7 @@
       >
         <ul
           v-if="checkIsLoggedIn($route.name) == false"
-          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 w-100"
+          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5"
         >
           <li class="nav-item">
             <router-link to="/login" class="nav-link">
@@ -60,7 +60,7 @@
         <!-- Navbar for Customers -->
         <ul
           v-if="checkIsLoggedIn($route.name) == 'Customer'"
-          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 w-100"
+          class="navbar-nav ms-auto mb-2 mb-lg-0"
         >
           <li class="nav-item">
             <router-link to="/feed" class="nav-link">
@@ -90,7 +90,7 @@
         <!-- Navbar for Hairdressers -->
         <ul
           v-if="checkIsLoggedIn($route.name) == 'Hairdresser'"
-          class="navbar-nav ms-auto mb-2 mb-lg-0 me-5 w-100"
+          class="navbar-nav ms-auto mb-2 mb-lg-0"
         >
           <li class="nav-item">
             <router-link to="/hairdresserfeed" class="nav-link">
@@ -177,4 +177,11 @@ export default {
   border-bottom: 2px solid $yellow;
   margin: -1px;
 }
+
+@media (max-width: 992px) {
+  .navbar-nav {
+    width: 100%;
+  }
+}
+
 </style>
