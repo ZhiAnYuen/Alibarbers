@@ -64,7 +64,7 @@
       </div>
 
       <!-- services -->
-      <div class="col-md-6 col-12 mb-2 mb-md-0">
+      <div class="col-md-6 col-12 mb-2">
         <div
           class="card border border-dark rounded-4 text-center px-4 pt-4"
         >
@@ -277,6 +277,7 @@ export default {
           2
         );
       }
+      this.totalRevenue = this.totalRevenue.toFixed(2);
 
       // graph for bookings
       const ctx2 = document.getElementById("bookingsChart");
@@ -370,6 +371,8 @@ export default {
           },
         },
       });
+      servicesChart.canvas.style.height = '193px';
+      servicesChart.canvas.style.width = '194px';
     }
   },
   methods: {},
