@@ -70,10 +70,7 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link
-              :to="{ name: 'chat', params: { uid: this.userID } }"
-              class="nav-link"
-            >
+            <router-link to="/chat" class="nav-link">
               <span class="fw-semibold text-dark"> Chats </span>
             </router-link>
           </li>
@@ -103,10 +100,7 @@
             </router-link>
           </li>
           <li class="nav-item">
-            <router-link
-              :to="{ name: 'chat', params: { uid: this.userID } }"
-              class="nav-link"
-            >
+            <router-link to="/chat" class="nav-link">
               <span class="fw-semibold text-dark"> Chats </span>
             </router-link>
           </li>
