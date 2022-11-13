@@ -143,14 +143,12 @@ router.beforeEach(async (to, from, next) => {
         "booking",
         "appointment",
         "appointments",
-        "chat",
       ];
       let shopRoutes = [
         "hairdresserfeed",
         "createshop",
         "hairdresserprofile",
         "shopappointments",
-        "chat",
       ];
 
       if (userType == "Hairdresser" && custRoutes.includes(to.name)) {
