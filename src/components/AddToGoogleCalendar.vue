@@ -6,7 +6,7 @@
       v-if="!addedToGoogleCalendar && !addingToGoogleCalendar"
       @click="addToGoogleCal"
     >
-      <img width="40" class="px-1" src="../assets/googleCalendar.png
+      <img width="40" class="px-1" src="../assets/googleCalendar.png"/>
       Add to Google Calendar
     </button>
     <button
