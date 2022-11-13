@@ -294,7 +294,7 @@ export default {
         title: "My Appointment",
         duration: 60,
       },
-      latestEvent: {},
+      latestEvent: undefined,
       selectedHairdressers: [],
       selectedServices: [],
       step1To2Alert: false,
@@ -325,14 +325,14 @@ export default {
 
       if (shopSnapshot.exists()) {
         var shopData = shopSnapshot.data();
-        //console.log(shopData);
+        shopData.docID = this.$route.params.id;
         this.shopData = shopData;
         this.hairdressers = shopData.hairdressers;
         this.services = shopData.services;
         this.open = shopData.open;
         this.close = shopData.close;
       } else {
-        //console.log("No such shop");
+        alert("No such shop");
       }
 
       const qAppointments = query(
@@ -346,8 +346,6 @@ export default {
       });
 
       this.retrievingData = false;
-      //console.log(this.shopData);
-      //console.log(this.appointments);
     },
     onEventDragStart(e, draggable) {
       e.dataTransfer.setData("event", JSON.stringify(draggable));
@@ -365,8 +363,6 @@ export default {
       } else {
         this.step1To2Alert = true;
       }
-
-      //console.log(this.selectedHairdressers);
     },
     step2To3() {
       if (this.selectedServices.length > 0) {
@@ -380,17 +376,16 @@ export default {
         }
         this.draggable.duration = totalDuration;
         this.draggable.price = totalPrice;
-        console.log(this.draggable);
       } else {
         this.step2To3Alert = true;
       }
-      //console.log(this.selectedServices);
     },
     step3To4() {
       this.showDraggable = true;
       if (this.latestEvent) {
-        //console.log(this.latestEvent);
         this.step += 1;
+      } else {
+        alert("Please drag the event into the calendar!");
       }
     },
     eventInfo(event) {
@@ -438,7 +433,6 @@ export default {
       this.draggable.title = this.userName;
       delete this.draggable.id;
       this.draggable.shopName = this.shopData.shopName;
-      //console.log(this.draggable);
 
       await addDoc(collection(db.db, "appointments"), this.draggable);
     },

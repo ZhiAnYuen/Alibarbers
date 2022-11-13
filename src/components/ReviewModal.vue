@@ -57,6 +57,7 @@ export default {
   width: 50%;
   height: 100%;
   z-index: 9999;
+  overflow: scroll;
 }
 .modal-header h3 {
   margin-top: 0;
@@ -90,7 +91,6 @@ export default {
 @media (max-width: 850px) {
   .modal-container {
     width: 100%;
-    overflow: scroll;
   }
 }
 </style>

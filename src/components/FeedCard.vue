@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     averageRating() {
-      return (this.ratingSum / this.ratingCount).toFixed(1);
+      return Number((this.ratingSum / this.ratingCount).toFixed(1));
     },
   },
 };

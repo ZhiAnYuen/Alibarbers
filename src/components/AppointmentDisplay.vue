@@ -265,6 +265,8 @@ export default {
         alert("Review submitted successfully!")
         this.showModal = false;
       }
+
+      alert("Thank you for your review!");
     },
     routeToAppointment() {
       this.$router.push({ path: "/appointment/" + this.appointmentData.docID });
