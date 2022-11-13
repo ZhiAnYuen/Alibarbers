@@ -1,86 +1,92 @@
 <template>
-  <div class="container-fluid px-5">
+
+  <div class="container px-lg-5 px-md-4 px-sm-4 px-4" width="90%">
     <br />
-    <span class="text-start fw-semibold">Hello {{ name }},</span>
+    <span class="text-start fw-semibold custom">Hello {{ name }},</span>
     <h1 class="text-start fw-semibold">Welcome to your Insights Dashboard.</h1>
 
-    <!-- <div class="row mt-5" v-if="check==false">
-      <h4 class="mb-2">You have not set up your shop yet!</h4>
-      <button 
-        type="button" 
-        class="btn custom col-auto mx-3 hover-button" 
-        @click="$router.push('/createshop')">
-          Get Started
-        </button>
-    </div> -->
-
-    <div class="row mt-4 gx-3" v-if="check == true">
-      <!-- Revenue -->
-      <div
-        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
-      >
-        <div class="d-flex flex-row justify-content-between">
-          <h3 class="fw-semibold">Revenue</h3>
-          <img src="../assets/revenue.png" class="img-fluid custom-size" />
-        </div>
-        <canvas id="revenueChart"></canvas>
-        <div class="card-body text-center">
-          Average Revenue per Booking: <strong>${{ averageRevenue }}</strong>
-          <br />
-          Total YTD Revenue: <strong>${{ totalRevenue }}</strong>
-        </div>
-      </div>
-
+    <div class="row mt-4" v-if="check == true">
+      
       <!-- bookings -->
-      <div
-        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
-      >
-        <div class="d-flex flex-row justify-content-between">
-          <h3 class="fw-semibold">Bookings</h3>
-          <img src="../assets/booking.png" class="img-fluid custom-size" />
-        </div>
-        <canvas id="bookingsChart"></canvas>
-        <div class="card-body text-center">
-          Total Bookings: <strong>{{ totalBookings }}</strong>
+      <div class="col-md-6 col-12 mb-2 mb-md-0">
+        <div
+          class="card border border-dark rounded-4 text-center px-4 pt-4"
+        >
+          <div class="d-flex flex-row justify-content-between">
+            <h3 class="fw-semibold">Bookings</h3>
+            <img src="../assets/booking.png" class="img-fluid custom-size" />
+          </div>
+          <canvas id="bookingsChart" class="mt-2"></canvas>
+          <div class="card-body text-center">
+            Total Bookings: <strong>{{ totalBookings }}</strong>
+          </div>
         </div>
       </div>
 
       <!-- ratings -->
-      <div
-        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
-      >
-        <div class="d-flex flex-row justify-content-between">
-          <h3 class="fw-semibold">Ratings</h3>
-          <img src="../assets/rating.png" class="img-fluid custom-size" />
+      <div class="col-md-6 col-12">
+        <div
+          class="card border border-dark rounded-4 text-center px-4 pt-4"
+        >
+          <div class="d-flex flex-row justify-content-between">
+            <h3 class="fw-semibold">Ratings</h3>
+            <img src="../assets/rating.png" class="img-fluid custom-size" />
+          </div>
+          <div class="mt-3 mx-3">
+            <canvas id="ratingsChart" class="mt-2"></canvas>
+          </div>
+          <div class="card-body text-center">
+            Average Rating: <strong>{{ averageRating }} stars</strong>
+          </div>
         </div>
-        <div class="mt-3 mx-3">
-          <canvas id="ratingsChart"></canvas>
-        </div>
-        <div class="card-body text-center">
-          Average Rating: <strong>{{ averageRating }} stars</strong>
+      </div>
+
+    </div>
+
+    <div class="row mt-2" v-if="check == true">
+      
+      <!-- Revenue -->
+      <div class="col-md-6 col-12 mb-2 mb-md-0">
+        <div
+          class="card border border-dark rounded-4 text-center px-4 pt-4"
+        >
+          <div class="d-flex flex-row justify-content-between">
+            <h3 class="fw-semibold">Revenue</h3>
+            <img src="../assets/revenue.png" class="img-fluid custom-size" />
+          </div>
+          <canvas id="revenueChart" class="mt-2"></canvas>
+          <div class="card-body text-center">
+            Average Revenue per Booking: <strong>${{ averageRevenue }}</strong>
+            <br />
+            Total YTD Revenue: <strong>${{ totalRevenue }}</strong>
+          </div>
         </div>
       </div>
 
       <!-- services -->
-      <div
-        class="card col-md-6 col-xs-10 border border-dark rounded-4 text-center p-4"
-      >
-        <div class="d-flex flex-row justify-content-between">
-          <h3 class="fw-semibold">Services</h3>
-          <img src="../assets/service.png" class="img-fluid custom-size" />
+      <div class="col-md-6 col-12 mb-2 mb-md-0">
+        <div
+          class="card border border-dark rounded-4 text-center px-4 pt-4"
+        >
+          <div class="d-flex flex-row justify-content-between">
+            <h3 class="fw-semibold">Services</h3>
+            <img src="../assets/service.png" class="img-fluid custom-size" />
+          </div>
+          <div class="my-2 d-flex flex-row justify-content-center">
+            <canvas
+              class="justify-content-center mt-2"
+              id="servicesChart"
+            ></canvas>
+          </div>
+          <div class="card-body text-center">
+            Total Services: <strong>{{ totalServices }}</strong>
+          </div>
         </div>
-        <div class="my-2 d-flex flex-row justify-content-center">
-          <canvas
-            class="justify-content-center mb-2"
-            id="servicesChart"
-          ></canvas>
-        </div>
-        <div class="card-body text-center">
-          Total Services: <strong>{{ totalServices }}</strong>
-        </div>
-      </div>
+      </div>  
+
     </div>
   </div>
+
 </template>
 
 <script>
@@ -371,8 +377,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h1 {
+  background-color: $pastel-yellow;
+}
 .custom-size {
-  height: 48px;
+  height: 43px;
   width: auto;
 }
 .card {
