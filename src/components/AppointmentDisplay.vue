@@ -261,8 +261,9 @@ export default {
           reviewFeedback: this.reviewFeedback,
           email: this.userEmail,
           likedCategories: this.likedCategories,
+          shopName: this.appointmentData.shopName,
         });
-        alert("Review submitted successfully!")
+        alert("Review submitted successfully!");
         this.showModal = false;
       }
 

@@ -18,12 +18,12 @@ npm run lint
 
 ### List of User Emails & Passwords For Testing
 
-##### As a Hairdresser
+#### As a Hairdresser
 ```sh
 email: hairdresser@gmail.com
 password: hairdresser
 ```
-##### As a Customer
+#### As a Customer
 ```sh
 email: customer@gmail.com
 password: customer
