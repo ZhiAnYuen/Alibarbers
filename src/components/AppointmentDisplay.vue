@@ -262,7 +262,7 @@ export default {
           email: this.userEmail,
           likedCategories: this.likedCategories,
         });
-
+        alert("Review submitted successfully!")
         this.showModal = false;
       }
     },
