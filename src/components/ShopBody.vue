@@ -233,7 +233,7 @@ export default {
       }
 
       // Route to chat
-      this.$router.push("/chat/" + currentUID);
+      this.$router.push("/chat");
     },
   },
   computed: {

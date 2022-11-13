@@ -107,7 +107,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/chat/:uid",
+      path: "/chat",
       name: "chat",
       component: ChatView,
       meta: {
