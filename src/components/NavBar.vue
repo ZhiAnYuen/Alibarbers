@@ -1,10 +1,10 @@
 <template>
   <nav class="navbar navbar-expand-lg bg-light">
-    <div class="container-fluid">
+    <div class="container-fluid ps-0">
       <router-link
         v-if="checkIsLoggedIn($route.name) == false"
         to="/home"
-        class="navbar-brand ms-5 mt-1 h1"
+        class="navbar-brand ms-lg-5 ms-md-4 ms-sm-4 ms-4 mt-1 h1"
       >
         AliBarbers
       </router-link>
@@ -12,7 +12,7 @@
       <router-link
         v-if="checkIsLoggedIn($route.name) == 'Customer'"
         to="/feed"
-        class="navbar-brand ms-5 mt-1 h1"
+        class="navbar-brand ms-lg-5 ms-md-4 ms-sm-4 ms-4 mt-1 h1"
       >
         AliBarbers
       </router-link>
@@ -20,7 +20,7 @@
       <router-link
         v-if="checkIsLoggedIn($route.name) == 'Hairdresser'"
         to="/hairdresserfeed"
-        class="navbar-brand ms-5 mt-1 h1"
+        class="navbar-brand ms-lg-5 ms-md-4 ms-sm-4 ms-4 mt-1 h1"
       >
         AliBarbers
       </router-link>
