@@ -13,7 +13,6 @@
     "@vue-stripe/vue-stripe": "^4.4.4",
     "bootstrap": "^5.2.2",
     "chart.js": "^3.9.1",
-    "events": "^3.3.0",
     "firebase": "^9.11.0",
     "pinia": "^2.0.23",
     "pinia-plugin-persistedstate": "^2.3.0",
