@@ -2,10 +2,54 @@
   <div class="container-fluid p-5">
     <!-- CHAT CARD -->
     <div class="row justify-content-center">
+      <div
+        class="modal fade"
+        id="exampleModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">
+                {{ name }}'s Chats
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div id="convoBodyMain">
+                <div
+                  v-for="(convo, index) of convos"
+                  :key="index"
+                  id="convoBody"
+                  class="row mb-3 mx-3"
+                  @click="readConvo(convo.displayName, convo.uid)"
+                >
+                  <div id="convoName">
+                    <h5 class="text-dark">
+                      {{ convo["displayName"] }}
+                    </h5>
+                  </div>
+                  <div id="convoLastMsg">
+                    <span class="text-dark">Last Message</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="card" class="card m-5 border rounded-4">
         <div class="row" style="height: 100%">
           <!-- CONVO BLOCK -->
-          <div id="convoBlock" class="col-3">
+          <div id="convoBlock" class="col-lg-12 col-xl-3">
             <!-- CONVO HEADER -->
             <div id="convoHeader" class="row mx-1">
               <h4 id="name" class="text-start text-dark">{{ name }}'s Chats</h4>
@@ -33,11 +77,22 @@
           </div>
 
           <!-- CHAT BLOCK -->
-          <div id="chatBlock" class="col-9">
+          <div id="chatBlock" class="col-lg-12 col-xl-9">
             <!-- CHAT HEADER -->
             <div class="row">
               <div id="chatInfo">
-                <h4 class="m-2 text-white">{{ chatHeaderName }}</h4>
+                <h4 class="m-2 text-white">
+                  <button
+                    id="convoListButton"
+                    type="button"
+                    class="btn btn-primary me-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModal"
+                  >
+                    Chat
+                  </button>
+                  {{ chatHeaderName }}
+                </h4>
               </div>
             </div>
 
@@ -130,7 +185,7 @@ export default {
       for (let entry of entries) {
         this.convos.push(entry[1]);
       }
-      console.log(this.convos);
+      // console.log(this.convos);
     });
   },
   methods: {
@@ -204,12 +259,11 @@ export default {
 <style lang="scss" scoped>
 .card {
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
-  height: 75vh;
-  overflow: hidden;
+  height: 100vh;
 }
 
 #convoBlock {
-  height: 100%;
+  // height: 100%;
   background-color: white;
   gap: 10px;
 }
@@ -223,7 +277,20 @@ export default {
 }
 
 #convoBodyMain {
+  max-height: 80vh;
   overflow: auto;
+}
+
+@media (max-width: 1200px) {
+  #convoBlock {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  #convoListButton {
+    display: none;
+  }
 }
 
 #convoBody {
