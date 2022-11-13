@@ -166,7 +166,7 @@ export default {
           this.shopDetails = docSnap.data();
           this.getReviews();
         } else {
-          console.log("No such document!");
+          //console.log("No such document!");
         }
       });
     },

@@ -325,14 +325,14 @@ export default {
 
       if (shopSnapshot.exists()) {
         var shopData = shopSnapshot.data();
-        console.log(shopData);
+        //console.log(shopData);
         this.shopData = shopData;
         this.hairdressers = shopData.hairdressers;
         this.services = shopData.services;
         this.open = shopData.open;
         this.close = shopData.close;
       } else {
-        console.log("No such shop");
+        //console.log("No such shop");
       }
 
       const qAppointments = query(
@@ -346,8 +346,8 @@ export default {
       });
 
       this.retrievingData = false;
-      console.log(this.shopData);
-      console.log(this.appointments);
+      //console.log(this.shopData);
+      //console.log(this.appointments);
     },
     onEventDragStart(e, draggable) {
       e.dataTransfer.setData("event", JSON.stringify(draggable));
@@ -366,7 +366,7 @@ export default {
         this.step1To2Alert = true;
       }
 
-      console.log(this.selectedHairdressers);
+      //console.log(this.selectedHairdressers);
     },
     step2To3() {
       if (this.selectedServices.length > 0) {
@@ -384,12 +384,12 @@ export default {
       } else {
         this.step2To3Alert = true;
       }
-      console.log(this.selectedServices);
+      //console.log(this.selectedServices);
     },
     step3To4() {
       this.showDraggable = true;
       if (this.latestEvent) {
-        console.log(this.latestEvent);
+        //console.log(this.latestEvent);
         this.step += 1;
       }
     },
@@ -438,7 +438,7 @@ export default {
       this.draggable.title = this.userName;
       delete this.draggable.id;
       this.draggable.shopName = this.shopData.shopName;
-      console.log(this.draggable);
+      //console.log(this.draggable);
 
       await addDoc(collection(db.db, "appointments"), this.draggable);
     },

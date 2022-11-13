@@ -453,7 +453,8 @@ export default {
           })
           .catch(error => {
             alert(error.code + ": " + error.message);
-            //console.log(error);
+            ////console.log(error);
+            //alert("Please enter a valid shop name.")
           })
       }
     },
@@ -563,8 +564,8 @@ export default {
             location.reload();
           })
           .catch(error => {
-            alert(error.code + ": " + error.message);
             //console.log(error);
+            alert("Edit failed. Please try again.")
           })
         }
 

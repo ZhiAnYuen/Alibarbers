@@ -118,7 +118,7 @@ export default {
         doc(db.db, "appointments", this.$route.params.id)
       );
       if (docSnap.exists()) {
-        console.log("Document data:", docSnap.data());
+        //console.log("Document data:", docSnap.data());
         this.appointmentData = docSnap.data();
         var totalPrice = 0;
         for (var service of this.appointmentData.selectedServices) {
