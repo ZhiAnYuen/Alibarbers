@@ -1,7 +1,7 @@
 <template>
   <h1 class="text-center p-5">Your Shop</h1>
   
-  <div class="container" width="90%">
+  <div class="container px-lg-5 px-md-4 px-sm-4 px-4" width="90%">
     <form>
       <div class="row my-4">
         <div class="col-lg-4 mb-2">
