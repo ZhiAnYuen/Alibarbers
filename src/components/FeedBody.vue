@@ -1,52 +1,54 @@
 <template>
-  <div class="container-fluid mt-4 mx-5">
-    <span class="text-start fw-semibold">Hello {{ name }},</span>
-    <h1 class="text-start fw-semibold">Get a makeover today!</h1>
+  <div class="container-fluid mt-4 px-lg-5 px-md-4 px-sm-4 px-4">
     <div class="row">
-      <div
-        class="col-lg-3 col-md-4 col-sm-12 card border border-dark rounded-4 mt-3 gy-2 p-4 h-100"
-      >
-        <div class="d-flex flex-row align-items-center">
-          <span class="text-start fw-semibold">Filters</span>
-          <button
-            type="button"
-            class="hover-button button ms-auto"
-            @click="
-              this.categories = null;
-              this.services = null;
-              this.locations = null;
-            "
-          >
-            Reset
-          </button>
+      <span class="fw-semibold">Hello {{ name }},</span>
+      <h1 class="fw-semibold">Get a makeover today!</h1>
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="card border border-dark rounded-4 mt-3 gy-2 p-4">
+          <div class="d-flex flex-row align-items-center">
+            <span class="text-start fw-semibold">Filters</span>
+            <button
+              type="button"
+              class="hover-button button ms-auto"
+              @click="
+                this.categories = null;
+                this.services = null;
+                this.locations = null;
+              "
+            >
+              Reset
+            </button>
+          </div>
+          <hr />
+          <span class="text-start fw-semibold">Services</span>
+          <multiselect
+            v-model="services"
+            :options="servicesOptions"
+            placeholder="Filter services"
+            :show-labels="false"
+            :multiple="true"
+          />
+          <span class="text-start fw-semibold mt-4">Categories</span>
+          <multiselect
+            v-model="categories"
+            :options="categoriesOptions"
+            placeholder="Filter category"
+            :show-labels="false"
+            :multiple="true"
+          />
+          <span class="text-start fw-semibold mt-4">Locations</span>
+          <multiselect
+            v-model="locations"
+            :options="locationsOptions"
+            placeholder="Filter MRT location"
+            :show-labels="false"
+            :multiple="true"
+          />
         </div>
-        <hr />
-        <span class="text-start fw-semibold">Services</span>
-        <multiselect
-          v-model="services"
-          :options="servicesOptions"
-          placeholder="Filter services"
-          :show-labels="false"
-          :multiple="true"
-        />
-        <span class="text-start fw-semibold mt-4">Categories</span>
-        <multiselect
-          v-model="categories"
-          :options="categoriesOptions"
-          placeholder="Filter category"
-          :show-labels="false"
-          :multiple="true"
-        />
-        <span class="text-start fw-semibold mt-4">Locations</span>
-        <multiselect
-          v-model="locations"
-          :options="locationsOptions"
-          placeholder="Filter MRT location"
-          :show-labels="false"
-          :multiple="true"
-        />
       </div>
-      <div class="col-lg-9 col-md-8 col-sm-12 ps-4">
+      <div class="col-lg-9 col-md-8 col-sm-12">
         <div class="row mt-4" v-auto-animate>
           <div
             v-for="feed in filtered"

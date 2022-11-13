@@ -2,7 +2,9 @@
   <div v-for="(review, index) in reviews" :key="index">
     <div class="card mb-4">
       <div class="card-body">
-        <h5 class="card-title mb-2">{{ review["name"] }}</h5>
+        <span class="card-title fs-4 fw-semibold mb-2">{{
+          review["name"]
+        }}</span>
         <star-rating
           :rating="getRatings(index)"
           :read-only="true"

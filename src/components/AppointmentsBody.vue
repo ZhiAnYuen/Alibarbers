@@ -1,23 +1,32 @@
 <template>
-  <div id="yellow-bar" class="container-fluid px-5 pt-4">
+  <div
+    id="yellow-bar"
+    class="container-fluid px-lg-5 px-md-4 px-sm-4 px-4 py-4"
+  >
     <span class="text-start fw-semibold">Hello {{ username }},</span>
     <h1 class="text-start fw-semibold">How have your haircuts been?</h1>
-    <div class="d-flex flex-row pt-2">
-      <div class="metric rounded-4 d-flex flex-column w-100 p-4 me-2 mb-4">
-        <span>Total Value</span>
-        <h1 class="pt-3">${{ totalValue }}</h1>
+    <div class="row pt-2">
+      <div class="col-lg-4 col-sm-12">
+        <div class="metric rounded-4 d-flex flex-column w-100 p-4 me-2 mb-4">
+          <span>Total Value</span>
+          <h1 class="pt-3">${{ totalValue }}</h1>
+        </div>
       </div>
-      <div class="metric rounded-4 d-flex flex-column w-100 p-4 me-2 mb-4">
-        <span>Shops Visited</span>
-        <h1 class="pt-3">{{ shopsVisited }}</h1>
+      <div class="col-lg-4 col-sm-12">
+        <div class="metric rounded-4 d-flex flex-column w-100 p-4 me-2 mb-4">
+          <span>Shops Visited</span>
+          <h1 class="pt-3">{{ shopsVisited }}</h1>
+        </div>
       </div>
-      <div class="metric rounded-4 d-flex flex-column w-100 p-4 mb-4">
-        <span>Total Appointments</span>
-        <h1 class="pt-3">{{ appointments.length }}</h1>
+      <div class="col-lg-4 col-sm-12">
+        <div class="metric rounded-4 d-flex flex-column w-100 p-4 mb-4">
+          <span>Total Appointments</span>
+          <h1 class="pt-3">{{ appointments.length }}</h1>
+        </div>
       </div>
     </div>
   </div>
-  <div class="container-fluid px-5">
+  <div class="container-fluid px-lg-5 px-md-4 px-sm-4 px-4">
     <h3 class="pt-4">Upcoming ({{ upcoming.length }})</h3>
     <AppointmentDisplay
       v-for="appointment in upcoming"

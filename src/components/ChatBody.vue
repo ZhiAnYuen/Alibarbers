@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid p-5">
+  <div class="container-fluid px-lg-5 px-md-4 px-sm-4 px-4 py-5">
     <!-- CHAT CARD -->
     <div class="row justify-content-center">
       <div
@@ -12,9 +12,6 @@
         <div class="modal-dialog modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">
-                {{ name }}'s Chats
-              </h1>
               <button
                 type="button"
                 class="btn-close"

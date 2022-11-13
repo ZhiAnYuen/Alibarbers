@@ -1,15 +1,15 @@
 <template>
   <!-- <h3 class="text-center mb-4">Services Provided</h3> -->
   <div v-for="(service, index) in services" :key="index">
-    <div class="row">
-      <div class="col-md-4 text-center">
-        <p>{{ service["name"] }}</p>
-      </div>
-      <div class="col-md-4 text-center">
-        <p>${{ service["price"] }}</p>
-      </div>
-      <div class="col-md-4 text-center">
-        <p>{{ service["duration"] }} mins</p>
+    <div class="card mb-4">
+      <div class="card-body">
+        <span class="card-title fs-4 fw-semibold mb-2">{{
+          service["name"]
+        }}</span>
+        <br />
+        <span>${{ service["price"] }}</span
+        ><br />
+        <span>{{ service["duration"] }} mins</span>
       </div>
     </div>
   </div>
@@ -21,3 +21,7 @@ export default {
   props: ["services"],
 };
 </script>
+
+<style lang="scss" scoped>
+
+</style>

@@ -1,12 +1,18 @@
 <template>
   <div id="calendar-body" class="container-fluid gx-0">
-    <div class="alert alert-danger px-5 col-12" v-if="step1To2Alert">
+    <div
+      class="alert alert-danger px-lg-5 px-md-4 px-sm-4 px-4 col-12"
+      v-if="step1To2Alert"
+    >
       Please choose at least 1 hairdresser!
     </div>
-    <div class="alert alert-danger px-5 col-12" v-if="step2To3Alert">
+    <div
+      class="alert alert-danger px-lg-5 px-md-4 px-sm-4 px-4 col-12"
+      v-if="step2To3Alert"
+    >
       Please choose at least 1 service!
     </div>
-    <div v-if="step < 3" class="row mx-5">
+    <div v-if="step < 3" class="row px-lg-5 px-md-4 px-sm-4 px-4">
       <div
         class="col-lg-6 col-md-12 card border border-dark rounded-4 my-5"
         v-if="step === 1"
@@ -89,7 +95,7 @@
         </div>
       </div>
     </div>
-    <div v-if="step === 3" class="row mx-5">
+    <div v-if="step === 3" class="row px-lg-5 px-md-4 px-sm-4 px-4">
       <div class="col-lg-4 col-md-12 mt-5">
         <div class="card border border-dark rounded-4 p-5">
           <h2>
@@ -158,7 +164,10 @@
         </div>
       </div>
     </div>
-    <div v-if="step === 4" class="row mx-5 justify-content-center">
+    <div
+      v-if="step === 4"
+      class="row px-lg-5 px-md-4 px-sm-4 px-4 justify-content-center"
+    >
       <div
         class="col-lg-8 col-md-12 card border border-dark rounded-4 p-5 my-5"
       >
