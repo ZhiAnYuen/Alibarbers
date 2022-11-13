@@ -157,14 +157,14 @@ export default {
       });
 
       this.retrievingData = false;
-      console.log(this.appointmentsData);
+      //console.log(this.appointmentsData);
     },
     onCalendarEventClick(event, e) {
       this.popUpEventModal = event;
       this.showModal = true;
 
       e.stopPropagation();
-      console.log(event);
+      //console.log(event);
 
       var startDate = new Date(this.popUpEventModal.start);
       var endDate = new Date(this.popUpEventModal.end);

@@ -192,7 +192,7 @@ export default {
       });
     },
     test() {
-      console.log(this.locations);
+      //console.log(this.locations);
     },
   },
 };

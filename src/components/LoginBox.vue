@@ -76,33 +76,33 @@ export default {
           const user = useUserStore();
           user.login(name, this.loginEmail, userType, cred.user.uid);
 
-          console.log("Login successful");
+          //console.log("Login successful");
           if (userType == "Customer") this.$router.push("/feed");
           if (userType == "Hairdresser") this.$router.push("/hairdresserfeed");
         })
         .catch((error) => {
           switch (error.code) {
             case "auth/invalid-email":
-              console.log("Invalid email");
+              //console.log("Invalid email");
               this.loginStatus = "Invalid email. Try again!";
-              // alert("Invalid email. Try again!");
+              alert("Invalid email. Try again!");
               break;
             case "auth/user-not-found":
-              console.log("No account with that email was found");
+              //console.log("No account with that email was found");
               this.loginStatus =
                 "No account with that email was found. Try again!";
-              // alert("No account with that email was found. Try again!");
+              alert("No account with that email was found. Try again!");
               break;
             case "auth/wrong-password":
-              console.log("Incorrect password");
+              //console.log("Incorrect password");
               this.loginStatus = "Incorrect password. Try again!";
-              // alert("Incorrect password. Try again!");
+              alert("Incorrect password. Try again!");
               break;
             default:
-              console.log(error);
-              console.log("Email or password was incorrect");
+              //console.log(error);
+              //console.log("Email or password was incorrect");
               this.loginStatus = "Email or password was incorrect. Try again!";
-              // alert("Email or password was incorrect. Try again!");
+              alert("Email or password was incorrect. Try again!");
               break;
           }
         });

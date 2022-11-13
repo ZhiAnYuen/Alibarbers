@@ -423,9 +423,9 @@ export default {
             querySnapshot.forEach((doc) => {
               othershopdata = doc.data();
             })
-            console.log(othershopdata);
+            //console.log(othershopdata);
             if (othershopdata == undefined) {
-              console.log("No matching document.");
+              //console.log("No matching document.");
               this.shopnameAvail = 3; // Shop name will be verified
               if (
                 this.shopnameerror.indexOf(
@@ -438,7 +438,7 @@ export default {
                 this.shopnameerror.splice(i, 1);
               }
             } else {
-              console.log('ERROR SHOULD SHOW!')
+              //console.log('ERROR SHOULD SHOW!')
               this.shopnameAvail = 2; // Error - shop name has been taken
               if (
                 this.shopnameerror.indexOf(
@@ -452,7 +452,8 @@ export default {
             }
           })
           .catch(error => {
-            console.log(error);
+            //console.log(error);
+            alert("Please enter a valid shop name.")
           })
       }
     },
@@ -562,7 +563,8 @@ export default {
             location.reload();
           })
           .catch(error => {
-            console.log(error);
+            //console.log(error);
+            alert("Edit failed. Please try again.")
           })
         }
 
