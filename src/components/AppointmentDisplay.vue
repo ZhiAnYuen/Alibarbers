@@ -149,11 +149,19 @@
     </div>
     <button
       v-if="type === 'upco'"
-      class="col-lg-3 col-md-12 hover-button p-2"
+      class="col-lg-1 col-md-12 hover-button p-2 mx-auto gy-3"
       @click="deleteAppointmentFromDB($event)"
     >
       Cancel
     </button>
+    <button
+      v-if="type === 'upco'"
+      class="col-lg-1 col-md-12 hover-button p-2 mx-auto gy-3"
+      @click="routeToChat($event)"
+    >
+      Chat
+    </button>
+
     <button
       v-else
       class="col-lg-3 col-md-12 hover-button p-2 review-button"
@@ -271,6 +279,10 @@ export default {
     },
     routeToAppointment() {
       this.$router.push({ path: "/appointment/" + this.appointmentData.docID });
+    },
+    routeToChat(event) {
+      event.stopPropagation();
+      this.$router.push({ path: "/chat" });
     },
     openReviewModal(event) {
       this.errors = [];

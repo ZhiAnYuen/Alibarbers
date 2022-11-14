@@ -56,6 +56,7 @@ export default {
   width: 50%;
   z-index: 9999;
   min-width: 500px;
+ 
 }
 
 .modal-body {
