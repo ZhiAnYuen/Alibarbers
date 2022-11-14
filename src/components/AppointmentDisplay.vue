@@ -282,7 +282,7 @@ export default {
     },
     routeToChat(event) {
       event.stopPropagation();
-      this.$router.push({ path: "/chat" });
+      this.$router.push({ path: "/chat"});
     },
     openReviewModal(event) {
       this.errors = [];

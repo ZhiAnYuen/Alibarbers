@@ -94,24 +94,23 @@
                     {{ chatHeaderName }}
                   </h4>
                   <button
-                    v-if="chatHeaderName != ''"
+                    v-if="chatHeaderName != '' && profileType == 'Customer'"
                     id="visitShopBtn"
                     class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
-                    style="border-color: white; max-width: 90vw;"
+                    style="border-color: white; max-width: 90vw"
                     @click="routeToShop"
                   >
                     Visit Shop
                   </button>
                   <button
-                    v-if="chatHeaderName != ''"
+                    v-if="chatHeaderName != '' && profileType == 'Customer'"
                     id="visitShopBtn"
                     class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
-                    style="border-color: white; max-width: 90vw;"
+                    style="border-color: white; max-width: 90vw"
                     @click="routeToBooking"
                   >
                     Book Now
                   </button>
-
                 </div>
               </div>
             </div>
@@ -188,6 +187,7 @@ export default {
       chatHeaderName: "",
       messages: [],
       inputText: "",
+      profileType: user.userType,
     };
   },
   async mounted() {
