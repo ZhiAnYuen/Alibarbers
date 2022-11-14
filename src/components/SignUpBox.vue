@@ -153,7 +153,6 @@ export default {
 #card {
   z-index: 0;
   width: 600px;
-  // overflow-x: scroll;
 }
 
 span {
