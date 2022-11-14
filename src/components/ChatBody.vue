@@ -73,7 +73,7 @@
             <div class="row">
               <div id="chatInfo">
                 <div class="row">
-                  <h4 class="m-2 text-white col-lg-9 col-md-6">
+                  <h4 class="m-2 text-white col-lg-5 col-md-7">
                     <svg
                       id="convoListButton"
                       data-bs-toggle="modal"
@@ -93,16 +93,25 @@
 
                     {{ chatHeaderName }}
                   </h4>
-
                   <button
                     v-if="chatHeaderName != ''"
                     id="visitShopBtn"
-                    class="col-lg-2 hover-button p-2"
-                    style="border-color: white; margin-right: 0"
+                    class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
+                    style="border-color: white;"
                     @click="routeToShop"
                   >
                     Visit Shop
                   </button>
+                  <button
+                    v-if="chatHeaderName != ''"
+                    id="visitShopBtn"
+                    class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
+                    style="border-color: white;"
+                    @click="routeToBooking"
+                  >
+                    Book Now
+                  </button>
+
                 </div>
               </div>
             </div>
@@ -264,8 +273,10 @@ export default {
       this.inputText = "";
     },
     routeToShop() {
-      console.log(this.currentUID)
       this.$router.push({ path: "/shop/" + this.otherUID });
+    },
+    routeToBooking() {
+      this.$router.push({ path: "/booking/" + this.otherUID });
     },
   },
 };
