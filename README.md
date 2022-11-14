@@ -1,20 +1,17 @@
 ## Project Setup
 
+Run the following command to install required packages.
 ```sh
 npm install
 ```
+<br />
 
 ### Compile and Hot-Reload for Development
-
+Run the following command to run project locally.
 ```sh
 npm run dev
 ```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+<br />
 
 ### List of User Emails & Passwords For Testing
 
@@ -28,4 +25,3 @@ password: hairdresser
 email: customer@gmail.com
 password: customer
 ```
-

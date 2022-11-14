@@ -90,12 +90,12 @@
   </div>
 </template>
 
-<script lang="js">
+<script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import db from "../firebase.js";
 import { useUserStore } from "../stores/users.js";
-import { VueRecaptcha } from 'vue-recaptcha';
+import { VueRecaptcha } from "vue-recaptcha";
 
 export default {
   name: "SignUp",
@@ -117,7 +117,8 @@ export default {
       if (!this.isVerified) {
         alert("reCAPTCHA not verified!");
         return;
-      };
+      }
+
       const auth = getAuth();
       createUserWithEmailAndPassword(
         auth,
@@ -161,9 +162,9 @@ span {
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
-  #recaptcha {
-    display: none;
-  }
-}
+// @media (max-width: 768px) {
+//   #recaptcha {
+//     display: none;
+//   }
+// }
 </style>
