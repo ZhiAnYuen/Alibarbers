@@ -97,7 +97,7 @@
                     v-if="chatHeaderName != ''"
                     id="visitShopBtn"
                     class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
-                    style="border-color: white;"
+                    style="border-color: white; max-width: 90vw;"
                     @click="routeToShop"
                   >
                     Visit Shop
@@ -106,7 +106,7 @@
                     v-if="chatHeaderName != ''"
                     id="visitShopBtn"
                     class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
-                    style="border-color: white;"
+                    style="border-color: white; max-width: 90vw;"
                     @click="routeToBooking"
                   >
                     Book Now
