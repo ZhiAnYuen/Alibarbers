@@ -2,13 +2,8 @@
   <div class="container-fluid px-lg-5 px-md-4 px-sm-4 px-4 py-5">
     <!-- CHAT CARD -->
     <div class="row justify-content-center">
-      <div
-        class="modal fade"
-        id="exampleModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
+      <!-- CONVO MODAL -->
+      <div class="modal fade" id="convoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
@@ -35,6 +30,33 @@
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT MODAL -->
+      <div class="modal fade" id="chatModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="ms-2">Options</h4>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <button
+                id="visitShopBtn"
+                class="hover-button p-2 m-2"
+                style="border-color: white; max-width: 90vw"
+                @click="routeToShop"
+              >
+                Visit Shop
+              </button>
             </div>
           </div>
         </div>
@@ -71,46 +93,55 @@
           <div id="chatBlock" class="col-lg-12 col-xl-9">
             <!-- CHAT HEADER -->
             <div class="row">
-              <div id="chatInfo">
-                <div class="row">
-                  <h4 class="m-2 text-white col-lg-5 col-md-7">
-                    <svg
-                      id="convoListButton"
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModal"
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="30"
-                      height="30"
-                      fill="currentColor"
-                      class="bi bi-list me-3"
-                      viewBox="0 0 16 16"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                      />
-                    </svg>
+              <div id="chatInfo" class="d-inline-flex align-items-center">
+                <svg
+                  id="convoListButton"
+                  data-bs-toggle="modal"
+                  data-bs-target="#convoModal"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="30"
+                  height="30"
+                  fill="currentColor"
+                  class="bi bi-list text-white"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+                  />
+                </svg>
 
-                    {{ chatHeaderName }}
-                  </h4>
-                  <button
+                <h4 class="text-white">
+                  {{ chatHeaderName }}
+                </h4>
+
+                <div class="dropdown">
+                  <svg
                     v-if="chatHeaderName != '' && profileType == 'Customer'"
-                    id="visitShopBtn"
-                    class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
-                    style="border-color: white; max-width: 90vw"
-                    @click="routeToShop"
+                    data-bs-toggle="dropdown"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="25"
+                    height="25"
+                    fill="currentColor"
+                    class="bi bi-three-dots text-white dropdown-toggle"
+                    viewBox="0 0 10 20"
                   >
-                    Visit Shop
-                  </button>
-                  <button
-                    v-if="chatHeaderName != '' && profileType == 'Customer'"
-                    id="visitShopBtn"
-                    class="col-lg-3 col-md-2 col-sm-6 col-xs-3 hover-button p-2 m-2"
-                    style="border-color: white; max-width: 90vw"
-                    @click="routeToBooking"
-                  >
-                    Book Now
-                  </button>
+                    <path
+                      d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+                    />
+                  </svg>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a class="dropdown-item" @click="routeToShop"
+                        >Visit Shop</a
+                      >
+                    </li>
+                    <li>
+                      <a class="dropdown-item" @click="routeToBooking"
+                        >Book Now</a
+                      >
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -403,5 +434,9 @@ export default {
     margin: 10px;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.08), 0 0 6px rgba(0, 0, 0, 0.05);
   }
+}
+
+.dropdown-item:active {
+  background-color: black;
 }
 </style>

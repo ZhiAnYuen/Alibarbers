@@ -23,8 +23,8 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6 col-sm-12 align-self-center">
-        <img class="img-fluid" src="../assets/main-image.jpg" alt="..." />
+      <div class="col-md-6 col-sm-12">
+        <img class="img-fluid" src="../assets/main_image.png" alt="..." />
       </div>
     </div>
   </div>
