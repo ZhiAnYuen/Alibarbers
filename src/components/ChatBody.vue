@@ -181,6 +181,7 @@
                   type="text"
                   class="form-control"
                   placeholder="Type something"
+                  @keyup.enter="sendMsg"
                 />
                 <button
                   class="btn btn-dark"
@@ -278,6 +279,8 @@ export default {
         uid: this.currentUID,
       };
 
+      this.inputText = "";
+
       const combinedUID =
         this.currentUID > this.otherUID
           ? this.currentUID + this.otherUID
@@ -301,7 +304,6 @@ export default {
           messages: curr,
         });
       }
-      this.inputText = "";
     },
     routeToShop() {
       this.$router.push({ path: "/shop/" + this.otherUID });
