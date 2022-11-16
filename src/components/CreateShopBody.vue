@@ -373,6 +373,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import db from "../firebase.js";
 import storage from "../firebase.js";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -408,6 +409,7 @@ export default {
       shopdata: undefined,
       shopImage: undefined,
       shopImageURL: undefined,
+      final_services: [],
       shopname: "",
       shoplocation: "",
       contactemail: "",
@@ -574,7 +576,7 @@ export default {
       }
       this.hairdressers.splice(index, 1);
     },
-    createShop() {
+    async createShop() {
       event.preventDefault();
 
       if (this.shopImage == undefined) return;
@@ -584,100 +586,127 @@ export default {
         `shopimages/${this.shopImage.name}`
       );
 
-      uploadBytes(imageRef, this.shopImage).then(() => {
-        getDownloadURL(imageRef).then((url) => {
-          this.shopImageURL = url;
+      await uploadBytes(imageRef, this.shopImage);
 
-          var final_hairdressers = [];
-          for (var i = 0; i < this.hairdressers.length; i++) {
-            let temp = {};
-            temp["class"] = this.hairdressers[i]["name"].replace(" ", "");
-            temp["id"] = i + 1;
-            temp["role"] = this.hairdressers[i]["role"];
-            temp["name"] = this.hairdressers[i]["name"];
-            temp["label"] = this.hairdressers[i]["name"];
-            final_hairdressers.push(temp);
-          }
+      const getDownloadURLResponse = await getDownloadURL(imageRef);
 
-          if (
-            !(this.closing.length == 4) ||
-            !(this.opening.length == 4) ||
-            isNaN(this.opening) == true ||
-            isNaN(this.closing) == true
-          ) {
-            var hourscheck = false;
-            alert(
-              "Error! Please enter valid opening hours in 24-hour clock format."
-            );
-          } else {
-            var hourscheck = true;
-          }
+      this.shopImageURL = getDownloadURLResponse;
 
-          if (
-            !(this.shopnameAvail == 3) ||
-            this.shoplocation == "" ||
-            this.errors.length > 0 ||
-            hourscheck == false ||
-            this.selectedMRT == "Choose..."
-          ) {
-            //console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
-            alert("Error! Please fill in all fields.");
-          } else {
-            // getting tags
-            let final_tags = [];
-            for (let tag of this.selectedTags) {
-              final_tags.push(tag);
-            }
-            final_tags.push(this.selectedMRT);
+      var final_hairdressers = [];
+      for (var i = 0; i < this.hairdressers.length; i++) {
+        let temp = {};
+        temp["class"] = this.hairdressers[i]["name"].replace(" ", "");
+        temp["id"] = i + 1;
+        temp["role"] = this.hairdressers[i]["role"];
+        temp["name"] = this.hairdressers[i]["name"];
+        temp["label"] = this.hairdressers[i]["name"];
+        final_hairdressers.push(temp);
+      }
 
-            const docRef2 = doc(db.db, "shop", this.userID);
+      if (
+        !(this.closing.length == 4) ||
+        !(this.opening.length == 4) ||
+        isNaN(this.opening) == true ||
+        isNaN(this.closing) == true
+      ) {
+        var hourscheck = false;
+        alert(
+          "Error! Please enter valid opening hours in 24-hour clock format."
+        );
+      } else {
+        var hourscheck = true;
+      }
 
-/*             // random image picker
-            var images = [
-              "https://www.byrdie.com/thmb/eYl7tehdeBDzIXWNV6zOxa8mVvY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/capella-salon-cc77d352d7c5429599eeb260c40cc4db.jpg",
-              "https://media.timeout.com/images/104686361/1372/1029/image.jpg",
-              "https://media.timeout.com/images/101842791/1372/1029/image.jpg",
-              "https://www.byrdie.com/thmb/SPvqSC_DJA9HKbLjjc0w8p375hQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__city-guide-these-are-the-best-hair-salons-in-la-2007482-1481135787.700x0c-79b54a039afe492a8a73fd0a0dd1f657.jpg",
-              "https://www.byrdie.com/thmb/hXdqb5lltpDAvOL7nvlCjXLns-A=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__stag-hair-parlor-2007533-1481140732.700x0c-3ec2838467724f92b0873fa33597b269.jpg",
-            ];
-            var random = Math.floor(Math.random() * images.length);
- */
-            const data1 = {
-              shopName: this.shopname,
-              imgLink: this.shopImageURL,
-              location: this.shoplocation,
-              ownerEmail: this.email,
-              services: this.services,
-              open:
-                Number(this.opening.substring(0, 2)) * 60 +
-                (Number(this.opening.substring(2)) / 60) * 60,
-              close:
-                Number(this.closing.substring(0, 2)) * 60 +
-                (Number(this.opening.substring(2)) / 60) * 60,
-              hairdressers: final_hairdressers,
-              tags: final_tags,
-              selectedMRT: this.selectedMRT,
-              rawClosing: this.closing,
-              rawOpening: this.opening,
-              selectedTags: this.selectedTags,
-              shopDescription: this.shopdesc,
-              phoneNum: this.phoneno,
-              contactEmail: this.contactemail,
-            };
+      if (
+        !(this.shopnameAvail == 3) ||
+        this.shoplocation == "" ||
+        this.errors.length > 0 ||
+        hourscheck == false ||
+        this.selectedMRT == "Choose..."
+      ) {
+        //console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
+        alert("Error! Please fill in all fields.");
+      } else {
+        // getting tags
+        let final_tags = [];
+        for (let tag of this.selectedTags) {
+          final_tags.push(tag);
+        }
+        final_tags.push(this.selectedMRT);
 
-            setDoc(docRef2, data1)
-              .then(() => {
-                //console.log('Document was added successfully!');
-                alert("Success! Welcome, " + this.shopname);
-                this.$router.push("/hairdresserfeed");
-              })
-              .catch((error) => {
-                alert(error.code + ": " + error.message);
-                //console.log(error);
-              });
-          }
-        });
-      });
+        for (var service of this.services) {
+          const priceID = await this.stripeID(service);
+          service["stripePriceID"] = priceID;
+          this.final_services.push(service);
+        }
+
+        const docRef2 = doc(db.db, "shop", this.userID);
+
+        const data1 = {
+          shopName: this.shopname,
+          imgLink: this.shopImageURL,
+          location: this.shoplocation,
+          ownerEmail: this.email,
+          services: this.services,
+          open:
+            Number(this.opening.substring(0, 2)) * 60 +
+            (Number(this.opening.substring(2)) / 60) * 60,
+          close:
+            Number(this.closing.substring(0, 2)) * 60 +
+            (Number(this.opening.substring(2)) / 60) * 60,
+          hairdressers: final_hairdressers,
+          tags: final_tags,
+          selectedMRT: this.selectedMRT,
+          rawClosing: this.closing,
+          rawOpening: this.opening,
+          selectedTags: this.selectedTags,
+          shopDescription: this.shopdesc,
+          phoneNum: this.phoneno,
+          contactEmail: this.contactemail,
+        };
+
+        setDoc(docRef2, data1)
+          .then(() => {
+            //console.log('Document was added successfully!');
+            alert("Success! Welcome, " + this.shopname);
+            this.$router.push("/hairdresserfeed");
+          })
+          .catch((error) => {
+            alert(error.code + ": " + error.message);
+            //console.log(error);
+          });
+      }
+    },
+    async stripeID(service) {
+      const config = {
+        headers: {
+          Authorization:
+            "Bearer sk_test_51M2yabJNfrkeeQDMMDMvIrANAmXe5V9B7SnrUF3kIt5loAoXS7h0d5FwOEqzj5mN0sWNwH77ITlCVSK1cHVdRaDL00bKNcDFQr",
+        },
+      };
+
+      const productParams = new URLSearchParams();
+      productParams.append("name", service.name);
+
+      const createProduct = await axios.post(
+        "https://api.stripe.com/v1/products",
+        productParams,
+        config
+      );
+
+      const priceParams = new URLSearchParams();
+      priceParams.append("unit_amount", Number(service.price) * 100);
+      priceParams.append("currency", "sgd");
+      priceParams.append("product", createProduct.data.id);
+      priceParams.append("billing_scheme", "per_unit");
+
+      const createPrice = await axios.post(
+        "https://api.stripe.com/v1/prices",
+        priceParams,
+        config
+      );
+
+      return createPrice.data.id;
     },
   },
 };
