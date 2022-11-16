@@ -69,8 +69,10 @@
           </div>
 
           <!-- Upload a picture of their shop -->
-          <!-- <div class="row">
-            <label class="my-2" for="shopimg"><strong>Shop Image</strong></label>
+          <div class="row">
+            <label class="my-2" for="shopimg"
+              ><strong>Shop Image</strong></label
+            >
             <div class="input-group">
               <input
                 type="file"
@@ -79,10 +81,15 @@
                 accept="image/*"
                 v-bind="shopimg"
                 aria-describedby="filepicker"
+                @change="
+                  (event) => {
+                    this.shopImage = event.target.files[0];
+                  }
+                "
               />
             </div>
-          </div> -->
-        
+          </div>
+
           <!-- Opening Hours -->
           <div class="row my-2">
             <div class="">
@@ -367,6 +374,9 @@
 
 <script>
 import db from "../firebase.js";
+import storage from "../firebase.js";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 import {
   doc,
   setDoc,
@@ -378,7 +388,8 @@ import {
 } from "firebase/firestore";
 import { useUserStore } from "../stores/users";
 import { computed } from "vue";
-import "firebase/storage";
+
+//import { v4 } from "uuid";
 
 export default {
   name: "CreateShop",
@@ -395,6 +406,8 @@ export default {
   data() {
     return {
       shopdata: undefined,
+      shopImage: undefined,
+      shopImageURL: undefined,
       shopname: "",
       shoplocation: "",
       contactemail: "",
@@ -563,94 +576,108 @@ export default {
     },
     createShop() {
       event.preventDefault();
-      var final_hairdressers = [];
-      for (var i = 0; i < this.hairdressers.length; i++) {
-        let temp = {};
-        temp["class"] = this.hairdressers[i]["name"].replace(" ", "");
-        temp["id"] = i + 1;
-        temp["role"] = this.hairdressers[i]["role"];
-        temp["name"] = this.hairdressers[i]["name"];
-        temp["label"] = this.hairdressers[i]["name"];
-        final_hairdressers.push(temp);
-      }
 
-      if (
-        !(this.closing.length == 4) ||
-        !(this.opening.length == 4) ||
-        isNaN(this.opening) == true ||
-        isNaN(this.closing) == true
-      ) {
-        var hourscheck = false;
-        alert(
-          "Error! Please enter valid opening hours in 24-hour clock format."
-        );
-      } else {
-        var hourscheck = true;
-      }
+      if (this.shopImage == undefined) return;
 
-      if (
-        !(this.shopnameAvail == 3) ||
-        this.shoplocation == "" ||
-        this.errors.length > 0 ||
-        hourscheck == false ||
-        this.selectedMRT == "Choose..."
-      ) {
-        //console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
-        alert("Error! Please fill in all fields.");
-      } else {
-        // getting tags
-        let final_tags = [];
-        for (let tag of this.selectedTags) {
-          final_tags.push(tag);
-        }
-        final_tags.push(this.selectedMRT);
+      const imageRef = ref(
+        storage.storage,
+        `shopimages/${this.shopImage.name}`
+      );
 
-        const docRef2 = doc(db.db, "shop", this.userID);
+      uploadBytes(imageRef, this.shopImage).then(() => {
+        getDownloadURL(imageRef).then((url) => {
+          this.shopImageURL = url;
 
-        // random image picker
-        var images = [
-          'https://www.byrdie.com/thmb/eYl7tehdeBDzIXWNV6zOxa8mVvY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/capella-salon-cc77d352d7c5429599eeb260c40cc4db.jpg',
-          'https://media.timeout.com/images/104686361/1372/1029/image.jpg',
-          'https://media.timeout.com/images/101842791/1372/1029/image.jpg',
-          'https://www.byrdie.com/thmb/SPvqSC_DJA9HKbLjjc0w8p375hQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__city-guide-these-are-the-best-hair-salons-in-la-2007482-1481135787.700x0c-79b54a039afe492a8a73fd0a0dd1f657.jpg',
-          'https://www.byrdie.com/thmb/hXdqb5lltpDAvOL7nvlCjXLns-A=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__stag-hair-parlor-2007533-1481140732.700x0c-3ec2838467724f92b0873fa33597b269.jpg',
-        ];
-        var random = Math.floor(Math.random() * images.length);
+          var final_hairdressers = [];
+          for (var i = 0; i < this.hairdressers.length; i++) {
+            let temp = {};
+            temp["class"] = this.hairdressers[i]["name"].replace(" ", "");
+            temp["id"] = i + 1;
+            temp["role"] = this.hairdressers[i]["role"];
+            temp["name"] = this.hairdressers[i]["name"];
+            temp["label"] = this.hairdressers[i]["name"];
+            final_hairdressers.push(temp);
+          }
 
-        const data1 = {
-          shopName: this.shopname,
-          imgLink: images[random],
-          location: this.shoplocation,
-          ownerEmail: this.email,
-          services: this.services,
-          open:
-            Number(this.opening.substring(0, 2)) * 60 +
-            (Number(this.opening.substring(2)) / 60) * 60,
-          close:
-            Number(this.closing.substring(0, 2)) * 60 +
-            (Number(this.opening.substring(2)) / 60) * 60,
-          hairdressers: final_hairdressers,
-          tags: final_tags,
-          selectedMRT: this.selectedMRT,
-          rawClosing: this.closing,
-          rawOpening: this.opening,
-          selectedTags: this.selectedTags,
-          shopDescription: this.shopdesc,
-          phoneNum: this.phoneno,
-          contactEmail: this.contactemail,
-        };
+          if (
+            !(this.closing.length == 4) ||
+            !(this.opening.length == 4) ||
+            isNaN(this.opening) == true ||
+            isNaN(this.closing) == true
+          ) {
+            var hourscheck = false;
+            alert(
+              "Error! Please enter valid opening hours in 24-hour clock format."
+            );
+          } else {
+            var hourscheck = true;
+          }
 
-        setDoc(docRef2, data1)
-          .then(() => {
-            //console.log('Document was added successfully!');
-            alert("Success! Welcome, " + this.shopname);
-            this.$router.push("/hairdresserfeed");
-          })
-          .catch((error) => {
-            alert(error.code + ": " + error.message);
-            //console.log(error);
-          });
-      }
+          if (
+            !(this.shopnameAvail == 3) ||
+            this.shoplocation == "" ||
+            this.errors.length > 0 ||
+            hourscheck == false ||
+            this.selectedMRT == "Choose..."
+          ) {
+            //console.log(this.selectedMRT, this.shopnameAvail, this.shoplocation, this.opening, this.closing, this.services, final_hairdressers);
+            alert("Error! Please fill in all fields.");
+          } else {
+            // getting tags
+            let final_tags = [];
+            for (let tag of this.selectedTags) {
+              final_tags.push(tag);
+            }
+            final_tags.push(this.selectedMRT);
+
+            const docRef2 = doc(db.db, "shop", this.userID);
+
+/*             // random image picker
+            var images = [
+              "https://www.byrdie.com/thmb/eYl7tehdeBDzIXWNV6zOxa8mVvY=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/capella-salon-cc77d352d7c5429599eeb260c40cc4db.jpg",
+              "https://media.timeout.com/images/104686361/1372/1029/image.jpg",
+              "https://media.timeout.com/images/101842791/1372/1029/image.jpg",
+              "https://www.byrdie.com/thmb/SPvqSC_DJA9HKbLjjc0w8p375hQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__city-guide-these-are-the-best-hair-salons-in-la-2007482-1481135787.700x0c-79b54a039afe492a8a73fd0a0dd1f657.jpg",
+              "https://www.byrdie.com/thmb/hXdqb5lltpDAvOL7nvlCjXLns-A=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cdn.cliqueinc.com__cache__posts__210559__stag-hair-parlor-2007533-1481140732.700x0c-3ec2838467724f92b0873fa33597b269.jpg",
+            ];
+            var random = Math.floor(Math.random() * images.length);
+ */
+            const data1 = {
+              shopName: this.shopname,
+              imgLink: this.shopImageURL,
+              location: this.shoplocation,
+              ownerEmail: this.email,
+              services: this.services,
+              open:
+                Number(this.opening.substring(0, 2)) * 60 +
+                (Number(this.opening.substring(2)) / 60) * 60,
+              close:
+                Number(this.closing.substring(0, 2)) * 60 +
+                (Number(this.opening.substring(2)) / 60) * 60,
+              hairdressers: final_hairdressers,
+              tags: final_tags,
+              selectedMRT: this.selectedMRT,
+              rawClosing: this.closing,
+              rawOpening: this.opening,
+              selectedTags: this.selectedTags,
+              shopDescription: this.shopdesc,
+              phoneNum: this.phoneno,
+              contactEmail: this.contactemail,
+            };
+
+            setDoc(docRef2, data1)
+              .then(() => {
+                //console.log('Document was added successfully!');
+                alert("Success! Welcome, " + this.shopname);
+                this.$router.push("/hairdresserfeed");
+              })
+              .catch((error) => {
+                alert(error.code + ": " + error.message);
+                //console.log(error);
+              });
+          }
+        });
+      });
     },
   },
 };
